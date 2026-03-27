@@ -26,7 +26,9 @@
     },
   ];
 
-  var API_TEMPLATE = "https://martialmatch.com/api/events/{id}/results/public";
+  /** Cloudflare Worker (CORS) → martialmatch.com */
+  var API_BASE = "https://martialmatch.andruwik777.workers.dev";
+  var API_TEMPLATE = API_BASE + "/api/events/{id}/results/public";
 
   function apiUrl(eventId) {
     return API_TEMPLATE.replace("{id}", String(eventId));

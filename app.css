@@ -1,0 +1,137 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #e8e8ec;
+  background: #12141a;
+}
+
+.header {
+  padding: 1rem 1rem 0.5rem;
+  border-bottom: 1px solid #2a2e3a;
+}
+
+.title {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #9aa0b0;
+}
+
+.subtitle code {
+  font-size: 0.8em;
+  padding: 0.1em 0.35em;
+  background: #2a2e3a;
+  border-radius: 4px;
+}
+
+.main {
+  padding: 0.75rem 1rem 2rem;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.event-card {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.65rem;
+  background: #1c1f28;
+  border: 1px solid #2a2e3a;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.event-card:active {
+  background: #252936;
+}
+
+.event-card:focus-visible {
+  outline: 2px solid #5b8cff;
+  outline-offset: 2px;
+}
+
+.event-card-thumb {
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: #2a2e3a;
+}
+
+.event-card-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.event-card-title {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f2f2f6;
+}
+
+.event-card-meta {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #9aa0b0;
+}
+
+.event-card-id {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.result {
+  margin-top: 1.25rem;
+}
+
+.result-heading {
+  margin: 0 0 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #c4c8d4;
+}
+
+.result-body {
+  margin: 0;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #0c0e12;
+  border: 1px solid #2a2e3a;
+  border-radius: 8px;
+  color: #b8f5c8;
+  min-height: 4rem;
+}
+
+.result-body.is-error {
+  color: #ffb4b4;
+}

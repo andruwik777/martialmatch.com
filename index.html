@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MartialMatch — test API / CORS</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="title">MartialMatch — próba API</h1>
+    <p class="subtitle">
+      Kliknij zawody — wywołanie <code>GET /api/events/{id}/results/public</code>.
+      Sprawdzamy CORS z przeglądarki (bez Java proxy).
+    </p>
+  </header>
+
+  <main class="main">
+    <section class="events" id="events" aria-label="Lista zawodów (przykładowa)"></section>
+
+    <section class="result" aria-live="polite">
+      <h2 class="result-heading">Ostatnia odpowiedź</h2>
+      <pre class="result-body" id="result">(brak)</pre>
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

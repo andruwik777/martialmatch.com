@@ -214,3 +214,86 @@ body {
 .mm-event-title-link:hover {
   text-decoration: underline;
 }
+
+/* Current matches — lista walk */
+.mm-cm-toolbar {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.mm-fights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mm-fight {
+  border: 1px solid #2a2e3a;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1c1f28;
+}
+
+.mm-fight__head {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* fightQueueStatuses: 1 — wezwanie / na macie, jeszcze nie trwa */
+.mm-fight__head--called {
+  background: #4a3a28;
+  color: #f0d9b8;
+}
+
+/* fightQueueStatuses: 2 — walka trwa */
+.mm-fight__head--active {
+  background: #1a3d2e;
+  color: #b8f5d0;
+}
+
+/* pozostałe / zaplanowane w kolejce */
+.mm-fight__head--scheduled {
+  background: #2a2e3a;
+  color: #9aa0b0;
+}
+
+.mm-fight__body {
+  padding: 0.65rem 0.75rem 0.75rem;
+}
+
+.mm-fight__time {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f2f2f6;
+  margin-bottom: 0.25rem;
+}
+
+.mm-fight__mat {
+  font-size: 0.875rem;
+  color: #7aa8ff;
+  margin-bottom: 0.35rem;
+}
+
+.mm-fight__category {
+  font-size: 0.8125rem;
+  color: #9aa0b0;
+  margin-bottom: 0.65rem;
+  line-height: 1.35;
+}
+
+.mm-fight__competitor {
+  font-size: 0.9375rem;
+  color: #e8e8ec;
+  line-height: 1.35;
+  padding: 0.2rem 0;
+}
+
+.mm-fight__vs {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
+  padding: 0.15rem 0;
+}

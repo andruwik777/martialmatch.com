@@ -22,6 +22,9 @@
   var mode = isTest ? "test" : "prod";
   var baseUrl = BASE_BY_MODE[mode] || BASE_BY_MODE.prod;
 
+  /** Odświeżanie listy walk na /pl/events/current-matches/ (tylko endpoint fights). */
+  var CURRENT_MATCHES_REFRESH_MS = 30000;
+
   /**
    * @param {string} href relative or absolute href without mode=test
    * @returns {string}
@@ -41,6 +44,7 @@
     baseUrl: baseUrl,
     isTestMode: isTest,
     withModeQuery: withModeQuery,
+    currentMatchesRefreshMs: CURRENT_MATCHES_REFRESH_MS,
     /** Absolute URL for a path on the proxied origin, e.g. "/pl/events" */
     url: function (path) {
       var p = path.charAt(0) === "/" ? path : "/" + path;

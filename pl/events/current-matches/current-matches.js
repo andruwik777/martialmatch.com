@@ -110,8 +110,7 @@
 
   function buildMatMapFromSchedules(payload) {
     var map = Object.create(null);
-    var ids = [];
-    if (!payload || typeof payload !== "object") return { map: map, ids: ids };
+    if (!payload || typeof payload !== "object") return map;
     var activeId = payload.activeScheduleId;
     var schedules = payload.schedules || [];
     var sch = null;
@@ -122,21 +121,19 @@
       }
     }
     if (!sch && schedules.length) sch = schedules[0];
-    if (!sch || !sch.mats) return { map: map, ids: ids };
+    if (!sch || !sch.mats) return map;
     sch.mats.forEach(function (m) {
       var id = m.id;
-      ids.push(id);
       map[String(id)] = m.name || "Mata " + id;
     });
-    return { map: map, ids: ids };
+    return map;
   }
 
-  function fightsUrl(eventIdStr, matIds) {
-    var base = "/api/public/events/" + encodeURIComponent(eventIdStr) + "/fights";
-    if (matIds && matIds.length > 0) {
-      return base + "?matIds=" + matIds.map(String).join(",");
-    }
-    return base;
+  /** Bez matIds — serwer zwraca walki dla wszystkich matów. */
+  function fightsUrl(eventIdStr) {
+    return (
+      "/api/public/events/" + encodeURIComponent(eventIdStr) + "/fights"
+    );
   }
 
   function showError(msg) {
@@ -258,10 +255,7 @@
   }
 
   function loadFights() {
-    var matIds = Object.keys(matNamesById).map(function (k) {
-      return parseInt(k, 10);
-    });
-    return fetchJson(fightsUrl(eventId, matIds)).then(function (data) {
+    return fetchJson(fightsUrl(eventId)).then(function (data) {
       clearError();
       renderFights(data);
     });
@@ -315,8 +309,7 @@
 
   fetchJson(schedulesPath)
     .then(function (sched) {
-      var built = buildMatMapFromSchedules(sched);
-      matNamesById = built.map;
+      matNamesById = buildMatMapFromSchedules(sched);
       return initWithMats();
     })
     .catch(function () {

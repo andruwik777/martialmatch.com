@@ -79,7 +79,9 @@
     listEl.innerHTML = "";
 
     events.forEach(function (ev) {
-      var href = "current-matches/?event=" + encodeURIComponent(ev.id);
+      var href = cfg.withModeQuery(
+        "current-matches/?event=" + encodeURIComponent(ev.id)
+      );
 
       var article = document.createElement("article");
       article.className = "event-card mm-event-row";

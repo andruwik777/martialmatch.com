@@ -45,7 +45,7 @@
     p.className = "mm-muted";
     var a = document.createElement("a");
     a.className = "mm-nav-link";
-    a.href = "../";
+    a.href = cfg.withModeQuery("../");
     a.textContent = "Przejdź do listy zawodów";
     p.appendChild(a);
     if (contentEl) contentEl.appendChild(p);

@@ -21,6 +21,68 @@
     statusEl.classList.toggle("mm-status--error", !!isError);
   }
 
+  /** Polish genitive month names as on martialmatch.com (Data zawodów). */
+  var POLISH_MONTH_TO_INDEX = {
+    stycznia: 0,
+    lutego: 1,
+    marca: 2,
+    kwietnia: 3,
+    maja: 4,
+    czerwca: 5,
+    lipca: 6,
+    sierpnia: 7,
+    września: 8,
+    wrzesnia: 8,
+    października: 9,
+    pazdziernika: 9,
+    listopada: 10,
+    grudnia: 11,
+  };
+
+  /**
+   * @param {string} dateText e.g. "28 marca 2026"
+   * @returns {Date|null} local calendar date at noon (avoid DST edge) or null
+   */
+  function parsePolishEventDate(dateText) {
+    if (!dateText || typeof dateText !== "string") return null;
+    var s = dateText.replace(/\s+/g, " ").replace(/[.,;]+$/g, "").trim();
+    var m = s.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})$/);
+    if (!m) return null;
+    var day = parseInt(m[1], 10);
+    var monthKey = m[2].toLowerCase();
+    var year = parseInt(m[3], 10);
+    var monthIdx = POLISH_MONTH_TO_INDEX[monthKey];
+    if (monthIdx === undefined || day < 1 || day > 31) return null;
+    var d = new Date(year, monthIdx, day, 12, 0, 0, 0);
+    if (
+      d.getFullYear() !== year ||
+      d.getMonth() !== monthIdx ||
+      d.getDate() !== day
+    ) {
+      return null;
+    }
+    return d;
+  }
+
+  function isLocalToday(d) {
+    var now = new Date();
+    return (
+      d.getFullYear() === now.getFullYear() &&
+      d.getMonth() === now.getMonth() &&
+      d.getDate() === now.getDate()
+    );
+  }
+
+  /**
+   * @param {{ dateText: string }[]} events
+   */
+  function filterEventsStrictlyToday(events) {
+    return events.filter(function (ev) {
+      var parsed = parsePolishEventDate(ev.dateText);
+      return parsed !== null && isLocalToday(parsed);
+    });
+  }
+
   /**
    * @param {Document} doc
    * @returns {{ id: string, title: string, thumb: string, dateText: string, place: string }[]}
@@ -144,11 +206,22 @@
         var doc = parser.parseFromString(html, "text/html");
         var events = parseEventsFromDocument(doc);
         if (events.length === 0) {
-          setStatus("Nie znaleziono zawodów w HTML (zmieniła się struktura strony?).", true);
+          setStatus(
+            "Nie znaleziono zawodów w HTML (zmieniła się struktura strony?).",
+            true
+          );
           return;
         }
-        setStatus("Znaleziono: " + events.length);
-        renderEvents(events);
+        var todayEvents = filterEventsStrictlyToday(events);
+        if (todayEvents.length === 0) {
+          setStatus(
+            "Dziś nie ma zawodów z listy nadchodzących — według dat „Data zawodów” na stronie (jak https://martialmatch.com/pl/events) żadna impreza nie przypada dokładnie na dzisiejszy dzień w strefie czasowej przeglądarki. Zawody na jutro i później są celowo ukryte.",
+            false
+          );
+          return;
+        }
+        setStatus("Dziś: " + todayEvents.length + " z " + events.length + " z listy.");
+        renderEvents(todayEvents);
       })
       .catch(function (err) {
         setStatus("Błąd: " + (err.message || String(err)) + "\nURL: " + url, true);

@@ -48,11 +48,20 @@
     },
   };
 
+  function shouldAppendModeToHref(href) {
+    if (!href) return false;
+    var h = href.trim();
+    if (/^(?:https?:|mailto:|tel:)/i.test(h)) return false;
+    return true;
+  }
+
   if (typeof document !== "undefined") {
     document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll("a.mm-nav-link[href]").forEach(function (a) {
         var h = a.getAttribute("href");
-        if (h) a.href = withModeQuery(h);
+        if (h && shouldAppendModeToHref(h)) {
+          a.href = withModeQuery(h);
+        }
       });
     });
   }

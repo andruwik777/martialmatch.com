@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nadchodzące zawody — MartialMatch viewer</title>
+  <title>Zawody dziś — MartialMatch viewer</title>
   <link rel="stylesheet" href="../../app.css">
 </head>
 <body>
@@ -11,8 +11,13 @@
     <nav class="mm-nav">
       <a class="mm-nav-link" href="../../index.html">API test (index)</a>
     </nav>
-    <h1 class="title">Nadchodzące zawody</h1>
-    <p class="subtitle">Lista z <code>/pl/events</code> (proxy: <span id="mm-proxy-label"></span>). Test: dopisz <code>?mode=test</code> do URL.</p>
+    <h1 class="title">Zawody dziś</h1>
+    <p class="subtitle">
+      Tylko imprezy z <strong>datą dokładnie dzisiaj</strong> (wg strefy czasowej przeglądarki), według pola „Data zawodów” z listy jak na
+      <a class="mm-nav-link" href="https://martialmatch.com/pl/events" target="_blank" rel="noopener">martialmatch.com/pl/events</a>
+      (pobierane przez proxy: <span id="mm-proxy-label"></span>). Jutro i później — ukryte.
+      Test: <code>?mode=test</code> w URL.
+    </p>
   </header>
 
   <main class="main">

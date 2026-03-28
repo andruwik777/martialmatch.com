@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nadchodzące zawody — MartialMatch viewer</title>
+  <link rel="stylesheet" href="../../app.css">
+</head>
+<body>
+  <header class="header">
+    <nav class="mm-nav">
+      <a class="mm-nav-link" href="../../index.html">API test (index)</a>
+    </nav>
+    <h1 class="title">Nadchodzące zawody</h1>
+    <p class="subtitle">Lista z <code>/pl/events</code> (proxy: <span id="mm-proxy-label"></span>)</p>
+  </header>
+
+  <main class="main">
+    <p class="mm-status" id="mm-events-status" aria-live="polite"></p>
+    <div class="events" id="mm-events-list"></div>
+  </main>
+
+  <script src="../../config.js"></script>
+  <script src="events.js" defer></script>
+</body>
+</html>

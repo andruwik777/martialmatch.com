@@ -135,3 +135,82 @@ body {
 .result-body.is-error {
   color: #ffb4b4;
 }
+
+/* Shared app navigation & messages */
+.mm-nav {
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.mm-nav-link {
+  color: #7aa8ff;
+  text-decoration: none;
+}
+
+.mm-nav-link:hover {
+  text-decoration: underline;
+}
+
+.mm-nav-sep {
+  margin: 0 0.35rem;
+  color: #6b7280;
+}
+
+.mm-status {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  color: #9aa0b0;
+}
+
+.mm-status--error {
+  color: #ffb4b4;
+}
+
+.mm-muted {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #9aa0b0;
+}
+
+.mm-alert {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9375rem;
+}
+
+.mm-alert--error {
+  background: #2a1a1a;
+  border: 1px solid #5c2a2a;
+  color: #ffb4b4;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+/* Event list row: two links (thumb + text block) */
+.mm-event-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.65rem;
+  background: #1c1f28;
+  border: 1px solid #2a2e3a;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.mm-event-row__media {
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.mm-event-title-link {
+  text-decoration: none;
+  color: #f2f2f6;
+}
+
+.mm-event-title-link:hover {
+  text-decoration: underline;
+}

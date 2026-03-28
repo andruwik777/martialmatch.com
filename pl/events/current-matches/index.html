@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Przebieg walk — MartialMatch viewer</title>
+  <link rel="stylesheet" href="../../../app.css">
+</head>
+<body>
+  <header class="header">
+    <nav class="mm-nav">
+      <a class="mm-nav-link" href="../">← Lista zawodów</a>
+      <span class="mm-nav-sep">·</span>
+      <a class="mm-nav-link" href="../../../index.html">API test</a>
+    </nav>
+    <h1 class="title">Przebieg walk</h1>
+    <p class="subtitle">Parametr <code>event</code> (ID zawodów). Proxy: <span id="mm-proxy-label"></span></p>
+  </header>
+
+  <main class="main">
+    <div id="mm-cm-error" class="mm-alert mm-alert--error is-hidden" role="alert"></div>
+    <div id="mm-cm-content">
+      <p class="mm-muted" id="mm-cm-placeholder">Ładowanie…</p>
+    </div>
+  </main>
+
+  <script src="../../../config.js"></script>
+  <script src="current-matches.js" defer></script>
+</body>
+</html>

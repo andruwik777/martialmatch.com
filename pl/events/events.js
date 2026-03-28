@@ -85,7 +85,7 @@
 
   /**
    * @param {Document} doc
-   * @returns {{ id: string, title: string, thumb: string, dateText: string, place: string }[]}
+   * @returns {{ slug: string, numericId: string, title: string, thumb: string, dateText: string, place: string }[]}
    */
   function parseEventsFromDocument(doc) {
     var links = doc.querySelectorAll("a.event-image-link[href*='/events/']");
@@ -94,11 +94,13 @@
 
     links.forEach(function (a) {
       var href = a.getAttribute("href") || "";
-      var m = href.match(/\/events\/(\d+)-/);
-      if (!m) return;
-      var id = m[1];
-      if (seen[id]) return;
-      seen[id] = true;
+      var pathMatch = href.match(/\/events\/([^/?#]+)/);
+      if (!pathMatch) return;
+      var slug = pathMatch[1];
+      var parsed = cfg.parseEventSlug(slug);
+      if (!parsed) return;
+      if (seen[parsed.slug]) return;
+      seen[parsed.slug] = true;
 
       var row = a.closest("div.columns.is-centered.is-gapless");
       if (!row) return;
@@ -130,7 +132,14 @@
         }
       }
 
-      out.push({ id: id, title: title, thumb: thumb, dateText: dateText, place: place });
+      out.push({
+        slug: parsed.slug,
+        numericId: parsed.numericId,
+        title: title,
+        thumb: thumb,
+        dateText: dateText,
+        place: place,
+      });
     });
 
     return out;
@@ -142,7 +151,7 @@
 
     events.forEach(function (ev) {
       var href = cfg.withModeQuery(
-        "current-matches/?event=" + encodeURIComponent(ev.id)
+        "current-matches/?slug=" + encodeURIComponent(ev.slug)
       );
 
       var article = document.createElement("article");
@@ -167,7 +176,7 @@
       var titleLink = document.createElement("a");
       titleLink.className = "event-card-title mm-event-title-link";
       titleLink.href = href;
-      titleLink.textContent = ev.title || "Event " + ev.id;
+      titleLink.textContent = ev.title || "Zawody " + ev.numericId;
 
       var meta = document.createElement("p");
       meta.className = "event-card-meta";
@@ -178,7 +187,7 @@
 
       var idLine = document.createElement("div");
       idLine.className = "event-card-id";
-      idLine.textContent = "ID: " + ev.id;
+      idLine.textContent = "ID: " + ev.numericId + " · " + ev.slug;
 
       body.appendChild(titleLink);
       body.appendChild(meta);

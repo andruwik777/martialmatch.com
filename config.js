@@ -39,6 +39,29 @@
     return path + sep + "mode=test" + hash;
   }
 
+  /**
+   * Segment ścieżki MartialMatch: /pl/events/{slug}/…
+   * Np. "628-x-superpuchar-polski-bjj-nogi-gi" → id liczbowe do API + reszta slug.
+   * @param {string} raw wartość z query (może być już zdecodeowana przez przeglądarkę)
+   * @returns {{ slug: string, numericId: string, tail: string } | null}
+   */
+  function parseEventSlug(raw) {
+    if (raw == null || typeof raw !== "string") return null;
+    var s = raw.trim();
+    try {
+      s = decodeURIComponent(s);
+    } catch (e) {
+      return null;
+    }
+    s = s.trim();
+    if (!s) return null;
+    var m = s.match(/^(\d+)-(.+)$/);
+    if (!m) return null;
+    var tail = m[2];
+    if (!tail) return null;
+    return { slug: s, numericId: m[1], tail: tail };
+  }
+
   global.MM_CONFIG = {
     mode: mode,
     baseUrl: baseUrl,
@@ -50,6 +73,7 @@
       var p = path.charAt(0) === "/" ? path : "/" + path;
       return baseUrl + p;
     },
+    parseEventSlug: parseEventSlug,
   };
 
   function shouldAppendModeToHref(href) {

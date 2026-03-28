@@ -1,6 +1,6 @@
 https://martialmatch.com/pl/events->html.pl.events
 https://martialmatch.com/pl/events/628-x-superpuchar-polski-bjj-nogi-gi->html.zavod
-https://martialmatch.com/pl/events/628-x-superpuchar-polski-bjj-nogi-gi/starting-lists->html.starting.list
+https://martialmatch.com/pl/events/628-x-superpuchar-polski-bjj-nogi-gi/starting-lists->html.starting.list->Screenshot-628-starting-list.png
 https://martialmatch.com/pl/events/628-x-superpuchar-polski-bjj-nogi-gi/brackets->html.drabinki.all
 https://martialmatch.com/pl/events/628-x-superpuchar-polski-bjj-nogi-gi/brackets/219551->html.drabinki
 https://martialmatch.com/api/events/628/results/public/bracket/219551->json.drabinki

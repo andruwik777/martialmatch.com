@@ -8,7 +8,22 @@
   }
 
   var params = new URLSearchParams(window.location.search);
-  var eventId = params.get("event");
+
+  /**
+   * Odczyt slug z query — logika w MM_CONFIG.parseEventSlug (config.js), żeby nie duplikować.
+   * @returns {{ slug: string, numericId: string, tail: string } | null}
+   */
+  function eventSlugFromQuery(searchParams) {
+    return cfg.parseEventSlug(searchParams.get("slug") || "");
+  }
+
+  /**
+   * @type {{ slug: string, numericId: string, tail: string } | null}
+   * Pełny segment z /pl/events/{slug}/… — numericId do API; slug np. do
+   * `/pl/events/${evSlug.slug}/starting-lists` przez proxy.
+   */
+  var evSlug = eventSlugFromQuery(params);
+  var eventNumericId = evSlug ? evSlug.numericId : null;
 
   var proxyLabel = document.getElementById("mm-proxy-label");
   if (proxyLabel) {
@@ -255,7 +270,7 @@
   }
 
   function loadFights() {
-    return fetchJson(fightsUrl(eventId)).then(function (data) {
+    return fetchJson(fightsUrl(eventNumericId)).then(function (data) {
       clearError();
       renderFights(data);
     });
@@ -284,12 +299,12 @@
     }, ms);
   }
 
-  if (!eventId || !/^\d+$/.test(eventId)) {
+  if (!evSlug || !eventNumericId) {
     if (placeholderEl) {
       placeholderEl.classList.add("is-hidden");
     }
     showError(
-      "Brak parametru event w URL (np. ?event=628). Wybierz zawody z listy."
+      "Brak parametru slug w URL (np. ?slug=628-x-superpuchar-polski-bjj-nogi-gi). Wybierz zawody z listy."
     );
     var p = document.createElement("p");
     p.className = "mm-muted";
@@ -305,7 +320,7 @@
   clearError();
 
   var schedulesPath =
-    "/api/events/" + encodeURIComponent(eventId) + "/schedules";
+    "/api/events/" + encodeURIComponent(eventNumericId) + "/schedules";
 
   fetchJson(schedulesPath)
     .then(function (sched) {

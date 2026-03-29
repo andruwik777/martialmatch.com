@@ -677,7 +677,10 @@ body {
 }
 
 .mm-filter-club-jump__toggle {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   width: 100%;
   padding: 0.45rem 0.65rem;
   font: inherit;
@@ -690,6 +693,27 @@ body {
   border-radius: 8px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+
+.mm-filter-club-jump__toggle-label {
+  min-width: 0;
+}
+
+.mm-filter-club-jump__chevron {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: #9ed9b8;
+  transition: transform 0.2s ease;
+}
+
+.mm-filter-club-jump.is-open .mm-filter-club-jump__chevron {
+  transform: rotate(180deg);
+}
+
+.mm-filter-club-jump__chevron-svg {
+  display: block;
 }
 
 .mm-filter-club-jump__toggle:active {
@@ -707,10 +731,12 @@ body {
   list-style: none;
   max-height: min(40vh, 14rem);
   overflow-y: auto;
-  background: #1c1f28;
-  border: 1px solid #2a2e3a;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  background: #1e3028;
+  border: 3px solid #3d8f62;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px rgba(80, 200, 130, 0.25),
+    0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
 .mm-filter-club-jump__option {
@@ -718,9 +744,9 @@ body {
   padding: 0.5rem 0.65rem;
   font-size: 0.8125rem;
   line-height: 1.35;
-  color: #e8e8ec;
+  color: #d8f0e4;
   cursor: pointer;
-  border-bottom: 1px solid #252936;
+  border-bottom: 1px solid #2d5c45;
 }
 
 .mm-filter-club-jump__option:last-child {
@@ -728,7 +754,7 @@ body {
 }
 
 .mm-filter-club-jump__option:active {
-  background: #252936;
+  background: #263d32;
 }
 
 .mm-filter-scroll {

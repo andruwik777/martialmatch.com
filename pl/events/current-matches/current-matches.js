@@ -372,6 +372,9 @@
     if (filterClubJumpToggleBtn) {
       filterClubJumpToggleBtn.setAttribute("aria-expanded", "false");
     }
+    if (filterClubJumpRootEl) {
+      filterClubJumpRootEl.classList.remove("is-open");
+    }
   }
 
   function bindClubJumpOutside() {
@@ -402,6 +405,9 @@
     if (open) {
       filterClubJumpListEl.classList.remove("is-hidden");
       filterClubJumpToggleBtn.setAttribute("aria-expanded", "true");
+      if (filterClubJumpRootEl) {
+        filterClubJumpRootEl.classList.add("is-open");
+      }
       bindClubJumpOutside();
     } else {
       closeClubJumpDropdown();

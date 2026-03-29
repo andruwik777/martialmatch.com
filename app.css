@@ -215,6 +215,192 @@ body {
   text-decoration: underline;
 }
 
+/* Event cards — jak lista /pl/events (data, rejestracja, miejsce, typy) */
+.mm-ev-date {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.mm-ev-date__label {
+  color: #9aa0b0;
+}
+
+.mm-ev-date__value {
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+.mm-ev-reg {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.28rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.mm-ev-reg strong {
+  font-weight: 700;
+}
+
+.mm-ev-reg--ongoing {
+  color: #48bb78;
+}
+
+.mm-ev-reg--ongoing::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  animation: mm-ev-pulse 1.2s ease-in-out infinite;
+}
+
+.mm-ev-reg--start {
+  color: #63b3ed;
+}
+
+.mm-ev-reg--end {
+  color: #68d391;
+}
+
+.mm-ev-reg--closed {
+  color: #ecc94b;
+}
+
+@keyframes mm-ev-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.mm-ev-place {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: #a0aec0;
+}
+
+.mm-ev-place__pin {
+  display: block;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.mm-ev-place__flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.mm-ev-place__city {
+  color: #cbd5e0;
+}
+
+.mm-ev-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.35rem;
+  margin: 0.45rem 0 0;
+}
+
+.mm-ev-tag {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  color: #1a202c;
+}
+
+.mm-ev-tag--BjjGi {
+  background: #38a169;
+  color: #f0fff4;
+}
+
+.mm-ev-tag--BjjNoGi {
+  background: #9ae6b4;
+  color: #1c4532;
+}
+
+.mm-ev-tag--Grappling {
+  background: #ecc94b;
+  color: #1a202c;
+}
+
+.mm-ev-tag--MMA {
+  background: #d6bcfa;
+  color: #322659;
+}
+
+.mm-ev-tag--ADCC {
+  background: #e53e3e;
+  color: #fff5f5;
+}
+
+.mm-ev-tag--Sambo {
+  background: #feb2b2;
+  color: #742a2a;
+}
+
+.mm-ev-tag--SubmissionOnly {
+  background: #2c5282;
+  color: #ebf8ff;
+}
+
+.mm-ev-tag--Boxing {
+  background: #805ad5;
+  color: #faf5ff;
+}
+
+.mm-ev-tag--Judo {
+  background: #f7fafc;
+  color: #1a202c;
+  border: 1px solid #718096;
+}
+
+.mm-ev-tag--CombatJuJutsu {
+  background: #1a1a1a;
+  color: #f7fafc;
+  border: 1px solid #4a5568;
+}
+
+.mm-ev-tag--Kickboxing {
+  background: #fc8181;
+  color: #3b0a0a;
+}
+
+.mm-ev-tag--Wrestling {
+  background: #3182ce;
+  color: #ebf8ff;
+}
+
+.mm-ev-tag--MuayThai {
+  background: #b7791f;
+  color: #1a1004;
+}
+
+.mm-ev-tag--Taekwondo {
+  background: #718096;
+  color: #f7fafc;
+}
+
+.mm-ev-tag--default {
+  background: #4a5568;
+  color: #edf2f7;
+}
+
 /* Current matches — lista walk */
 .mm-cm-toolbar {
   margin: 0 0 0.75rem;

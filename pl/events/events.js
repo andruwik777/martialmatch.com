@@ -10,15 +10,160 @@
   var listEl = document.getElementById("mm-events-list");
   var statusEl = document.getElementById("mm-events-status");
 
+  /** Class keys from MartialMatch tag.is-event-type (third class). */
+  var KNOWN_EVENT_TYPE_KEYS = {
+    Grappling: true,
+    BjjGi: true,
+    BjjNoGi: true,
+    MMA: true,
+    CombatJuJutsu: true,
+    ADCC: true,
+    Sambo: true,
+    Judo: true,
+    SubmissionOnly: true,
+    Kickboxing: true,
+    Boxing: true,
+    Wrestling: true,
+    MuayThai: true,
+    Taekwondo: true,
+  };
+
   function setStatus(msg, isError) {
     if (!statusEl) return;
     statusEl.textContent = msg || "";
     statusEl.classList.toggle("mm-status--error", !!isError);
   }
 
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function flagEmoji(code) {
+    if (!code || String(code).length !== 2) return "";
+    var c = String(code).toUpperCase();
+    var base = 0x1f1e6 - 0x41;
+    return String.fromCodePoint(
+      base + c.charCodeAt(0),
+      base + c.charCodeAt(1)
+    );
+  }
+
+  /**
+   * @param {HTMLElement} row
+   * @returns {{ kind: string, text: string } | null}
+   * kind: ongoing | start | end | closed
+   */
+  function parseRegistration(row) {
+    var pad = row.querySelector(".has-added-padding");
+    if (!pad) return null;
+    var ed = pad.querySelector(".event-date");
+    var regWrap = ed && ed.nextElementSibling;
+    if (!regWrap) return null;
+    var inner = regWrap.querySelector(
+      "span.has-text-success, span.has-text-info, span.has-text-warning"
+    );
+    if (!inner) return null;
+    var txt = inner.textContent.replace(/\s+/g, " ").trim();
+    var cls = inner.className || "";
+    if (cls.indexOf("has-text-warning") !== -1) {
+      return { kind: "closed", text: txt };
+    }
+    if (cls.indexOf("has-text-info") !== -1) {
+      return { kind: "start", text: txt };
+    }
+    if (cls.indexOf("has-text-success") !== -1) {
+      if (/Trwające/i.test(txt)) return { kind: "ongoing", text: txt };
+      return { kind: "end", text: txt };
+    }
+    return null;
+  }
+
+  function registrationHtml(reg) {
+    if (!reg) return "";
+    var t = reg.text;
+    if (reg.kind === "start") {
+      var ms = t.match(/^(Start\s+rejestracji:)\s*(.+)$/i);
+      if (ms) {
+        return (
+          escapeHtml(ms[1]) +
+          " <strong>" +
+          escapeHtml(ms[2].trim()) +
+          "</strong>"
+        );
+      }
+    }
+    if (reg.kind === "end") {
+      var me = t.match(/^(Koniec\s+rejestracji:)\s*(.+)$/i);
+      if (me) {
+        return (
+          escapeHtml(me[1]) +
+          " <strong>" +
+          escapeHtml(me[2].trim()) +
+          "</strong>"
+        );
+      }
+    }
+    return escapeHtml(t);
+  }
+
+  /**
+   * @param {HTMLElement} row
+   * @returns {{ countryCode: string, place: string }}
+   */
+  function parsePlaceAndFlag(row) {
+    var marker = row.querySelector(".fa-map-marker-alt");
+    var locRow = marker && marker.closest(".is-size-6");
+    var countryCode = "";
+    var place = "";
+    if (!locRow) return { countryCode: countryCode, place: place };
+
+    var flagEl = locRow.querySelector("i.flag-icon");
+    if (flagEl && flagEl.classList) {
+      flagEl.classList.forEach(function (c) {
+        var m = /^flag-icon-([a-z]{2})$/i.exec(c);
+        if (m) countryCode = m[1].toLowerCase();
+      });
+    }
+
+    var spans = locRow.querySelectorAll("span");
+    for (var i = 0; i < spans.length; i++) {
+      var sp = spans[i];
+      if (sp.querySelector(".fa-map-marker-alt")) continue;
+      if (sp.querySelector("i.flag-icon")) continue;
+      var t = sp.textContent.replace(/\s+/g, " ").trim();
+      if (t && t.length < 120) place = t;
+    }
+    return { countryCode: countryCode, place: place };
+  }
+
+  /**
+   * @param {HTMLElement} row
+   * @returns {{ key: string, label: string }[]}
+   */
+  function parseEventTypeTags(row) {
+    var out = [];
+    row.querySelectorAll(".tag.is-event-type").forEach(function (el) {
+      var typeKey = "";
+      el.classList.forEach(function (c) {
+        if (c === "tag" || c === "is-event-type") return;
+        typeKey = c;
+      });
+      if (!typeKey) return;
+      out.push({
+        key: typeKey,
+        label: el.textContent.replace(/\s+/g, " ").trim() || typeKey,
+      });
+    });
+    return out;
+  }
+
   /**
    * @param {Document} doc
-   * @returns {{ slug: string, numericId: string, title: string, thumb: string, dateText: string, place: string }[]}
+   * @returns {object[]}
    */
   function parseEventsFromDocument(doc) {
     var links = doc.querySelectorAll("a.event-image-link[href*='/events/']");
@@ -39,31 +184,24 @@
       if (!row) return;
 
       var titleEl = row.querySelector("a.has-text-white");
-      var title = titleEl ? titleEl.textContent.replace(/\s+/g, " ").trim() : "";
+      var title = titleEl
+        ? titleEl.textContent.replace(/\s+/g, " ").trim()
+        : "";
 
       var img = a.querySelector("img.event-thumbnail");
       var thumb = img ? (img.getAttribute("src") || "").trim() : "";
 
       var dateEl = row.querySelector(".event-date");
       var dateText = dateEl
-        ? dateEl.textContent.replace(/\s+/g, " ").replace(/Data zawodów:\s*/i, "").trim()
+        ? dateEl.textContent
+            .replace(/\s+/g, " ")
+            .replace(/Data zawodów:\s*/i, "")
+            .trim()
         : "";
 
-      var place = "";
-      var marker = row.querySelector(".fa-map-marker-alt");
-      if (marker) {
-        var placeRow = marker.closest(".is-size-6");
-        if (placeRow) {
-          var spans = placeRow.querySelectorAll("span");
-          for (var i = spans.length - 1; i >= 0; i--) {
-            var t = spans[i].textContent.replace(/\s+/g, " ").trim();
-            if (t && t.length < 80 && !/^[A-Z]{2}$/.test(t)) {
-              place = t;
-              break;
-            }
-          }
-        }
-      }
+      var pf = parsePlaceAndFlag(row);
+      var registration = parseRegistration(row);
+      var tags = parseEventTypeTags(row);
 
       out.push({
         slug: parsed.slug,
@@ -71,12 +209,18 @@
         title: title,
         thumb: thumb,
         dateText: dateText,
-        place: place,
+        place: pf.place,
+        countryCode: pf.countryCode,
+        registration: registration,
+        tags: tags,
       });
     });
 
     return out;
   }
+
+  var PLACE_PIN_SVG =
+    '<svg class="mm-ev-place__pin" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>';
 
   function renderEvents(events) {
     if (!listEl) return;
@@ -110,21 +254,62 @@
       titleLink.className = "event-card-title mm-event-title-link";
       titleLink.href = href;
       titleLink.textContent = ev.title || "Zawody " + ev.numericId;
-
-      var meta = document.createElement("p");
-      meta.className = "event-card-meta";
-      var metaParts = [];
-      if (ev.dateText) metaParts.push(ev.dateText);
-      if (ev.place) metaParts.push(ev.place);
-      meta.textContent = metaParts.join(" · ");
-
-      var idLine = document.createElement("div");
-      idLine.className = "event-card-id";
-      idLine.textContent = "ID: " + ev.numericId + " · " + ev.slug;
-
       body.appendChild(titleLink);
-      body.appendChild(meta);
-      body.appendChild(idLine);
+
+      if (ev.dateText) {
+        var dateRow = document.createElement("div");
+        dateRow.className = "mm-ev-date";
+        var lab = document.createElement("span");
+        lab.className = "mm-ev-date__label";
+        lab.textContent = "Data zawodów:";
+        var val = document.createElement("span");
+        val.className = "mm-ev-date__value";
+        val.textContent = " " + ev.dateText;
+        dateRow.appendChild(lab);
+        dateRow.appendChild(val);
+        body.appendChild(dateRow);
+      }
+
+      if (ev.registration) {
+        var regEl = document.createElement("div");
+        regEl.className =
+          "mm-ev-reg mm-ev-reg--" + ev.registration.kind;
+        regEl.innerHTML = registrationHtml(ev.registration);
+        body.appendChild(regEl);
+      }
+
+      if (ev.place || ev.countryCode) {
+        var placeRow = document.createElement("div");
+        placeRow.className = "mm-ev-place";
+        placeRow.innerHTML = PLACE_PIN_SVG;
+        if (ev.countryCode) {
+          var fl = document.createElement("span");
+          fl.className = "mm-ev-place__flag";
+          fl.textContent = flagEmoji(ev.countryCode);
+          fl.setAttribute("aria-hidden", "true");
+          placeRow.appendChild(fl);
+        }
+        var city = document.createElement("span");
+        city.className = "mm-ev-place__city";
+        city.textContent = ev.place || "";
+        placeRow.appendChild(city);
+        body.appendChild(placeRow);
+      }
+
+      if (ev.tags && ev.tags.length) {
+        var tagRoot = document.createElement("div");
+        tagRoot.className = "mm-ev-tags";
+        ev.tags.forEach(function (t) {
+          var sp = document.createElement("span");
+          var mod = KNOWN_EVENT_TYPE_KEYS[t.key]
+            ? t.key
+            : "default";
+          sp.className = "mm-ev-tag mm-ev-tag--" + mod;
+          sp.textContent = t.label;
+          tagRoot.appendChild(sp);
+        });
+        body.appendChild(tagRoot);
+      }
 
       article.appendChild(linkInner);
       article.appendChild(body);

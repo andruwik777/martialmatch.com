@@ -793,7 +793,7 @@ body {
 .mm-filter-scroll {
   max-height: min(70vh, 28rem);
   overflow-y: auto;
-  border: 1px solid #2a2e3a;
+  border: 3px solid #2a2e3a;
   border-radius: 10px;
   background: #161922;
 }

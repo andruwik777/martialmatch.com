@@ -352,21 +352,21 @@ body {
   font: inherit;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #c8dcff;
+  color: #c4efd8;
   text-align: left;
-  background: #222838;
-  border: 1px solid #3d4d6e;
+  background: #1e3028;
+  border: 1px solid #356b52;
   border-radius: 8px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
 .mm-filter-club-jump__toggle:active {
-  background: #2a3148;
+  background: #263d32;
 }
 
 .mm-filter-club-jump__toggle:focus-visible {
-  outline: 2px solid #5b8cff;
+  outline: 2px solid #5ecf8f;
   outline-offset: 2px;
 }
 

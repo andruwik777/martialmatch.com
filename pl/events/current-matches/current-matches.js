@@ -16,9 +16,9 @@
   var evSlug = eventSlugFromQuery(params);
   var eventNumericId = evSlug ? evSlug.numericId : null;
 
-  var proxyLabel = document.getElementById("mm-proxy-label");
-  if (proxyLabel) {
-    proxyLabel.textContent = cfg.mode + " → " + cfg.baseUrl;
+  var contextLabel = document.getElementById("mm-proxy-label");
+  if (contextLabel) {
+    contextLabel.textContent = evSlug ? evSlug.slug : "—";
   }
 
   var errEl = document.getElementById("mm-cm-error");
@@ -298,14 +298,13 @@
         nameEl.className = "mm-filter-row__name";
         nameEl.textContent = item.name;
 
-        var metaEl = document.createElement("div");
-        metaEl.className = "mm-filter-row__meta";
-        metaEl.textContent = [item.category, item.clubText]
-          .filter(Boolean)
-          .join(" | ");
-
         textWrap.appendChild(nameEl);
-        textWrap.appendChild(metaEl);
+        if (item.category) {
+          var metaEl = document.createElement("div");
+          metaEl.className = "mm-filter-row__meta";
+          metaEl.textContent = item.category;
+          textWrap.appendChild(metaEl);
+        }
 
         var checkWrap = document.createElement("div");
         checkWrap.className = "mm-filter-row__check";

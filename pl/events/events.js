@@ -9,11 +9,6 @@
 
   var listEl = document.getElementById("mm-events-list");
   var statusEl = document.getElementById("mm-events-status");
-  var proxyLabel = document.getElementById("mm-proxy-label");
-
-  if (proxyLabel) {
-    proxyLabel.textContent = cfg.mode + " → " + cfg.baseUrl;
-  }
 
   function setStatus(msg, isError) {
     if (!statusEl) return;

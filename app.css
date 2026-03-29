@@ -428,10 +428,25 @@ body {
 }
 
 .mm-filter-club-name {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.45rem;
+  padding: 0.45rem 0.6rem;
   font-size: 0.8125rem;
-  font-weight: 600;
-  color: #c4c8d4;
+  font-weight: 700;
+  color: #b8d4ff;
+  background: rgba(90, 140, 255, 0.14);
+  border-left: 3px solid #6d9ef7;
+  border-radius: 0 8px 8px 0;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+.mm-cm-slug-line {
+  word-break: break-word;
+}
+
+.mm-cm-slug {
+  font-size: 0.8125rem;
+  color: #9ec0ff;
 }
 
 .mm-filter-row {

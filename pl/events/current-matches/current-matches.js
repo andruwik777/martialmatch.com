@@ -33,6 +33,8 @@
   var filterPanelStatusEl = document.getElementById("mm-filter-panel-status");
   var filterListRootEl = document.getElementById("mm-filter-list-root");
   var filterApplyStickyBtn = document.getElementById("mm-filter-apply-sticky");
+  var filterMobileBarEl = document.getElementById("mm-filter-mobile-bar");
+  var filterApplyMobileBtn = document.getElementById("mm-filter-apply-mobile");
 
   var matNamesById = Object.create(null);
   var pollTimerId = null;
@@ -337,11 +339,22 @@
   function updateFilterMainButtonLabel() {
     if (!filterMainBtn) return;
     if (filterPanelOpen) {
-      filterMainBtn.textContent = "Apply";
+      filterMainBtn.textContent = "Close";
       return;
     }
     var hasFilter = getFilterIdSetFromUrl() !== null;
     filterMainBtn.textContent = hasFilter ? "Edit filter" : "No filter";
+  }
+
+  function setFilterMobileBarVisible(visible) {
+    if (!filterMobileBarEl) return;
+    if (visible) {
+      filterMobileBarEl.classList.remove("is-hidden");
+      filterMobileBarEl.setAttribute("aria-hidden", "false");
+    } else {
+      filterMobileBarEl.classList.add("is-hidden");
+      filterMobileBarEl.setAttribute("aria-hidden", "true");
+    }
   }
 
   function openFilterPanel() {
@@ -350,11 +363,13 @@
       filterPanelEl.classList.remove("is-hidden");
       filterPanelEl.setAttribute("aria-hidden", "false");
     }
+    setFilterMobileBarVisible(true);
     updateFilterMainButtonLabel();
   }
 
   function closeFilterPanel() {
     filterPanelOpen = false;
+    setFilterMobileBarVisible(false);
     if (filterPanelEl) {
       filterPanelEl.classList.add("is-hidden");
       filterPanelEl.setAttribute("aria-hidden", "true");
@@ -453,7 +468,7 @@
       onFilterPanelOpenRequest();
       return;
     }
-    applyFilterFromPanel();
+    closeFilterPanel();
   }
 
   function prefetchStartingListIfFilterInUrl() {
@@ -655,6 +670,9 @@
   }
   if (filterApplyStickyBtn) {
     filterApplyStickyBtn.addEventListener("click", applyFilterFromPanel);
+  }
+  if (filterApplyMobileBtn) {
+    filterApplyMobileBtn.addEventListener("click", applyFilterFromPanel);
   }
 
   prefetchStartingListIfFilterInUrl();

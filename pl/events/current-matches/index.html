@@ -29,13 +29,22 @@
         >
           <p id="mm-filter-panel-status" class="mm-filter-panel-status mm-muted"></p>
           <div class="mm-filter-scroll">
-            <div class="mm-filter-sticky">
+            <div class="mm-filter-sticky mm-filter-sticky--desktop">
               <button type="button" class="mm-filter-apply-btn" id="mm-filter-apply-sticky">
                 Apply
               </button>
             </div>
             <div id="mm-filter-list-root" class="mm-filter-list-root"></div>
           </div>
+        </div>
+        <div
+          id="mm-filter-mobile-bar"
+          class="mm-filter-mobile-bar is-hidden"
+          aria-hidden="true"
+        >
+          <button type="button" class="mm-filter-apply-btn" id="mm-filter-apply-mobile">
+            Apply
+          </button>
         </div>
       </div>
       <p class="mm-muted" id="mm-cm-placeholder">Ładowanie…</p>

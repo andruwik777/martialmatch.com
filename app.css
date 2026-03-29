@@ -354,6 +354,44 @@ body {
   border-bottom: 1px solid #2a2e3a;
 }
 
+/* Mobile (Galaxy-class): jedna Apply przyklejona do dołu viewport — patrz .mm-filter-mobile-bar */
+@media (max-width: 40rem) {
+  .mm-filter-sticky--desktop {
+    display: none;
+  }
+
+  .mm-filter-panel:not(.is-hidden) .mm-filter-scroll {
+    max-height: min(58dvh, calc(100dvh - 13rem));
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .mm-filter-panel:not(.is-hidden) .mm-filter-list-root {
+    /* miejsce pod fixed bar + safe area (ok. wysokość przycisku + paddingi paska) */
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mm-filter-mobile-bar:not(.is-hidden) {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+    padding: 0.5rem 1rem;
+    padding-bottom: calc(0.55rem + env(safe-area-inset-bottom, 0px));
+    background: #1a1d26;
+    border-top: 1px solid #2a2e3a;
+    box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@media (min-width: 40.0625rem) {
+  .mm-filter-mobile-bar {
+    display: none !important;
+  }
+}
+
 .mm-filter-apply-btn {
   display: block;
   width: 100%;

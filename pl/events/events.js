@@ -52,6 +52,58 @@
     );
   }
 
+  /** Miesiące w dopełniaczu jak w „Data zawodów” na martialmatch.com */
+  var POLISH_MONTH_TO_INDEX = {
+    stycznia: 0,
+    lutego: 1,
+    marca: 2,
+    kwietnia: 3,
+    maja: 4,
+    czerwca: 5,
+    lipca: 6,
+    sierpnia: 7,
+    września: 8,
+    wrzesnia: 8,
+    października: 9,
+    pazdziernika: 9,
+    listopada: 10,
+    grudnia: 11,
+  };
+
+  /**
+   * @param {string} dateText np. „29 marca 2026” (bez prefiksu „Data zawodów:”)
+   * @returns {Date|null} data kalendarzowa lokalnie w południe (DST)
+   */
+  function parsePolishEventDate(dateText) {
+    if (!dateText || typeof dateText !== "string") return null;
+    var s = dateText.replace(/\s+/g, " ").replace(/[.,;]+$/g, "").trim();
+    var m = s.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})$/);
+    if (!m) return null;
+    var day = parseInt(m[1], 10);
+    var monthKey = m[2].toLowerCase();
+    var year = parseInt(m[3], 10);
+    var monthIdx = POLISH_MONTH_TO_INDEX[monthKey];
+    if (monthIdx === undefined || day < 1 || day > 31) return null;
+    var d = new Date(year, monthIdx, day, 12, 0, 0, 0);
+    if (
+      d.getFullYear() !== year ||
+      d.getMonth() !== monthIdx ||
+      d.getDate() !== day
+    ) {
+      return null;
+    }
+    return d;
+  }
+
+  function isSameLocalCalendarDay(d, ref) {
+    ref = ref || new Date();
+    return (
+      d.getFullYear() === ref.getFullYear() &&
+      d.getMonth() === ref.getMonth() &&
+      d.getDate() === ref.getDate()
+    );
+  }
+
   /**
    * @param {HTMLElement} row
    * @returns {{ kind: string, text: string } | null}
@@ -202,6 +254,11 @@
       var pf = parsePlaceAndFlag(row);
       var registration = parseRegistration(row);
       var tags = parseEventTypeTags(row);
+
+      var parsedEventDay = parsePolishEventDate(dateText);
+      if (parsedEventDay && isSameLocalCalendarDay(parsedEventDay)) {
+        registration = { kind: "ongoing", text: "Trwające zawody" };
+      }
 
       out.push({
         slug: parsed.slug,

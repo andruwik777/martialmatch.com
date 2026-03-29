@@ -337,6 +337,69 @@ body {
   min-height: 1.2em;
 }
 
+.mm-filter-club-jump-wrap {
+  margin: 0 0 0.5rem;
+}
+
+.mm-filter-club-jump {
+  position: relative;
+}
+
+.mm-filter-club-jump__toggle {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #c8dcff;
+  text-align: left;
+  background: #222838;
+  border: 1px solid #3d4d6e;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-filter-club-jump__toggle:active {
+  background: #2a3148;
+}
+
+.mm-filter-club-jump__toggle:focus-visible {
+  outline: 2px solid #5b8cff;
+  outline-offset: 2px;
+}
+
+.mm-filter-club-jump__list {
+  margin: 0.35rem 0 0;
+  padding: 0.2rem 0;
+  list-style: none;
+  max-height: min(40vh, 14rem);
+  overflow-y: auto;
+  background: #1c1f28;
+  border: 1px solid #2a2e3a;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.mm-filter-club-jump__option {
+  margin: 0;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: #e8e8ec;
+  cursor: pointer;
+  border-bottom: 1px solid #252936;
+}
+
+.mm-filter-club-jump__option:last-child {
+  border-bottom: none;
+}
+
+.mm-filter-club-jump__option:active {
+  background: #252936;
+}
+
 .mm-filter-scroll {
   max-height: min(70vh, 28rem);
   overflow-y: auto;
@@ -421,10 +484,17 @@ body {
 
 .mm-filter-club {
   margin-top: 0.65rem;
+  scroll-margin-top: 0.35rem;
 }
 
 .mm-filter-club:first-child {
   margin-top: 0;
+}
+
+@media (min-width: 40.0625rem) {
+  .mm-filter-club {
+    scroll-margin-top: 3.75rem;
+  }
 }
 
 .mm-filter-club-name {

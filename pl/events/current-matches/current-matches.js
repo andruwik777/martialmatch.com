@@ -35,6 +35,13 @@
   var filterApplyStickyBtn = document.getElementById("mm-filter-apply-sticky");
   var filterMobileBarEl = document.getElementById("mm-filter-mobile-bar");
   var filterApplyMobileBtn = document.getElementById("mm-filter-apply-mobile");
+  var filterClubJumpWrapEl = document.getElementById("mm-filter-club-jump-wrap");
+  var filterClubJumpRootEl = document.getElementById("mm-filter-club-jump-root");
+  var filterClubJumpToggleBtn = document.getElementById("mm-filter-club-jump-toggle");
+  var filterClubJumpListEl = document.getElementById("mm-filter-club-jump-list");
+
+  var clubJumpOutsideHandler = null;
+  var clubJumpEscapeHandler = null;
 
   var matNamesById = Object.create(null);
   var pollTimerId = null;
@@ -271,6 +278,97 @@
     return { clubNames: clubNames, byClub: byClub };
   }
 
+  function unbindClubJumpOutside() {
+    if (clubJumpOutsideHandler) {
+      document.removeEventListener("click", clubJumpOutsideHandler, true);
+      clubJumpOutsideHandler = null;
+    }
+    if (clubJumpEscapeHandler) {
+      document.removeEventListener("keydown", clubJumpEscapeHandler, true);
+      clubJumpEscapeHandler = null;
+    }
+  }
+
+  function closeClubJumpDropdown() {
+    unbindClubJumpOutside();
+    if (filterClubJumpListEl) {
+      filterClubJumpListEl.classList.add("is-hidden");
+    }
+    if (filterClubJumpToggleBtn) {
+      filterClubJumpToggleBtn.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  function bindClubJumpOutside() {
+    unbindClubJumpOutside();
+    clubJumpOutsideHandler = function (ev) {
+      var root = filterClubJumpRootEl;
+      if (root && root.contains(ev.target)) return;
+      closeClubJumpDropdown();
+    };
+    clubJumpEscapeHandler = function (ev) {
+      if (ev.key === "Escape") {
+        closeClubJumpDropdown();
+      }
+    };
+    setTimeout(function () {
+      if (clubJumpOutsideHandler) {
+        document.addEventListener("click", clubJumpOutsideHandler, true);
+      }
+      if (clubJumpEscapeHandler) {
+        document.addEventListener("keydown", clubJumpEscapeHandler, true);
+      }
+    }, 0);
+  }
+
+  function toggleClubJumpDropdown() {
+    if (!filterClubJumpListEl || !filterClubJumpToggleBtn) return;
+    var open = filterClubJumpListEl.classList.contains("is-hidden");
+    if (open) {
+      filterClubJumpListEl.classList.remove("is-hidden");
+      filterClubJumpToggleBtn.setAttribute("aria-expanded", "true");
+      bindClubJumpOutside();
+    } else {
+      closeClubJumpDropdown();
+    }
+  }
+
+  function hideClubJumpUI() {
+    closeClubJumpDropdown();
+    if (filterClubJumpWrapEl) {
+      filterClubJumpWrapEl.classList.add("is-hidden");
+    }
+    if (filterClubJumpListEl) {
+      filterClubJumpListEl.innerHTML = "";
+    }
+  }
+
+  function rebuildClubJumpDropdown(clubNames) {
+    if (!filterClubJumpWrapEl || !filterClubJumpListEl) return;
+    closeClubJumpDropdown();
+    filterClubJumpListEl.innerHTML = "";
+    if (!clubNames || clubNames.length < 2) {
+      filterClubJumpWrapEl.classList.add("is-hidden");
+      return;
+    }
+    filterClubJumpWrapEl.classList.remove("is-hidden");
+    for (var i = 0; i < clubNames.length; i++) {
+      var li = document.createElement("li");
+      li.setAttribute("role", "option");
+      li.className = "mm-filter-club-jump__option";
+      li.textContent = clubNames[i];
+      li.setAttribute("data-sect-index", String(i));
+      filterClubJumpListEl.appendChild(li);
+    }
+  }
+
+  function scrollToFilterClubSection(indexStr) {
+    var el = document.getElementById("mm-filter-club-sect-" + indexStr);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   function renderFilterListDom(entries) {
     if (!filterListRootEl) return;
     filterListRootEl.innerHTML = "";
@@ -279,6 +377,7 @@
       var clubName = grouped.clubNames[c];
       var section = document.createElement("section");
       section.className = "mm-filter-club";
+      section.id = "mm-filter-club-sect-" + c;
 
       var hn = document.createElement("h3");
       hn.className = "mm-filter-club-name";
@@ -321,6 +420,7 @@
 
       filterListRootEl.appendChild(section);
     }
+    rebuildClubJumpDropdown(grouped.clubNames);
   }
 
   function syncFilterCheckboxesFromUrl() {
@@ -368,6 +468,7 @@
 
   function closeFilterPanel() {
     filterPanelOpen = false;
+    closeClubJumpDropdown();
     setFilterMobileBarVisible(false);
     if (filterPanelEl) {
       filterPanelEl.classList.add("is-hidden");
@@ -458,6 +559,7 @@
             (err.message || String(err));
         }
         if (filterListRootEl) filterListRootEl.innerHTML = "";
+        hideClubJumpUI();
       });
   }
 
@@ -672,6 +774,26 @@
   }
   if (filterApplyMobileBtn) {
     filterApplyMobileBtn.addEventListener("click", applyFilterFromPanel);
+  }
+
+  if (filterClubJumpToggleBtn) {
+    filterClubJumpToggleBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      toggleClubJumpDropdown();
+    });
+  }
+
+  if (filterClubJumpListEl) {
+    filterClubJumpListEl.addEventListener("click", function (e) {
+      var t = e.target;
+      if (!t || !t.closest) return;
+      var li = t.closest("li.mm-filter-club-jump__option");
+      if (!li) return;
+      var idx = li.getAttribute("data-sect-index");
+      if (idx == null) return;
+      closeClubJumpDropdown();
+      scrollToFilterClubSection(idx);
+    });
   }
 
   prefetchStartingListIfFilterInUrl();

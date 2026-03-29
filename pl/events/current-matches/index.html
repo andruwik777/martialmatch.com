@@ -12,12 +12,32 @@
       <a class="mm-nav-link" href="../">← Lista zawodów</a>
     </nav>
     <h1 class="title">Przebieg walk</h1>
-    <p class="subtitle">Parametr <code>slug</code> (jak w URL zawodów na martialmatch.com), opcjonalnie <code>mode=test</code>. Proxy: <span id="mm-proxy-label"></span></p>
+    <p class="subtitle"><span id="mm-proxy-label"></span></p>
   </header>
 
   <main class="main">
     <div id="mm-cm-error" class="mm-alert mm-alert--error is-hidden" role="alert"></div>
     <div id="mm-cm-content">
+      <div id="mm-cm-filter-root" class="mm-cm-filter is-hidden">
+        <button type="button" id="mm-filter-main-btn" class="mm-filter-main-btn">
+          No filter
+        </button>
+        <div
+          id="mm-filter-panel"
+          class="mm-filter-panel is-hidden"
+          aria-hidden="true"
+        >
+          <p id="mm-filter-panel-status" class="mm-filter-panel-status mm-muted"></p>
+          <div class="mm-filter-scroll">
+            <div class="mm-filter-sticky">
+              <button type="button" class="mm-filter-apply-btn" id="mm-filter-apply-sticky">
+                Apply
+              </button>
+            </div>
+            <div id="mm-filter-list-root" class="mm-filter-list-root"></div>
+          </div>
+        </div>
+      </div>
       <p class="mm-muted" id="mm-cm-placeholder">Ładowanie…</p>
       <p class="mm-cm-toolbar mm-muted is-hidden" id="mm-cm-toolbar" aria-live="polite"></p>
       <div class="mm-fights" id="mm-fights-list"></div>

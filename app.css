@@ -297,3 +297,143 @@ body {
   text-align: center;
   padding: 0.15rem 0;
 }
+
+/* Current matches — filtr uczestników (starting-lists) */
+.mm-cm-filter {
+  margin-bottom: 0.85rem;
+}
+
+.mm-filter-main-btn {
+  display: block;
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #e8e8ec;
+  background: #2a3248;
+  border: 1px solid #3d4a66;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-filter-main-btn:active {
+  background: #343d56;
+}
+
+.mm-filter-main-btn:focus-visible {
+  outline: 2px solid #5b8cff;
+  outline-offset: 2px;
+}
+
+.mm-filter-panel {
+  margin-top: 0.5rem;
+}
+
+.mm-filter-panel-status {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  min-height: 1.2em;
+}
+
+.mm-filter-scroll {
+  max-height: min(70vh, 28rem);
+  overflow-y: auto;
+  border: 1px solid #2a2e3a;
+  border-radius: 10px;
+  background: #161922;
+}
+
+.mm-filter-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 0.5rem 0.6rem;
+  background: linear-gradient(180deg, #161922 85%, transparent);
+  border-bottom: 1px solid #2a2e3a;
+}
+
+.mm-filter-apply-btn {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0e1218;
+  background: #7aa8ff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.mm-filter-apply-btn:active {
+  filter: brightness(0.95);
+}
+
+.mm-filter-apply-btn:focus-visible {
+  outline: 2px solid #c4d8ff;
+  outline-offset: 2px;
+}
+
+.mm-filter-list-root {
+  padding: 0.35rem 0.6rem 0.65rem;
+}
+
+.mm-filter-club {
+  margin-top: 0.65rem;
+}
+
+.mm-filter-club:first-child {
+  margin-top: 0;
+}
+
+.mm-filter-club-name {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #c4c8d4;
+}
+
+.mm-filter-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem 0.5rem;
+  align-items: start;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #252936;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.mm-filter-row:last-child {
+  border-bottom: none;
+}
+
+.mm-filter-row__text {
+  min-width: 0;
+  color: #d8dbe6;
+}
+
+.mm-filter-row__name {
+  font-weight: 500;
+  color: #f2f2f6;
+}
+
+.mm-filter-row__meta {
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: #8b92a8;
+}
+
+.mm-filter-row__check {
+  padding-top: 0.15rem;
+}
+
+.mm-filter-row__check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #7aa8ff;
+  cursor: pointer;
+}

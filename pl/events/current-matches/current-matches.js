@@ -802,12 +802,15 @@
       return Promise.resolve(startingListEntries);
     }
     if (startingListLoadPromise) {
+      if (filterPanelOpen && filterPanelStatusEl) {
+        filterPanelStatusEl.textContent = "Ładowanie list startowych…";
+      }
       return startingListLoadPromise;
     }
     if (!evSlug) {
       return Promise.reject(new Error("Brak slug"));
     }
-    if (filterPanelStatusEl) {
+    if (filterPanelOpen && filterPanelStatusEl) {
       filterPanelStatusEl.textContent = "Ładowanie list startowych…";
     }
     startingListLoadPromise = fetchHtml(startingListsPath(evSlug.slug))
@@ -855,11 +858,9 @@
     closeFilterPanel();
   }
 
-  function prefetchStartingListIfFilterInUrl() {
-    var raw = new URLSearchParams(window.location.search).get("filter");
-    if (!raw || !String(raw).trim()) return;
+  function prefetchStartingListEarly() {
     ensureStartingListLoaded().catch(function () {
-      /* tylko prefetch — błąd pokażemy przy otwarciu panelu */
+      /* prefetch w tle — błąd pokażemy przy otwarciu panelu */
     });
   }
 
@@ -1094,7 +1095,7 @@
     filterListRootEl.addEventListener("change", onFilterListCheckboxChange);
   }
 
-  prefetchStartingListIfFilterInUrl();
+  prefetchStartingListEarly();
 
   clearError();
 

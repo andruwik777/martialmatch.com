@@ -711,7 +711,11 @@ body {
 .mm-filter-panel-status {
   margin: 0 0 0.5rem;
   font-size: 0.8125rem;
-  min-height: 1.2em;
+}
+
+.mm-filter-panel-status:empty {
+  display: none;
+  margin: 0;
 }
 
 .mm-filter-club-jump-wrap {

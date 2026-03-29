@@ -687,8 +687,25 @@ body {
   margin-top: 0.5rem;
 }
 
-.mm-filter-panel .mm-filter-scroll {
+.mm-filter-panel-box {
+  margin-top: 0.35rem;
+  padding: 0.55rem 0.55rem 0.6rem;
+  background: rgba(30, 48, 40, 0.35);
+  border: 4px solid #2a3248;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(80, 200, 130, 0.22),
+    0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.mm-filter-panel-box .mm-filter-club-jump-wrap {
+  margin-top: 0;
+}
+
+.mm-filter-panel-box .mm-filter-scroll {
   margin-top: 0.45rem;
+  border: 1px solid #2a3248;
+  border-radius: 8px;
 }
 
 .mm-filter-panel-status {
@@ -804,12 +821,18 @@ body {
   z-index: 2;
   padding: 0.5rem 0.6rem;
   background: linear-gradient(180deg, #161922 85%, transparent);
+  border-bottom: 1px solid #2a2e3a;
 }
 
 /* Mobile (Galaxy-class): jedna Apply przyklejona do dołu viewport — patrz .mm-filter-mobile-bar */
 @media (max-width: 40rem) {
   .mm-filter-sticky--desktop {
     display: none;
+  }
+
+  .mm-filter-panel:not(.is-hidden) .mm-filter-panel-box {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .mm-filter-panel:not(.is-hidden) .mm-filter-scroll {

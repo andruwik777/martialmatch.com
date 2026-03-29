@@ -20,7 +20,18 @@
     <div id="mm-cm-content">
       <div id="mm-cm-filter-root" class="mm-cm-filter is-hidden">
         <button type="button" id="mm-filter-main-btn" class="mm-filter-main-btn">
-          Show Filter
+          <span class="mm-filter-main-btn__label">Show Filter</span>
+          <span class="mm-filter-main-btn__chevron" aria-hidden="true">
+            <svg
+              class="mm-filter-main-btn__chevron-svg"
+              width="12"
+              height="8"
+              viewBox="0 0 12 8"
+              focusable="false"
+            >
+              <path fill="currentColor" d="M6 8L0 0h12L6 8z" />
+            </svg>
+          </span>
         </button>
         <div
           id="mm-filter-panel"
@@ -28,50 +39,52 @@
           aria-hidden="true"
         >
           <p id="mm-filter-panel-status" class="mm-filter-panel-status mm-muted"></p>
-          <div
-            id="mm-filter-club-jump-wrap"
-            class="mm-filter-club-jump-wrap is-hidden"
-          >
-            <div class="mm-filter-club-jump" id="mm-filter-club-jump-root">
-              <button
-                type="button"
-                id="mm-filter-club-jump-toggle"
-                class="mm-filter-club-jump__toggle"
-                aria-expanded="false"
-                aria-haspopup="listbox"
-                aria-controls="mm-filter-club-jump-list"
-              >
-                <span class="mm-filter-club-jump__toggle-label">Go to club</span>
-                <span class="mm-filter-club-jump__chevron" aria-hidden="true">
-                  <svg
-                    class="mm-filter-club-jump__chevron-svg"
-                    width="12"
-                    height="8"
-                    viewBox="0 0 12 8"
-                    focusable="false"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M6 8L0 0h12L6 8z"
-                    />
-                  </svg>
-                </span>
-              </button>
-              <ul
-                id="mm-filter-club-jump-list"
-                class="mm-filter-club-jump__list is-hidden"
-                role="listbox"
-                aria-labelledby="mm-filter-club-jump-toggle"
-              ></ul>
+          <div class="mm-filter-panel-box">
+            <div
+              id="mm-filter-club-jump-wrap"
+              class="mm-filter-club-jump-wrap is-hidden"
+            >
+              <div class="mm-filter-club-jump" id="mm-filter-club-jump-root">
+                <button
+                  type="button"
+                  id="mm-filter-club-jump-toggle"
+                  class="mm-filter-club-jump__toggle"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-controls="mm-filter-club-jump-list"
+                >
+                  <span class="mm-filter-club-jump__toggle-label">Go to club</span>
+                  <span class="mm-filter-club-jump__chevron" aria-hidden="true">
+                    <svg
+                      class="mm-filter-club-jump__chevron-svg"
+                      width="12"
+                      height="8"
+                      viewBox="0 0 12 8"
+                      focusable="false"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M6 8L0 0h12L6 8z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <ul
+                  id="mm-filter-club-jump-list"
+                  class="mm-filter-club-jump__list is-hidden"
+                  role="listbox"
+                  aria-labelledby="mm-filter-club-jump-toggle"
+                ></ul>
+              </div>
             </div>
-          </div>
-          <div class="mm-filter-scroll">
-            <div class="mm-filter-sticky mm-filter-sticky--desktop">
-              <button type="button" class="mm-filter-apply-btn" id="mm-filter-apply-sticky">
-                Apply
-              </button>
+            <div class="mm-filter-scroll">
+              <div class="mm-filter-sticky mm-filter-sticky--desktop">
+                <button type="button" class="mm-filter-apply-btn" id="mm-filter-apply-sticky">
+                  Apply
+                </button>
+              </div>
+              <div id="mm-filter-list-root" class="mm-filter-list-root"></div>
             </div>
-            <div id="mm-filter-list-root" class="mm-filter-list-root"></div>
           </div>
         </div>
         <div

@@ -612,11 +612,12 @@
 
   function updateFilterMainButtonLabel() {
     if (!filterMainBtn) return;
+    var lab = filterMainBtn.querySelector(".mm-filter-main-btn__label");
     if (filterPanelOpen) {
-      filterMainBtn.textContent = "Hide Filter";
+      if (lab) lab.textContent = "Hide Filter";
       return;
     }
-    filterMainBtn.textContent = "Show Filter";
+    if (lab) lab.textContent = "Show Filter";
   }
 
   function setFilterMobileBarVisible(visible) {
@@ -632,6 +633,9 @@
 
   function openFilterPanel() {
     filterPanelOpen = true;
+    if (filterRootEl) {
+      filterRootEl.classList.add("is-open");
+    }
     if (filterPanelEl) {
       filterPanelEl.classList.remove("is-hidden");
       filterPanelEl.setAttribute("aria-hidden", "false");
@@ -644,6 +648,9 @@
     filterPanelOpen = false;
     closeClubJumpDropdown();
     setFilterMobileBarVisible(false);
+    if (filterRootEl) {
+      filterRootEl.classList.remove("is-open");
+    }
     if (filterPanelEl) {
       filterPanelEl.classList.add("is-hidden");
       filterPanelEl.setAttribute("aria-hidden", "true");

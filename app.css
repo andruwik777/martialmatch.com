@@ -635,7 +635,10 @@ body {
 }
 
 .mm-filter-main-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   width: 100%;
   padding: 0.55rem 0.75rem;
   font: inherit;
@@ -649,6 +652,28 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+.mm-filter-main-btn__label {
+  min-width: 0;
+  text-align: left;
+}
+
+.mm-filter-main-btn__chevron {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: #a8b8d8;
+  transition: transform 0.2s ease;
+}
+
+.mm-cm-filter.is-open .mm-filter-main-btn__chevron {
+  transform: rotate(180deg);
+}
+
+.mm-filter-main-btn__chevron-svg {
+  display: block;
+}
+
 .mm-filter-main-btn:active {
   background: #343d56;
 }
@@ -660,6 +685,27 @@ body {
 
 .mm-filter-panel {
   margin-top: 0.5rem;
+}
+
+.mm-filter-panel-box {
+  margin-top: 0.35rem;
+  padding: 0.55rem 0.55rem 0.6rem;
+  background: rgba(30, 48, 40, 0.35);
+  border: 4px solid #3d8f62;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(80, 200, 130, 0.22),
+    0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.mm-filter-panel-box .mm-filter-club-jump-wrap {
+  margin-top: 0;
+}
+
+.mm-filter-panel-box .mm-filter-scroll {
+  margin-top: 0.45rem;
+  border: 1px solid #2d5c45;
+  border-radius: 8px;
 }
 
 .mm-filter-panel-status {
@@ -778,6 +824,11 @@ body {
 @media (max-width: 40rem) {
   .mm-filter-sticky--desktop {
     display: none;
+  }
+
+  .mm-filter-panel:not(.is-hidden) .mm-filter-panel-box {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .mm-filter-panel:not(.is-hidden) .mm-filter-scroll {

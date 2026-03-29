@@ -804,7 +804,6 @@ body {
   z-index: 2;
   padding: 0.5rem 0.6rem;
   background: linear-gradient(180deg, #161922 85%, transparent);
-  border-bottom: 1px solid #2a2e3a;
 }
 
 /* Mobile (Galaxy-class): jedna Apply przyklejona do dołu viewport — patrz .mm-filter-mobile-bar */

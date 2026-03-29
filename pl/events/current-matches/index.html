@@ -95,9 +95,56 @@
           </button>
         </div>
       </div>
-      <p class="mm-muted" id="mm-cm-placeholder">Ładowanie…</p>
-      <p class="mm-cm-toolbar mm-muted is-hidden" id="mm-cm-toolbar" aria-live="polite"></p>
-      <div class="mm-fights" id="mm-fights-list"></div>
+      <div
+        class="mm-cm-tabs"
+        role="tablist"
+        aria-label="Widok zawodów"
+      >
+        <button
+          type="button"
+          class="mm-cm-tab"
+          id="mm-cm-tab-fights"
+          role="tab"
+          aria-selected="true"
+          aria-controls="mm-cm-panel-fights"
+          tabindex="0"
+        >
+          Przebieg walk
+        </button>
+        <button
+          type="button"
+          class="mm-cm-tab"
+          id="mm-cm-tab-harmonogram"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mm-cm-panel-harmonogram"
+          tabindex="-1"
+        >
+          Harmonogram
+        </button>
+      </div>
+      <div
+        id="mm-cm-panel-fights"
+        class="mm-cm-tabpanel"
+        role="tabpanel"
+        aria-labelledby="mm-cm-tab-fights"
+      >
+        <p class="mm-muted" id="mm-cm-placeholder">Ładowanie…</p>
+        <p class="mm-cm-toolbar mm-muted is-hidden" id="mm-cm-toolbar" aria-live="polite"></p>
+        <div class="mm-fights" id="mm-fights-list"></div>
+      </div>
+      <div
+        id="mm-cm-panel-harmonogram"
+        class="mm-cm-tabpanel"
+        role="tabpanel"
+        aria-labelledby="mm-cm-tab-harmonogram"
+        hidden
+      >
+        <p class="mm-muted mm-cm-tabpanel-placeholder">
+          Harmonogram — treść pojawi się w kolejnej wersji (będzie respektował ten sam filtr
+          uczestników).
+        </p>
+      </div>
     </div>
   </main>
 

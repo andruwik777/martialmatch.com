@@ -401,6 +401,58 @@ body {
   color: #edf2f7;
 }
 
+/* Current matches — zakładki (Przebieg / Harmonogram) */
+.mm-cm-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0 0 0.75rem;
+}
+
+.mm-cm-tab {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #a8b8d8;
+  text-align: center;
+  background: #252a38;
+  border: 1px solid #3d4a66;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.mm-cm-tab:hover {
+  color: #e8e8ec;
+  background: #2a3248;
+  border-color: #4a5a7a;
+}
+
+.mm-cm-tab[aria-selected="true"] {
+  color: #e8f4ff;
+  background: #2a3248;
+  border-color: #5b8cff;
+  box-shadow: 0 0 0 1px rgba(91, 140, 255, 0.35);
+}
+
+.mm-cm-tab:focus-visible {
+  outline: 2px solid #5b8cff;
+  outline-offset: 2px;
+}
+
+.mm-cm-tabpanel-placeholder {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  max-width: 36rem;
+}
+
 /* Current matches — lista walk */
 .mm-cm-toolbar {
   margin: 0 0 0.75rem;

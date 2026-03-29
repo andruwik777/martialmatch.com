@@ -26,6 +26,13 @@
   var placeholderEl = document.getElementById("mm-cm-placeholder");
   var toolbarEl = document.getElementById("mm-cm-toolbar");
   var listEl = document.getElementById("mm-fights-list");
+  var tabFightsBtn = document.getElementById("mm-cm-tab-fights");
+  var tabHarmonogramBtn = document.getElementById("mm-cm-tab-harmonogram");
+  var panelFightsEl = document.getElementById("mm-cm-panel-fights");
+  var panelHarmonogramEl = document.getElementById("mm-cm-panel-harmonogram");
+
+  var CM_TAB_FIGHTS = "fights";
+  var CM_TAB_HARMONOGRAM = "harmonogram";
 
   var filterRootEl = document.getElementById("mm-cm-filter-root");
   var filterMainBtn = document.getElementById("mm-filter-main-btn");
@@ -271,6 +278,101 @@
     var next = qs ? path + "?" + qs + hash : path + hash;
     window.history.replaceState(null, "", next);
   }
+
+  function getCmTabFromUrl() {
+    var raw = new URLSearchParams(window.location.search).get("tab");
+    if (raw && String(raw).toLowerCase() === "harmonogram") {
+      return CM_TAB_HARMONOGRAM;
+    }
+    return CM_TAB_FIGHTS;
+  }
+
+  /** Usuwa nieobsługiwane wartości ?tab= z adresu (zostaje tylko harmonogram). */
+  function normalizeCmTabParamInUrl() {
+    var p = new URLSearchParams(window.location.search);
+    var raw = p.get("tab");
+    if (!raw) return;
+    if (String(raw).toLowerCase() === "harmonogram") return;
+    p.delete("tab");
+    var qs = p.toString();
+    var path = window.location.pathname || "";
+    var hash = window.location.hash || "";
+    var next = qs ? path + "?" + qs + hash : path + hash;
+    window.history.replaceState(null, "", next);
+  }
+
+  function setCmTabQueryInUrl(tab) {
+    var p = new URLSearchParams(window.location.search);
+    if (tab === CM_TAB_HARMONOGRAM) {
+      p.set("tab", "harmonogram");
+    } else {
+      p.delete("tab");
+    }
+    var qs = p.toString();
+    var path = window.location.pathname || "";
+    var hash = window.location.hash || "";
+    var next = qs ? path + "?" + qs + hash : path + hash;
+    window.history.replaceState(null, "", next);
+  }
+
+  function applyCmTabDom(tab) {
+    var isH = tab === CM_TAB_HARMONOGRAM;
+    if (tabFightsBtn) {
+      tabFightsBtn.setAttribute("aria-selected", isH ? "false" : "true");
+      tabFightsBtn.tabIndex = isH ? -1 : 0;
+    }
+    if (tabHarmonogramBtn) {
+      tabHarmonogramBtn.setAttribute("aria-selected", isH ? "true" : "false");
+      tabHarmonogramBtn.tabIndex = isH ? 0 : -1;
+    }
+    if (panelFightsEl) {
+      panelFightsEl.hidden = isH;
+    }
+    if (panelHarmonogramEl) {
+      panelHarmonogramEl.hidden = !isH;
+    }
+  }
+
+  function setCmTab(tab) {
+    applyCmTabDom(tab);
+    setCmTabQueryInUrl(tab);
+  }
+
+  function initCmTabsFromUrl() {
+    if (!tabFightsBtn || !tabHarmonogramBtn || !panelFightsEl || !panelHarmonogramEl) {
+      return;
+    }
+    normalizeCmTabParamInUrl();
+    applyCmTabDom(getCmTabFromUrl());
+    window.addEventListener("popstate", function () {
+      applyCmTabDom(getCmTabFromUrl());
+    });
+    tabFightsBtn.addEventListener("click", function () {
+      setCmTab(CM_TAB_FIGHTS);
+    });
+    tabHarmonogramBtn.addEventListener("click", function () {
+      setCmTab(CM_TAB_HARMONOGRAM);
+    });
+    var tabsWrap = tabFightsBtn.closest(".mm-cm-tabs");
+    if (tabsWrap) {
+      tabsWrap.addEventListener("keydown", function (ev) {
+        var key = ev.key;
+        if (key !== "ArrowLeft" && key !== "ArrowRight") return;
+        var cur = getCmTabFromUrl();
+        if (key === "ArrowRight" && cur === CM_TAB_FIGHTS) {
+          ev.preventDefault();
+          setCmTab(CM_TAB_HARMONOGRAM);
+          tabHarmonogramBtn.focus();
+        } else if (key === "ArrowLeft" && cur === CM_TAB_HARMONOGRAM) {
+          ev.preventDefault();
+          setCmTab(CM_TAB_FIGHTS);
+          tabFightsBtn.focus();
+        }
+      });
+    }
+  }
+
+  initCmTabsFromUrl();
 
   function parseNameSortKeys(fullName) {
     var tokens = String(fullName || "")

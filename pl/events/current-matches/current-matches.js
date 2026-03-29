@@ -450,6 +450,76 @@
     }
   }
 
+  function memberFilterCheckboxesInSection(section) {
+    if (!section) return [];
+    return section.querySelectorAll(
+      'input[type="checkbox"][data-mm-filter-member]'
+    );
+  }
+
+  function clubHeaderCheckboxInSection(section) {
+    if (!section) return null;
+    return section.querySelector(
+      'input[type="checkbox"][data-mm-filter-club]'
+    );
+  }
+
+  function setClubHeaderCheckboxAria(headerCb) {
+    if (!headerCb) return;
+    if (headerCb.indeterminate) {
+      headerCb.setAttribute("aria-checked", "mixed");
+    } else {
+      headerCb.setAttribute(
+        "aria-checked",
+        headerCb.checked ? "true" : "false"
+      );
+    }
+  }
+
+  function updateClubHeaderCheckboxFromMembers(section) {
+    var headerCb = clubHeaderCheckboxInSection(section);
+    if (!headerCb) return;
+    var children = memberFilterCheckboxesInSection(section);
+    var n = children.length;
+    var checked = 0;
+    for (var i = 0; i < n; i++) {
+      if (children[i].checked) checked++;
+    }
+    headerCb.indeterminate = checked > 0 && checked < n;
+    headerCb.checked = n > 0 && checked === n;
+    setClubHeaderCheckboxAria(headerCb);
+  }
+
+  function refreshAllClubHeaderCheckboxes() {
+    if (!filterListRootEl) return;
+    var sections = filterListRootEl.querySelectorAll(".mm-filter-club");
+    for (var s = 0; s < sections.length; s++) {
+      updateClubHeaderCheckboxFromMembers(sections[s]);
+    }
+  }
+
+  function onFilterListCheckboxChange(ev) {
+    var t = ev.target;
+    if (!t || t.type !== "checkbox" || !filterListRootEl) return;
+    if (!filterListRootEl.contains(t)) return;
+    var section = t.closest(".mm-filter-club");
+    if (!section) return;
+
+    if (t.hasAttribute("data-mm-filter-club")) {
+      t.indeterminate = false;
+      var kids = memberFilterCheckboxesInSection(section);
+      for (var i = 0; i < kids.length; i++) {
+        kids[i].checked = t.checked;
+      }
+      setClubHeaderCheckboxAria(t);
+      return;
+    }
+
+    if (t.hasAttribute("data-mm-filter-member")) {
+      updateClubHeaderCheckboxFromMembers(section);
+    }
+  }
+
   function renderFilterListDom(entries) {
     if (!filterListRootEl) return;
     filterListRootEl.innerHTML = "";
@@ -461,8 +531,30 @@
       section.id = "mm-filter-club-sect-" + c;
 
       var hn = document.createElement("h3");
-      hn.className = "mm-filter-club-name";
-      hn.textContent = clubName;
+      hn.className = "mm-filter-club-name mm-filter-club-name--with-select";
+
+      var lab = document.createElement("label");
+      lab.className = "mm-filter-club-name__label";
+
+      var checkWrap = document.createElement("span");
+      checkWrap.className = "mm-filter-club-name__check-wrap";
+      var clubCb = document.createElement("input");
+      clubCb.type = "checkbox";
+      clubCb.setAttribute("data-mm-filter-club", "1");
+      clubCb.setAttribute(
+        "aria-label",
+        "Zaznacz lub usuń zaznaczenie wszystkich z: " + clubName
+      );
+      clubCb.setAttribute("aria-checked", "false");
+      checkWrap.appendChild(clubCb);
+
+      var titleSpan = document.createElement("span");
+      titleSpan.className = "mm-filter-club-name__title";
+      titleSpan.textContent = clubName;
+
+      lab.appendChild(checkWrap);
+      lab.appendChild(titleSpan);
+      hn.appendChild(lab);
       section.appendChild(hn);
 
       var list = grouped.byClub[clubName];
@@ -492,6 +584,7 @@
         cb.type = "checkbox";
         cb.value = item.publicId;
         cb.setAttribute("data-mm-filter", "1");
+        cb.setAttribute("data-mm-filter-member", "1");
         checkWrap.appendChild(cb);
 
         row.appendChild(textWrap);
@@ -508,22 +601,22 @@
     if (!filterListRootEl) return;
     var idSet = getFilterIdSetFromUrl();
     var boxes = filterListRootEl.querySelectorAll(
-      'input[type="checkbox"][data-mm-filter]'
+      'input[type="checkbox"][data-mm-filter-member]'
     );
     for (var i = 0; i < boxes.length; i++) {
       var b = boxes[i];
       b.checked = Boolean(idSet && idSet[b.value]);
     }
+    refreshAllClubHeaderCheckboxes();
   }
 
   function updateFilterMainButtonLabel() {
     if (!filterMainBtn) return;
     if (filterPanelOpen) {
-      filterMainBtn.textContent = "Close";
+      filterMainBtn.textContent = "Hide Filter";
       return;
     }
-    var hasFilter = getFilterIdSetFromUrl() !== null;
-    filterMainBtn.textContent = hasFilter ? "Edit filter" : "No filter";
+    filterMainBtn.textContent = "Show Filter";
   }
 
   function setFilterMobileBarVisible(visible) {
@@ -562,7 +655,7 @@
   function collectCheckedPublicIds() {
     if (!filterListRootEl) return [];
     var boxes = filterListRootEl.querySelectorAll(
-      'input[type="checkbox"][data-mm-filter]:checked'
+      'input[type="checkbox"][data-mm-filter-member]:checked'
     );
     var seen = Object.create(null);
     var order = [];
@@ -886,6 +979,10 @@
       closeClubJumpDropdown();
       scrollToFilterClubSection(idx);
     });
+  }
+
+  if (filterListRootEl) {
+    filterListRootEl.addEventListener("change", onFilterListCheckboxChange);
   }
 
   prefetchStartingListIfFilterInUrl();

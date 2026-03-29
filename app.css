@@ -228,74 +228,219 @@ body {
 }
 
 .mm-fight {
-  border: 1px solid #2a2e3a;
+  border: 1px solid #1a202c;
   border-radius: 10px;
   overflow: hidden;
-  background: #1c1f28;
+  background: #2d3748;
 }
 
-.mm-fight__head {
-  padding: 0.35rem 0.65rem;
-  font-size: 0.75rem;
+.mm-fight__topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  padding: 0.45rem 0.65rem 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.mm-fight__topbar-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  min-width: 0;
+  color: #fff;
+}
+
+.mm-fight__topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  color: #a0aec0;
+  font-size: 0.8125rem;
+}
+
+.mm-fight__mat-pin {
+  display: block;
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+.mm-fight__mat-label {
+  white-space: nowrap;
+}
+
+.mm-fight__fight-num {
+  font-weight: 700;
+  color: #fff;
+}
+
+.mm-fight__top-time {
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  color: #fff;
 }
 
-/* fightQueueStatuses: 1 — wezwanie / na macie, jeszcze nie trwa */
-.mm-fight__head--called {
-  background: #4a3a28;
-  color: #f0d9b8;
+.mm-fight__top-category {
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+.mm-fight__rb {
+  display: inline-block;
+  padding: 0.12rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.mm-fight__rb--round {
+  background: #276749;
+  color: #f0fff4;
+}
+
+.mm-fight__rb--final {
+  background: #9b2c2c;
+  color: #fff5f5;
+}
+
+.mm-fight__rb--third {
+  background: #b7791f;
+  color: #fffaf0;
+}
+
+.mm-fight__rb--neutral {
+  background: #4a5568;
+  color: #e2e8f0;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.6875rem;
+}
+
+/* fightQueueStatuses: 1 — wezwanie / na macie */
+.mm-fight__topbar--called {
+  background: #744210;
+  color: #faf089;
+}
+
+.mm-fight__topbar--called .mm-fight__top-category,
+.mm-fight__topbar--called .mm-fight__mat-label {
+  color: #f6e05e;
+}
+
+.mm-fight__topbar--called .mm-fight__topbar-right {
+  color: #faf089;
 }
 
 /* fightQueueStatuses: 2 — walka trwa */
-.mm-fight__head--active {
-  background: #1a3d2e;
-  color: #b8f5d0;
+.mm-fight__topbar--active {
+  background: #276749;
+  color: #f0fff4;
 }
 
-/* pozostałe / zaplanowane w kolejce */
-.mm-fight__head--scheduled {
-  background: #2a2e3a;
-  color: #9aa0b0;
+.mm-fight__topbar--active .mm-fight__top-category,
+.mm-fight__topbar--active .mm-fight__mat-label {
+  color: #c6f6d5;
+}
+
+.mm-fight__topbar--active .mm-fight__topbar-right {
+  color: #c6f6d5;
+}
+
+.mm-fight__topbar--active .mm-fight__rb--round {
+  background: #22543d;
+  color: #f0fff4;
+}
+
+.mm-fight__topbar--active .mm-fight__rb--neutral {
+  background: #22543d;
+  color: #e6fffa;
+}
+
+/* zaplanowane w kolejce */
+.mm-fight__topbar--scheduled {
+  background: #2d3748;
+  color: #a0aec0;
+}
+
+.mm-fight__topbar--scheduled .mm-fight__fight-num,
+.mm-fight__topbar--scheduled .mm-fight__top-time {
+  color: #fff;
+}
+
+.mm-fight__topbar--scheduled .mm-fight__top-category {
+  color: #e2e8f0;
 }
 
 .mm-fight__body {
-  padding: 0.65rem 0.75rem 0.75rem;
+  padding: 0;
+  background: #2d3748;
 }
 
-.mm-fight__time {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #f2f2f6;
-  margin-bottom: 0.25rem;
+.mm-fight__athlete {
+  display: flex;
+  min-height: 3rem;
+  align-items: stretch;
+  border-top: 1px solid #1a202c;
 }
 
-.mm-fight__mat {
-  font-size: 0.875rem;
-  color: #7aa8ff;
-  margin-bottom: 0.35rem;
+.mm-fight__athlete:first-of-type {
+  border-top: none;
 }
 
-.mm-fight__category {
-  font-size: 0.8125rem;
-  color: #9aa0b0;
-  margin-bottom: 0.65rem;
-  line-height: 1.35;
+.mm-fight__corner {
+  width: 4px;
+  flex-shrink: 0;
 }
 
-.mm-fight__competitor {
+.mm-fight__athlete--blue .mm-fight__corner {
+  background: #3182ce;
+}
+
+.mm-fight__athlete--red .mm-fight__corner {
+  background: #e53e3e;
+}
+
+.mm-fight__athlete-main {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.65rem 0.55rem 0.5rem;
+}
+
+.mm-fight__athlete-line1 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.mm-fight__flag {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.mm-fight__name {
   font-size: 0.9375rem;
-  color: #e8e8ec;
-  line-height: 1.35;
-  padding: 0.2rem 0;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
 }
 
-.mm-fight__vs {
-  font-size: 0.75rem;
-  color: #6b7280;
-  text-align: center;
-  padding: 0.15rem 0;
+.mm-fight__name--placeholder {
+  font-weight: 600;
+  font-style: italic;
+}
+
+.mm-fight__club {
+  margin-top: 0.2rem;
+  font-size: 0.8125rem;
+  color: #90cdf4;
+  line-height: 1.35;
+  opacity: 0.92;
 }
 
 /* Current matches — filtr uczestników (starting-lists) */

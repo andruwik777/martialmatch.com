@@ -64,12 +64,6 @@
     return "scheduled";
   }
 
-  function headVariantLabel(v) {
-    if (v === "active") return "Walka trwa";
-    if (v === "called") return "Na macie";
-    return "W kolejce";
-  }
-
   function parseStartTimeUtc(isoLike) {
     if (!isoLike || typeof isoLike !== "string") return null;
     var m = isoLike.match(
@@ -94,36 +88,117 @@
     minute: "2-digit",
   });
 
-  var dateFmt = new Intl.DateTimeFormat("pl-PL", {
-    timeZone: "Europe/Warsaw",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-
-  function formatStartLocal(d) {
-    if (!d || isNaN(d.getTime())) return "—";
-    return dateFmt.format(d) + ", " + timeFmt.format(d);
-  }
-
   function sortKeyStartTime(startTimeStr) {
     var d = parseStartTimeUtc(startTimeStr);
     return d ? d.getTime() : Number.MAX_SAFE_INTEGER;
   }
 
-  function competitorLine(c) {
-    if (!c) return "—";
-    var name = [c.firstName, c.lastName].filter(Boolean).join(" ").trim();
-    if (!name) return "—";
-    var ac = c.academy || "";
-    var br = c.branch || "";
-    var extra = [ac, br].filter(Boolean).join(" · ");
-    return extra ? name + " · " + extra : name;
+  function flagFromNationality(code) {
+    if (!code || typeof code !== "string") return "";
+    var c = code.toUpperCase();
+    if (c.length !== 2) return "";
+    var base = 0x1f1e6 - 0x41;
+    return String.fromCodePoint(
+      base + c.charCodeAt(0),
+      base + c.charCodeAt(1)
+    );
   }
 
-  function roundLabel(roundName) {
-    if (!roundName) return "";
-    return String(roundName).replace(/_/g, " ");
+  function formatCategoryDisplay(cat) {
+    if (!cat) return "";
+    return String(cat).replace(/;/g, " ").replace(/\s+/g, " ").trim();
+  }
+
+  function roundBadgeList(pf) {
+    var rn = (pf.roundName || "").trim();
+    var rnl = rn.toLowerCase();
+    var list = [];
+    if (rnl === "final") list.push({ text: "FINAŁ", variant: "final" });
+    else if (rnl === "semi_final") list.push({ text: "SF", variant: "round" });
+    else if (rnl === "quarter_final")
+      list.push({ text: "1/4", variant: "round" });
+    else if (
+      rnl === "third_place_playoff" ||
+      rnl === "repechage_3rd_place"
+    )
+      list.push({ text: "o 3 miejsce", variant: "third" });
+    else if (rnl === "repechage") list.push({ text: "REP", variant: "round" });
+    else if (rn === "1/8" || rnl.indexOf("1/8") === 0)
+      list.push({ text: "1/8", variant: "round" });
+    else if (rn === "1/4" || rnl.indexOf("1/4") === 0)
+      list.push({ text: "1/4", variant: "round" });
+    else if (rnl.indexOf("1/2") === 0)
+      list.push({ text: "1/2", variant: "round" });
+    else if (rn) list.push({ text: rn.replace(/_/g, " "), variant: "neutral" });
+    return list;
+  }
+
+  var MAT_PIN_SVG =
+    '<svg class="mm-fight__mat-pin" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>';
+
+  function competitorDisplayName(c) {
+    if (!c) return "—";
+    var name = [c.firstName, c.lastName].filter(Boolean).join(" ").trim();
+    return name || "—";
+  }
+
+  function competitorClubLine(c) {
+    if (!c) return "";
+    var ac = c.academy || "";
+    var br = c.branch || "";
+    return [ac, br].filter(Boolean).join(" · ");
+  }
+
+  function buildAthleteRow(c, corner) {
+    var wrap = document.createElement("div");
+    wrap.className = "mm-fight__athlete mm-fight__athlete--" + corner;
+
+    var cornerEl = document.createElement("div");
+    cornerEl.className = "mm-fight__corner";
+    cornerEl.setAttribute("aria-hidden", "true");
+
+    var main = document.createElement("div");
+    main.className = "mm-fight__athlete-main";
+
+    var row1 = document.createElement("div");
+    row1.className = "mm-fight__athlete-line1";
+
+    var flag = flagFromNationality(c && c.nationality);
+    if (flag) {
+      var fspan = document.createElement("span");
+      fspan.className = "mm-fight__flag";
+      fspan.textContent = flag;
+      row1.appendChild(fspan);
+    }
+
+    var nm = document.createElement("span");
+    nm.className = "mm-fight__name";
+    var dn = competitorDisplayName(c);
+    nm.textContent = dn;
+    if (/^--/.test(String(dn).trim())) {
+      nm.classList.add("mm-muted", "mm-fight__name--placeholder");
+    }
+    row1.appendChild(nm);
+    main.appendChild(row1);
+
+    var club = competitorClubLine(c);
+    if (club) {
+      var row2 = document.createElement("div");
+      row2.className = "mm-fight__club";
+      row2.textContent = club;
+      main.appendChild(row2);
+    }
+
+    wrap.appendChild(cornerEl);
+    wrap.appendChild(main);
+    return wrap;
+  }
+
+  function buildMatDisplayName(matNameRaw, matId) {
+    var s = String(matNameRaw || "").trim() || "Mata " + matId;
+    s = s.replace(/^mata\s+/i, "mata ");
+    if (!/^mata\s/i.test(s)) s = "mata " + s;
+    return s.toLowerCase();
   }
 
   function buildMatMapFromSchedules(payload) {
@@ -623,60 +698,71 @@
       return fightMatchesFilter(row, idSet);
     });
 
-    rows.forEach(function (row) {
+    rows.forEach(function (row, idx) {
       var pf = row.publicFight;
       if (!pf) return;
       var fightId = pf.id;
       var matId = pf.matId;
       var variant = rowHeadVariant(fightId, matId, queue);
-      var matName = matNamesById[String(matId)] || "Mata " + matId;
+      var matNameRaw = matNamesById[String(matId)] || "Mata " + matId;
+      var matNameDisplay = buildMatDisplayName(matNameRaw, matId);
 
       var article = document.createElement("article");
       article.className = "mm-fight";
 
-      var head = document.createElement("div");
-      head.className =
-        "mm-fight__head mm-fight__head--" + variant;
-      head.textContent = headVariantLabel(variant);
+      var topbar = document.createElement("div");
+      topbar.className =
+        "mm-fight__topbar mm-fight__topbar--" + variant;
+
+      var left = document.createElement("div");
+      left.className = "mm-fight__topbar-left";
+
+      var num = pf.fightNumber != null ? pf.fightNumber : idx + 1;
+      var hash = document.createElement("span");
+      hash.className = "mm-fight__fight-num";
+      hash.textContent = "#" + num;
+      left.appendChild(hash);
+
+      var t = parseStartTimeUtc(row.startTime);
+      var timeSpan = document.createElement("span");
+      timeSpan.className = "mm-fight__top-time";
+      timeSpan.textContent =
+        t && !isNaN(t.getTime()) ? timeFmt.format(t) : "—";
+      left.appendChild(timeSpan);
+
+      var cat = formatCategoryDisplay(pf.category);
+      if (cat) {
+        var catEl = document.createElement("span");
+        catEl.className = "mm-fight__top-category";
+        catEl.textContent = cat;
+        left.appendChild(catEl);
+      }
+
+      roundBadgeList(pf).forEach(function (b) {
+        var badge = document.createElement("span");
+        badge.className =
+          "mm-fight__rb mm-fight__rb--" + b.variant;
+        badge.textContent = b.text;
+        left.appendChild(badge);
+      });
+
+      var right = document.createElement("div");
+      right.className = "mm-fight__topbar-right";
+      right.innerHTML = MAT_PIN_SVG;
+      var matSpan = document.createElement("span");
+      matSpan.className = "mm-fight__mat-label";
+      matSpan.textContent = matNameDisplay;
+      right.appendChild(matSpan);
+
+      topbar.appendChild(left);
+      topbar.appendChild(right);
 
       var body = document.createElement("div");
       body.className = "mm-fight__body";
+      body.appendChild(buildAthleteRow(pf.firstCompetitor, "blue"));
+      body.appendChild(buildAthleteRow(pf.secondCompetitor, "red"));
 
-      var t = parseStartTimeUtc(row.startTime);
-      var timeEl = document.createElement("div");
-      timeEl.className = "mm-fight__time";
-      timeEl.textContent = formatStartLocal(t);
-
-      var matEl = document.createElement("div");
-      matEl.className = "mm-fight__mat";
-      matEl.textContent = matName;
-
-      var metaEl = document.createElement("div");
-      metaEl.className = "mm-fight__category";
-      var metaParts = [pf.category || "", roundLabel(pf.roundName)];
-      if (pf.fightNumber != null) metaParts.push("#" + pf.fightNumber);
-      metaEl.textContent = metaParts.filter(Boolean).join(" · ");
-
-      var c1 = document.createElement("div");
-      c1.className = "mm-fight__competitor";
-      c1.textContent = competitorLine(pf.firstCompetitor);
-
-      var vs = document.createElement("div");
-      vs.className = "mm-fight__vs";
-      vs.textContent = "vs";
-
-      var c2 = document.createElement("div");
-      c2.className = "mm-fight__competitor";
-      c2.textContent = competitorLine(pf.secondCompetitor);
-
-      body.appendChild(timeEl);
-      body.appendChild(matEl);
-      body.appendChild(metaEl);
-      body.appendChild(c1);
-      body.appendChild(vs);
-      body.appendChild(c2);
-
-      article.appendChild(head);
+      article.appendChild(topbar);
       article.appendChild(body);
       listEl.appendChild(article);
     });

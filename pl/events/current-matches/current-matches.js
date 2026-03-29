@@ -30,6 +30,7 @@
   var tabHarmonogramBtn = document.getElementById("mm-cm-tab-harmonogram");
   var panelFightsEl = document.getElementById("mm-cm-panel-fights");
   var panelHarmonogramEl = document.getElementById("mm-cm-panel-harmonogram");
+  var harmonogramRootEl = document.getElementById("mm-cm-harmonogram-root");
 
   var CM_TAB_FIGHTS = "fights";
   var CM_TAB_HARMONOGRAM = "harmonogram";
@@ -54,9 +55,11 @@
   var pollTimerId = null;
   /** @type {object | null} ostatnia poprawna odpowiedź /api/.../fights */
   var lastFightsData = null;
+  /** @type {object | null} pełna odpowiedź /api/events/.../schedules */
+  var lastSchedulesPayload = null;
 
   var filterPanelOpen = false;
-  /** @type {Array<{publicId:string,name:string,category:string,clubText:string}>|null} */
+  /** @type {Array<{publicId:string,name:string,category:string,clubText:string,categoryParameterId:number|null}>|null} */
   var startingListEntries = null;
   var startingListLoadPromise = null;
 
@@ -229,6 +232,194 @@
     return map;
   }
 
+  function parseParameterIdFromSchedulesHref(href) {
+    if (!href || typeof href !== "string") return null;
+    var m = href.match(/[?&]parameterId=(\d+)/);
+    if (!m) return null;
+    var n = parseInt(m[1], 10);
+    return isNaN(n) ? null : n;
+  }
+
+  /**
+   * @param {object} payload
+   * @returns {Record<string, {categoryId:number,categoryName:string,matId:number,matNameRaw:string,start:string,end:string}>}
+   */
+  function buildCategoryScheduleIndex(payload) {
+    var map = Object.create(null);
+    if (!payload || typeof payload !== "object") return map;
+    var activeId = payload.activeScheduleId;
+    var schedules = payload.schedules || [];
+    var sch = null;
+    for (var i = 0; i < schedules.length; i++) {
+      if (schedules[i].id === activeId) {
+        sch = schedules[i];
+        break;
+      }
+    }
+    if (!sch && schedules.length) sch = schedules[0];
+    if (!sch || !sch.mats) return map;
+    sch.mats.forEach(function (m) {
+      var matId = m.id;
+      var matNameRaw = m.name || "Mata " + matId;
+      var cats = m.categories || [];
+      cats.forEach(function (c) {
+        var id = c.id;
+        if (id == null) return;
+        var key = String(id);
+        var t = c.scheduledCategoryTime || {};
+        map[key] = {
+          categoryId: id,
+          categoryName: c.name || "",
+          matId: matId,
+          matNameRaw: matNameRaw,
+          start: t.start || "",
+          end: t.end || "",
+        };
+      });
+    });
+    return map;
+  }
+
+  function formatHarmonogramTimeRange(startStr, endStr) {
+    var a = parseStartTimeUtc(startStr);
+    var b = parseStartTimeUtc(endStr);
+    var left =
+      a && !isNaN(a.getTime()) ? timeFmt.format(a) : "—";
+    var right =
+      b && !isNaN(b.getTime()) ? timeFmt.format(b) : "—";
+    return left + "–" + right;
+  }
+
+  /**
+   * @param {{ slot: object, members: Array<{name:string,clubText:string}> }} row
+   */
+  function buildHarmonogramCard(row) {
+    var slot = row.slot;
+    var members = row.members;
+    var card = document.createElement("article");
+    card.className = "mm-hg-card";
+
+    var meta = document.createElement("div");
+    meta.className = "mm-hg-card__meta";
+
+    var catEl = document.createElement("div");
+    catEl.className = "mm-hg-card__category";
+    catEl.textContent = slot.categoryName || "—";
+    meta.appendChild(catEl);
+
+    var sub = document.createElement("div");
+    sub.className = "mm-hg-card__sub";
+    var matDisplay = buildMatDisplayName(slot.matNameRaw, slot.matId);
+    var timeRange = formatHarmonogramTimeRange(slot.start, slot.end);
+    sub.textContent = matDisplay + " · " + timeRange;
+    meta.appendChild(sub);
+
+    card.appendChild(meta);
+
+    var list = document.createElement("div");
+    list.className = "mm-hg-card__athletes";
+    for (var i = 0; i < members.length; i++) {
+      var m = members[i];
+      var line = document.createElement("div");
+      line.className = "mm-hg-card__athlete";
+      var strong = document.createElement("span");
+      strong.className = "mm-hg-card__athlete-name";
+      strong.textContent = m.name || "—";
+      line.appendChild(strong);
+      var club = (m.clubText || "").trim();
+      if (club && club !== "—") {
+        var br = document.createElement("span");
+        br.className = "mm-hg-card__athlete-club";
+        br.textContent = " (" + club + ")";
+        line.appendChild(br);
+      }
+      list.appendChild(line);
+    }
+    card.appendChild(list);
+    return card;
+  }
+
+  function renderHarmonogram() {
+    if (!harmonogramRootEl) return;
+    harmonogramRootEl.innerHTML = "";
+
+    if (!lastSchedulesPayload) {
+      var p = document.createElement("p");
+      p.className = "mm-muted";
+      p.textContent = "Brak danych harmonogramu z API.";
+      harmonogramRootEl.appendChild(p);
+      return;
+    }
+
+    if (!startingListEntries) {
+      var p2 = document.createElement("p");
+      p2.className = "mm-muted";
+      p2.textContent = "Ładowanie list startowej…";
+      harmonogramRootEl.appendChild(p2);
+      return;
+    }
+
+    var index = buildCategoryScheduleIndex(lastSchedulesPayload);
+    var idSet = getFilterIdSetFromUrl();
+    var filtered = startingListEntries.filter(function (e) {
+      if (e.categoryParameterId == null) return false;
+      if (idSet && !idSet[e.publicId]) return false;
+      return true;
+    });
+
+    var byCat = Object.create(null);
+    for (var i = 0; i < filtered.length; i++) {
+      var ent = filtered[i];
+      var k = String(ent.categoryParameterId);
+      if (!byCat[k]) byCat[k] = [];
+      byCat[k].push(ent);
+    }
+
+    var keys = Object.keys(byCat);
+    var rows = [];
+    for (var j = 0; j < keys.length; j++) {
+      var catKey = keys[j];
+      var slot = index[catKey];
+      if (!slot) continue;
+      var rawMembers = byCat[catKey];
+      var seen = Object.create(null);
+      var members = [];
+      for (var m = 0; m < rawMembers.length; m++) {
+        var r = rawMembers[m];
+        if (seen[r.publicId]) continue;
+        seen[r.publicId] = true;
+        members.push(r);
+      }
+      members.sort(compareEntriesByName);
+      rows.push({ slot: slot, members: members });
+    }
+
+    rows.sort(function (a, b) {
+      return sortKeyStartTime(a.slot.start) - sortKeyStartTime(b.slot.start);
+    });
+
+    if (!rows.length) {
+      var empty = document.createElement("p");
+      empty.className = "mm-muted";
+      empty.textContent = idSet
+        ? "Brak wpisów harmonogramu dla wybranych zawodników (wymagany link z parameterId na liście startowej)."
+        : "Brak dopasowań: lista startowa bez parameterId lub kategorie poza harmonogramem.";
+      harmonogramRootEl.appendChild(empty);
+      return;
+    }
+
+    var wrap = document.createElement("div");
+    wrap.className = "mm-hg-list";
+    for (var r = 0; r < rows.length; r++) {
+      wrap.appendChild(buildHarmonogramCard(rows[r]));
+    }
+    harmonogramRootEl.appendChild(wrap);
+  }
+
+  function refreshHarmonogram() {
+    renderHarmonogram();
+  }
+
   function fightsUrl(eventIdStr) {
     return (
       "/api/public/events/" + encodeURIComponent(eventIdStr) + "/fights"
@@ -331,6 +522,9 @@
     if (panelHarmonogramEl) {
       panelHarmonogramEl.hidden = !isH;
     }
+    if (isH) {
+      refreshHarmonogram();
+    }
   }
 
   function setCmTab(tab) {
@@ -346,6 +540,7 @@
     applyCmTabDom(getCmTabFromUrl());
     window.addEventListener("popstate", function () {
       applyCmTabDom(getCmTabFromUrl());
+      refreshHarmonogram();
     });
     tabFightsBtn.addEventListener("click", function () {
       setCmTab(CM_TAB_FIGHTS);
@@ -372,8 +567,6 @@
     }
   }
 
-  initCmTabsFromUrl();
-
   function parseNameSortKeys(fullName) {
     var tokens = String(fullName || "")
       .trim()
@@ -393,7 +586,7 @@
 
   /**
    * @param {string} html
-   * @returns {Array<{publicId:string,name:string,category:string,clubText:string}>}
+   * @returns {Array<{publicId:string,name:string,category:string,clubText:string,categoryParameterId:number|null}>}
    */
   function parseStartingListHtml(html) {
     var parser = new DOMParser();
@@ -412,12 +605,16 @@
       var clubText = (tds[2].textContent || "").replace(/\s+/g, " ").trim();
 
       var category = "";
+      var categoryParameterId = null;
       var col = tr.closest(".column");
       if (col && col.previousElementSibling) {
         var prev = col.previousElementSibling;
         var h4a = prev.querySelector("h4.title.is-4 a");
         if (h4a) {
           category = (h4a.textContent || "").replace(/\s+/g, " ").trim();
+          categoryParameterId = parseParameterIdFromSchedulesHref(
+            h4a.getAttribute("href") || ""
+          );
         } else {
           var h4 = prev.querySelector("h4.title.is-4");
           if (h4) {
@@ -431,6 +628,7 @@
         name: name,
         category: category,
         clubText: clubText || "—",
+        categoryParameterId: categoryParameterId,
       });
     }
     return out;
@@ -785,6 +983,7 @@
     if (lastFightsData) {
       renderFights(lastFightsData);
     }
+    refreshHarmonogram();
   }
 
   function fetchHtml(path) {
@@ -821,11 +1020,13 @@
           throw new Error("Brak uczestników na liście (nieznany HTML?)");
         }
         startingListEntries = entries;
+        refreshHarmonogram();
         return entries;
       })
       .catch(function (err) {
         startingListLoadPromise = null;
         startingListEntries = null;
+        refreshHarmonogram();
         throw err;
       });
     return startingListLoadPromise;
@@ -1053,6 +1254,7 @@
     a.textContent = "Przejdź do listy zawodów";
     p.appendChild(a);
     if (contentEl) contentEl.appendChild(p);
+    initCmTabsFromUrl();
     return;
   }
 
@@ -1096,6 +1298,7 @@
   }
 
   prefetchStartingListEarly();
+  initCmTabsFromUrl();
 
   clearError();
 
@@ -1104,11 +1307,15 @@
 
   fetchJson(schedulesPath)
     .then(function (sched) {
+      lastSchedulesPayload = sched;
       matNamesById = buildMatMapFromSchedules(sched);
+      refreshHarmonogram();
       return initWithMats();
     })
     .catch(function () {
+      lastSchedulesPayload = null;
       matNamesById = Object.create(null);
+      refreshHarmonogram();
       return initWithMats();
     })
     .then(function () {

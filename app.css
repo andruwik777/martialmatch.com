@@ -453,6 +453,67 @@ body {
   max-width: 36rem;
 }
 
+/* Current matches — harmonogram (kafelki) */
+.mm-cm-harmonogram-root {
+  min-height: 2rem;
+}
+
+.mm-hg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.mm-hg-card {
+  border: 1px solid #2d3748;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #2d3748;
+}
+
+.mm-hg-card__meta {
+  padding: 0.5rem 0.65rem 0.45rem;
+  border-bottom: 1px solid #1a202c;
+  background: linear-gradient(180deg, #354456 0%, #2d3748 100%);
+}
+
+.mm-hg-card__category {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.35;
+}
+
+.mm-hg-card__sub {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: #a0aec0;
+  line-height: 1.4;
+}
+
+.mm-hg-card__athletes {
+  padding: 0.45rem 0.65rem 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.mm-hg-card__athlete {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #e8e8ec;
+}
+
+.mm-hg-card__athlete-name {
+  font-weight: 600;
+}
+
+.mm-hg-card__athlete-club {
+  font-weight: 400;
+  color: #90cdf4;
+  opacity: 0.95;
+}
+
 /* Current matches — lista walk */
 .mm-cm-toolbar {
   margin: 0 0 0.75rem;

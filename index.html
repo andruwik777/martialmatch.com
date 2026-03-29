@@ -3,27 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MartialMatch — test API / CORS</title>
-  <link rel="stylesheet" href="app.css">
+  <meta http-equiv="refresh" content="0;url=pl/events/">
+  <title>Przekierowanie…</title>
+  <script>
+    (function () {
+      var q = window.location.search || "";
+      window.location.replace("pl/events/" + q);
+    })();
+  </script>
 </head>
 <body>
-  <header class="header">
-    <h1 class="title">MartialMatch — próba API</h1>
-    <p class="subtitle">
-      Kliknij zawody — <code>GET</code> przez Cloudflare Worker
-      (<code>martialmatch.andruwik777.workers.dev</code>) → MartialMatch API.
-    </p>
-  </header>
-
-  <main class="main">
-    <section class="events" id="events" aria-label="Lista zawodów (przykładowa)"></section>
-
-    <section class="result" aria-live="polite">
-      <h2 class="result-heading">Ostatnia odpowiedź</h2>
-      <pre class="result-body" id="result">(brak)</pre>
-    </section>
-  </main>
-
-  <script src="app.js" defer></script>
+  <p><a href="pl/events/">Przejdź do listy zawodów</a></p>
 </body>
 </html>

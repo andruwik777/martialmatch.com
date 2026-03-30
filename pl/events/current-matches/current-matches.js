@@ -720,11 +720,7 @@
 
     if (!showAll && slugActive) {
       for (var f = 0; f < articles.length; f++) {
-        var af = articles[f];
-        var s = af.getAttribute("data-mm-event-slug") || "";
-        if (s !== slugActive) {
-          af.classList.add("mm-event-row--filtered-out");
-        }
+        articles[f].classList.add("mm-event-row--filtered-out");
       }
       return;
     }

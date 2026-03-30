@@ -22,10 +22,55 @@
     <div id="mm-cm-error" class="mm-alert mm-alert--error is-hidden" role="alert"></div>
     <div id="mm-cm-content">
       <div id="mm-cm-filter-root" class="mm-cm-filter is-hidden">
+        <div
+          id="mm-cm-events-toolbar"
+          class="mm-cm-events-toolbar is-hidden"
+          aria-label="Lista wydarzeń"
+        >
+          <label class="mm-cm-events-toolbar__check-label">
+            <input
+              type="checkbox"
+              id="mm-show-all-events-cb"
+              class="mm-show-all-events-cb"
+            />
+            <span>Pokaż wszystkie wydarzenia</span>
+          </label>
+          <div class="mm-cm-events-toolbar__actions">
+            <button
+              type="button"
+              id="mm-change-active-event-btn"
+              class="mm-change-active-event-btn is-hidden"
+              title="Usuwa wybór wydarzenia z adresu — widać znowu całą listę (filtr zawodników w URL zostaje)."
+              aria-label="Zmień aktywne wydarzenie — usuwa slug z adresu, lista wszystkich wydarzeń"
+            >
+              Zmień aktywne wydarzenie
+            </button>
+            <button
+              type="button"
+              id="mm-filter-main-btn-events"
+              class="mm-filter-main-btn mm-filter-main-btn--compact is-hidden"
+              aria-controls="mm-filter-panel"
+              aria-expanded="false"
+            >
+              <span class="mm-filter-main-btn__label">Filtr · wszyscy</span>
+              <span class="mm-filter-main-btn__chevron" aria-hidden="true">
+                <svg
+                  class="mm-filter-main-btn__chevron-svg"
+                  width="12"
+                  height="8"
+                  viewBox="0 0 12 8"
+                  focusable="false"
+                >
+                  <path fill="currentColor" d="M6 8L0 0h12L6 8z" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
         <button
           type="button"
           id="mm-filter-main-btn"
-          class="mm-filter-main-btn"
+          class="mm-filter-main-btn mm-filter-main-btn--tab-fights"
           aria-controls="mm-filter-panel"
           aria-expanded="false"
         >

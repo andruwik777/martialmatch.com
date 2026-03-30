@@ -56,6 +56,10 @@
   var MM_CLUB_FILTER_HIDDEN = "mm-filter-club--filter-hidden";
 
   var filterRootEl = document.getElementById("mm-cm-filter-root");
+  var eventsToolbarEl = document.getElementById("mm-cm-events-toolbar");
+  var showAllEventsCb = document.getElementById("mm-show-all-events-cb");
+  var changeActiveEventBtn = document.getElementById("mm-change-active-event-btn");
+  var filterMainBtnEvents = document.getElementById("mm-filter-main-btn-events");
   var filterMainBtn = document.getElementById("mm-filter-main-btn");
   var filterPanelEl = document.getElementById("mm-filter-panel");
   var filterPanelStatusEl = document.getElementById("mm-filter-panel-status");
@@ -684,25 +688,58 @@
   var PLACE_PIN_SVG_EV =
     '<svg class="mm-ev-place__pin" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>';
 
+  function getShowAllFromUrl() {
+    var v = new URLSearchParams(window.location.search).get("show_all");
+    return v !== null && String(v).toLowerCase() === "true";
+  }
+
+  function setShowAllInUrl(on) {
+    var p = new URLSearchParams(window.location.search);
+    if (on) {
+      p.set("show_all", "true");
+    } else {
+      p.delete("show_all");
+    }
+    replaceLocationQuery(p);
+  }
+
   function refreshEventsListVisibility() {
     if (!eventsListEl) return;
-    var idSet = getFilterIdSetFromUrl();
     var articles = eventsListEl.querySelectorAll(".mm-event-row");
+    var showAll = getShowAllFromUrl();
+    var slugActive = evSlug ? evSlug.slug : "";
+
+    for (var c = 0; c < articles.length; c++) {
+      articles[c].classList.remove("mm-event-row--filtered-out");
+    }
+
+    if (!showAll && slugActive) {
+      for (var f = 0; f < articles.length; f++) {
+        var af = articles[f];
+        var s = af.getAttribute("data-mm-event-slug") || "";
+        if (s !== slugActive) {
+          af.classList.add("mm-event-row--filtered-out");
+        }
+      }
+      return;
+    }
+
+    if (!showAll) {
+      return;
+    }
+
+    var idSet = getFilterIdSetFromUrl();
     var mapsEmpty = true;
     for (var mp in eventParticipantIdMap) {
       mapsEmpty = false;
       break;
     }
     if (idSet && mapsEmpty) {
-      for (var z = 0; z < articles.length; z++) {
-        articles[z].classList.remove("mm-event-row--filtered-out");
-      }
       return;
     }
     for (var i = 0; i < articles.length; i++) {
       var art = articles[i];
       var nid = art.getAttribute("data-mm-event-id") || "";
-      art.classList.remove("mm-event-row--filtered-out");
       if (!idSet) continue;
       var map = eventParticipantIdMap[nid];
       var show = false;
@@ -1022,6 +1059,54 @@
     filterRootEl.classList.toggle("is-hidden", !show);
   }
 
+  function updateEventsToolbarUi() {
+    if (!eventsToolbarEl || !filterMainBtn) return;
+    var tab = getCmTabFromUrl();
+    var showAll = getShowAllFromUrl();
+    var onEvents = tab === CM_TAB_EVENTS;
+
+    if (showAllEventsCb) {
+      showAllEventsCb.checked = showAll;
+    }
+
+    eventsToolbarEl.classList.toggle("is-hidden", !onEvents);
+    filterMainBtn.classList.toggle("is-hidden", onEvents);
+
+    if (changeActiveEventBtn) {
+      var showChange = onEvents && !showAll && Boolean(evSlug);
+      changeActiveEventBtn.classList.toggle("is-hidden", !showChange);
+    }
+    if (filterMainBtnEvents) {
+      var showFilEv = onEvents && showAll;
+      filterMainBtnEvents.classList.toggle("is-hidden", !showFilEv);
+    }
+  }
+
+  function clearActiveEventSlug() {
+    closeFilterPanel();
+    var p = new URLSearchParams(window.location.search);
+    p.delete("slug");
+    p.set("tab", "events");
+    replaceLocationQuery(p);
+    lastFightsData = null;
+    lastSchedulesPayload = null;
+    startingListEntries = null;
+    matNamesById = Object.create(null);
+    startingListLoadPromise = null;
+    if (listEl) listEl.innerHTML = "";
+    if (toolbarEl) toolbarEl.classList.add("is-hidden");
+    if (placeholderEl) {
+      placeholderEl.classList.remove("is-hidden");
+      placeholderEl.textContent = "Wybierz wydarzenie…";
+    }
+    clearError();
+    notifyUrlChanged();
+    highlightSelectedEventRow("");
+    refreshEventsListVisibility();
+    updateFilterMainButtonLabel();
+    stopPoll();
+  }
+
   function syncHeaderEventLine() {
     if (eventTitleEl) {
       var title = "";
@@ -1046,6 +1131,7 @@
     updateCmTabsDisabled();
     updateFilterRootVisibility();
     syncHeaderEventLine();
+    updateEventsToolbarUi();
   }
 
   function applyCachedEventToView(nid) {
@@ -1107,6 +1193,7 @@
     notifyUrlChanged();
     applyCmTabDom(getCmTabFromUrl());
     updateFilterMainButtonLabel();
+    refreshEventsListVisibility();
     highlightSelectedEventRow(slugObj.slug);
     if (placeholderEl) {
       placeholderEl.classList.remove("is-hidden");
@@ -1122,6 +1209,7 @@
         refreshHarmonogram();
         updatePollingForTab();
         updateFilterMainButtonLabel();
+        refreshEventsListVisibility();
       })
       .catch(function (err) {
         showError(
@@ -1259,6 +1347,7 @@
     normalizeCmUrlOnLoad();
     notifyUrlChanged();
     applyCmTabDom(getCmTabFromUrl());
+    refreshEventsListVisibility();
     window.addEventListener("popstate", function () {
       refreshSlugFromLocation();
       notifyUrlChanged();
@@ -1853,67 +1942,73 @@
   }
 
   function updateFilterMainButtonLabel() {
-    if (!filterMainBtn) return;
-    var lab = filterMainBtn.querySelector(".mm-filter-main-btn__label");
-    filterMainBtn.setAttribute("aria-expanded", filterPanelOpen ? "true" : "false");
-    if (filterPanelOpen) {
-      if (lab) lab.textContent = "Hide";
-      filterMainBtn.setAttribute(
-        "aria-label",
-        "Collapse filter panel without applying changes — use Apply Filter to save."
-      );
-      filterMainBtn.title =
-        "Collapse without applying: list and schedule stay as last Apply Filter.";
-      return;
-    }
+    var triggers = [filterMainBtn, filterMainBtnEvents].filter(Boolean);
+    if (!triggers.length) return;
+
     var n = countFilterIdsForMainButton();
     var tab = getCmTabFromUrl();
     var totalUrl = countFilterIdsInUrl();
-    if (lab) {
-      if (tab === CM_TAB_EVENTS) {
-        lab.textContent =
-          totalUrl > 0 ? "Filtr · " + totalUrl : "Filtr · wszyscy";
-      } else {
-        lab.textContent =
-          totalUrl > 0 ? "Filtr · " + n : "Filtr · wszyscy";
+
+    for (var ti = 0; ti < triggers.length; ti++) {
+      var btn = triggers[ti];
+      var lab = btn.querySelector(".mm-filter-main-btn__label");
+      btn.setAttribute("aria-expanded", filterPanelOpen ? "true" : "false");
+      if (filterPanelOpen) {
+        if (lab) lab.textContent = "Hide";
+        btn.setAttribute(
+          "aria-label",
+          "Collapse filter panel without applying changes — use Apply Filter to save."
+        );
+        btn.title =
+          "Collapse without applying: list and schedule stay as last Apply Filter.";
+        continue;
       }
-    }
-    if (tab === CM_TAB_EVENTS) {
-      filterMainBtn.setAttribute(
-        "aria-label",
-        n > 0
-          ? "Otwórz filtr — w URL wybranych zawodników: " + n + "."
-          : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
-      );
-      filterMainBtn.title =
-        n > 0
-          ? "W URL jest " +
-            n +
-            " zawodników (wszystkie wydarzenia). Kliknij, by edytować."
-          : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
-    } else {
-      filterMainBtn.setAttribute(
-        "aria-label",
-        n > 0
-          ? "Otwórz filtr — dla tego wydarzenia aktywnych z URL: " + n + " z " + totalUrl + "."
-          : totalUrl > 0
-            ? "Otwórz filtr — w URL " +
-              totalUrl +
-              " zawodników, żaden nie występuje na liście tego wydarzenia."
+      if (lab) {
+        if (tab === CM_TAB_EVENTS) {
+          lab.textContent =
+            totalUrl > 0 ? "Filtr · " + totalUrl : "Filtr · wszyscy";
+        } else {
+          lab.textContent =
+            totalUrl > 0 ? "Filtr · " + n : "Filtr · wszyscy";
+        }
+      }
+      if (tab === CM_TAB_EVENTS) {
+        btn.setAttribute(
+          "aria-label",
+          n > 0
+            ? "Otwórz filtr — w URL wybranych zawodników: " + n + "."
             : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
-      );
-      filterMainBtn.title =
-        n > 0
-          ? "Dla tego wydarzenia " +
-            n +
-            " z " +
-            totalUrl +
-            " zawodników z URL pasuje do listy startowej. Kliknij, by edytować."
-          : totalUrl > 0
+        );
+        btn.title =
+          n > 0
             ? "W URL jest " +
-              totalUrl +
-              " zawodników, ale żaden nie jest na liście tego wydarzenia."
+              n +
+              " zawodników (wszystkie wydarzenia). Kliknij, by edytować."
             : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
+      } else {
+        btn.setAttribute(
+          "aria-label",
+          n > 0
+            ? "Otwórz filtr — dla tego wydarzenia aktywnych z URL: " + n + " z " + totalUrl + "."
+            : totalUrl > 0
+              ? "Otwórz filtr — w URL " +
+                totalUrl +
+                " zawodników, żaden nie występuje na liście tego wydarzenia."
+              : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
+        );
+        btn.title =
+          n > 0
+            ? "Dla tego wydarzenia " +
+              n +
+              " z " +
+              totalUrl +
+              " zawodników z URL pasuje do listy startowej. Kliknij, by edytować."
+            : totalUrl > 0
+              ? "W URL jest " +
+                totalUrl +
+                " zawodników, ale żaden nie jest na liście tego wydarzenia."
+              : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
+      }
     }
   }
 
@@ -2047,6 +2142,16 @@
 
   function onFilterPanelOpenRequest() {
     if (getCmTabFromUrl() === CM_TAB_EVENTS) {
+      if (!getShowAllFromUrl()) {
+        if (filterPanelStatusEl) {
+          filterPanelStatusEl.textContent =
+            "Włącz „Pokaż wszystkie wydarzenia”, aby filtrować listę wydarzeń.";
+        }
+        if (filterListRootEl) filterListRootEl.innerHTML = "";
+        hideClubJumpUI();
+        closeFilterPanel();
+        return;
+      }
       if (filterPanelStatusEl) {
         filterPanelStatusEl.textContent = "Ładowanie wszystkich list…";
       }
@@ -2089,6 +2194,9 @@
   }
 
   function onFilterMainButtonClick() {
+    if (getCmTabFromUrl() === CM_TAB_EVENTS && !getShowAllFromUrl()) {
+      return;
+    }
     if (!filterPanelOpen) {
       openFilterPanel();
       onFilterPanelOpenRequest();
@@ -2271,6 +2379,26 @@
   if (filterMainBtn) {
     filterMainBtn.addEventListener("click", onFilterMainButtonClick);
   }
+  if (filterMainBtnEvents) {
+    filterMainBtnEvents.addEventListener("click", onFilterMainButtonClick);
+  }
+  if (showAllEventsCb) {
+    showAllEventsCb.addEventListener("change", function () {
+      var on = showAllEventsCb.checked;
+      if (!on) {
+        closeFilterPanel();
+      }
+      setShowAllInUrl(on);
+      notifyUrlChanged();
+      refreshEventsListVisibility();
+      updateFilterMainButtonLabel();
+    });
+  }
+  if (changeActiveEventBtn) {
+    changeActiveEventBtn.addEventListener("click", function () {
+      clearActiveEventSlug();
+    });
+  }
   if (filterApplyStickyBtn) {
     filterApplyStickyBtn.addEventListener("click", applyFilterFromPanel);
   }
@@ -2362,6 +2490,7 @@
           refreshHarmonogram();
           prefetchStartingListEarly();
           updateFilterMainButtonLabel();
+          refreshEventsListVisibility();
         })
         .catch(function (err) {
           showError(
@@ -2372,10 +2501,15 @@
     } else {
       if (placeholderEl) placeholderEl.classList.add("is-hidden");
       clearError();
+      refreshEventsListVisibility();
     }
     updatePollingForTab();
     updateFilterMainButtonLabel();
-    if (getCmTabFromUrl() === CM_TAB_EVENTS && getFilterIdSetFromUrl()) {
+    if (
+      getCmTabFromUrl() === CM_TAB_EVENTS &&
+      getShowAllFromUrl() &&
+      getFilterIdSetFromUrl()
+    ) {
       ensureAggregateParticipantMaps()
         .then(function () {
           refreshEventsListVisibility();

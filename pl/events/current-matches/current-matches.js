@@ -22,8 +22,10 @@
 
   refreshSlugFromLocation();
 
-  var contextLabel = document.getElementById("mm-proxy-label");
-  var eventTitleEl = document.getElementById("mm-cm-event-title");
+  var headerPromptEl = document.getElementById("mm-cm-header-prompt");
+  var headerCardWrapEl = document.getElementById("mm-cm-header-card-wrap");
+  var headerCardRootEl = document.getElementById("mm-cm-header-card-root");
+  var origMmLinkEl = document.getElementById("mm-cm-orig-mm-link");
   var eventsStatusEl = document.getElementById("mm-events-status");
   var eventsListEl = document.getElementById("mm-events-list");
 
@@ -776,104 +778,138 @@
     }
   }
 
+  /**
+   * @param {object} ev
+   * @param {{ interactive?: boolean }} opts
+   */
+  function buildEventCardNode(ev, opts) {
+    opts = opts || {};
+    var interactive = !!opts.interactive;
+    var root = document.createElement(interactive ? "article" : "div");
+    root.className =
+      "event-card mm-event-row" +
+      (interactive ? "" : " mm-event-row--display-only");
+    root.setAttribute("data-mm-event-id", ev.numericId);
+    root.setAttribute("data-mm-event-slug", ev.slug);
+    if (interactive) {
+      root.setAttribute("role", "button");
+      root.tabIndex = 0;
+      root.setAttribute(
+        "aria-label",
+        "Wybierz wydarzenie: " + (ev.title || ev.slug)
+      );
+    }
+
+    var media = document.createElement("div");
+    media.className = "mm-event-row__media";
+    var img = document.createElement("img");
+    img.className = "event-card-thumb";
+    img.alt = "";
+    img.loading = "lazy";
+    img.src = ev.thumb || "";
+    img.draggable = false;
+    img.onerror = function () {
+      img.style.visibility = "hidden";
+    };
+    media.appendChild(img);
+
+    var body = document.createElement("div");
+    body.className = "event-card-body";
+
+    var titleEl = document.createElement("div");
+    titleEl.className = "event-card-title";
+    titleEl.textContent = ev.title || "Zawody " + ev.numericId;
+    body.appendChild(titleEl);
+
+    if (ev.dateText) {
+      var dateRow = document.createElement("div");
+      dateRow.className = "mm-ev-date";
+      var lab = document.createElement("span");
+      lab.className = "mm-ev-date__label";
+      lab.textContent = "Data zawodów:";
+      var val = document.createElement("span");
+      val.className = "mm-ev-date__value";
+      val.textContent = " " + ev.dateText;
+      dateRow.appendChild(lab);
+      dateRow.appendChild(val);
+      body.appendChild(dateRow);
+    }
+
+    if (ev.registration) {
+      var regEl = document.createElement("div");
+      regEl.className = "mm-ev-reg mm-ev-reg--" + ev.registration.kind;
+      regEl.innerHTML = registrationHtmlEv(ev.registration);
+      body.appendChild(regEl);
+    }
+
+    if (ev.place || ev.countryCode) {
+      var placeRow = document.createElement("div");
+      placeRow.className = "mm-ev-place";
+      placeRow.innerHTML = PLACE_PIN_SVG_EV;
+      if (ev.countryCode) {
+        var fl = document.createElement("span");
+        fl.className = "mm-ev-place__flag";
+        fl.textContent = flagEmojiEv(ev.countryCode);
+        fl.setAttribute("aria-hidden", "true");
+        placeRow.appendChild(fl);
+      }
+      var city = document.createElement("span");
+      city.className = "mm-ev-place__city";
+      city.textContent = ev.place || "";
+      placeRow.appendChild(city);
+      body.appendChild(placeRow);
+    }
+
+    if (ev.tags && ev.tags.length) {
+      var tagRoot = document.createElement("div");
+      tagRoot.className = "mm-ev-tags";
+      ev.tags.forEach(function (t) {
+        var sp = document.createElement("span");
+        var mod = KNOWN_EVENT_TYPE_KEYS[t.key] ? t.key : "default";
+        sp.className = "mm-ev-tag mm-ev-tag--" + mod;
+        sp.textContent = t.label;
+        tagRoot.appendChild(sp);
+      });
+      body.appendChild(tagRoot);
+    }
+
+    root.appendChild(media);
+    root.appendChild(body);
+    return root;
+  }
+
   function renderEventsListCm(events) {
     if (!eventsListEl) return;
     eventsListEl.innerHTML = "";
 
     events.forEach(function (ev) {
-      var article = document.createElement("article");
-      article.className = "event-card mm-event-row";
-      article.setAttribute("data-mm-event-id", ev.numericId);
-      article.setAttribute("data-mm-event-slug", ev.slug);
-      article.setAttribute("role", "button");
-      article.tabIndex = 0;
-      article.setAttribute(
-        "aria-label",
-        "Wybierz wydarzenie: " + (ev.title || ev.slug)
-      );
-
-      var media = document.createElement("div");
-      media.className = "mm-event-row__media";
-      var img = document.createElement("img");
-      img.className = "event-card-thumb";
-      img.alt = "";
-      img.loading = "lazy";
-      img.src = ev.thumb || "";
-      img.draggable = false;
-      img.onerror = function () {
-        img.style.visibility = "hidden";
-      };
-      media.appendChild(img);
-
-      var body = document.createElement("div");
-      body.className = "event-card-body";
-
-      var titleEl = document.createElement("div");
-      titleEl.className = "event-card-title";
-      titleEl.textContent = ev.title || "Zawody " + ev.numericId;
-      body.appendChild(titleEl);
-
-      if (ev.dateText) {
-        var dateRow = document.createElement("div");
-        dateRow.className = "mm-ev-date";
-        var lab = document.createElement("span");
-        lab.className = "mm-ev-date__label";
-        lab.textContent = "Data zawodów:";
-        var val = document.createElement("span");
-        val.className = "mm-ev-date__value";
-        val.textContent = " " + ev.dateText;
-        dateRow.appendChild(lab);
-        dateRow.appendChild(val);
-        body.appendChild(dateRow);
-      }
-
-      if (ev.registration) {
-        var regEl = document.createElement("div");
-        regEl.className =
-          "mm-ev-reg mm-ev-reg--" + ev.registration.kind;
-        regEl.innerHTML = registrationHtmlEv(ev.registration);
-        body.appendChild(regEl);
-      }
-
-      if (ev.place || ev.countryCode) {
-        var placeRow = document.createElement("div");
-        placeRow.className = "mm-ev-place";
-        placeRow.innerHTML = PLACE_PIN_SVG_EV;
-        if (ev.countryCode) {
-          var fl = document.createElement("span");
-          fl.className = "mm-ev-place__flag";
-          fl.textContent = flagEmojiEv(ev.countryCode);
-          fl.setAttribute("aria-hidden", "true");
-          placeRow.appendChild(fl);
-        }
-        var city = document.createElement("span");
-        city.className = "mm-ev-place__city";
-        city.textContent = ev.place || "";
-        placeRow.appendChild(city);
-        body.appendChild(placeRow);
-      }
-
-      if (ev.tags && ev.tags.length) {
-        var tagRoot = document.createElement("div");
-        tagRoot.className = "mm-ev-tags";
-        ev.tags.forEach(function (t) {
-          var sp = document.createElement("span");
-          var mod = KNOWN_EVENT_TYPE_KEYS[t.key]
-            ? t.key
-            : "default";
-          sp.className = "mm-ev-tag mm-ev-tag--" + mod;
-          sp.textContent = t.label;
-          tagRoot.appendChild(sp);
-        });
-        body.appendChild(tagRoot);
-      }
-
-      article.appendChild(media);
-      article.appendChild(body);
-      eventsListEl.appendChild(article);
+      eventsListEl.appendChild(buildEventCardNode(ev, { interactive: true }));
     });
 
     highlightSelectedEventRow(evSlug ? evSlug.slug : "");
+  }
+
+  function getEventSummaryForHeader() {
+    if (!evSlug || !eventNumericId) return null;
+    var i;
+    for (i = 0; i < parsedEventsList.length; i++) {
+      if (parsedEventsList[i].slug === evSlug.slug) {
+        return parsedEventsList[i];
+      }
+    }
+    var c = eventCache[eventNumericId];
+    var title = (c && c.title) || "Zawody " + eventNumericId;
+    return {
+      slug: evSlug.slug,
+      numericId: eventNumericId,
+      title: title,
+      thumb: "",
+      dateText: "",
+      place: "",
+      countryCode: "",
+      registration: null,
+      tags: [],
+    };
   }
 
   function loadEventsIndex() {
@@ -1141,21 +1177,32 @@
   }
 
   function syncHeaderEventLine() {
-    if (eventTitleEl) {
-      var title = "";
-      if (evSlug && eventNumericId && eventCache[eventNumericId]) {
-        title = eventCache[eventNumericId].title || "";
-      }
-      if (title) {
-        eventTitleEl.textContent = title;
-        eventTitleEl.classList.remove("is-hidden");
+    if (origMmLinkEl && typeof cfg.martialMatchEventUrl === "function") {
+      if (evSlug) {
+        var mmUrl = cfg.martialMatchEventUrl(evSlug.slug);
+        origMmLinkEl.href = mmUrl;
+        origMmLinkEl.setAttribute("title", mmUrl);
+        origMmLinkEl.classList.remove("is-hidden");
       } else {
-        eventTitleEl.textContent = "";
-        eventTitleEl.classList.add("is-hidden");
+        origMmLinkEl.classList.add("is-hidden");
       }
     }
-    if (contextLabel) {
-      contextLabel.textContent = evSlug ? evSlug.slug : "";
+    if (headerPromptEl && headerCardWrapEl && headerCardRootEl) {
+      if (!evSlug) {
+        headerPromptEl.classList.remove("is-hidden");
+        headerCardWrapEl.classList.add("is-hidden");
+        headerCardRootEl.innerHTML = "";
+      } else {
+        headerPromptEl.classList.add("is-hidden");
+        headerCardWrapEl.classList.remove("is-hidden");
+        headerCardRootEl.innerHTML = "";
+        var sum = getEventSummaryForHeader();
+        if (sum) {
+          headerCardRootEl.appendChild(
+            buildEventCardNode(sum, { interactive: false })
+          );
+        }
+      }
     }
   }
 
@@ -2525,6 +2572,7 @@
   initCmTabsFromUrl();
   updateFilterRootVisibility();
   updateFilterMainButtonLabel();
+  syncHeaderEventLine();
 
   loadEventsIndex().then(function () {
     refreshSlugFromLocation();

@@ -8,14 +8,28 @@
 </head>
 <body>
   <header class="header">
-    <nav class="mm-nav">
+    <nav class="mm-nav mm-cm-header-nav" aria-label="Nawigacja">
       <a class="mm-nav-link" href="./?tab=events" id="mm-cm-nav-home">Wydarzenia</a>
+      <a
+        class="mm-nav-link mm-cm-header-orig-link is-hidden"
+        id="mm-cm-orig-mm-link"
+        href="https://martialmatch.com/pl/events/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Oryginał na MartialMatch</a>
     </nav>
-    <h1 class="title">Zawody</h1>
-    <p class="subtitle mm-cm-slug-line">
-      <span id="mm-cm-event-title" class="mm-cm-event-title is-hidden" aria-live="polite"></span>
-      <span id="mm-proxy-label" class="mm-cm-slug mm-cm-slug--secondary"></span>
-    </p>
+    <div class="mm-cm-header-context">
+      <p id="mm-cm-header-prompt" class="mm-cm-header-prompt">
+        Wybierz aktywne zawody…
+      </p>
+      <div
+        id="mm-cm-header-card-wrap"
+        class="mm-cm-header-card-wrap is-hidden"
+        aria-label="Aktywne wydarzenie"
+      >
+        <div id="mm-cm-header-card-root" class="mm-cm-header-card-root" aria-live="polite"></div>
+      </div>
+    </div>
   </header>
 
   <main class="main">

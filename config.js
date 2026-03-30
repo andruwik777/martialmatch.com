@@ -45,6 +45,19 @@
    * @param {string} raw wartość z query (może być już zdecodeowana przez przeglądarkę)
    * @returns {{ slug: string, numericId: string, tail: string } | null}
    */
+  /**
+   * Publiczny URL strony wydarzenia na martialmatch.com (nie proxy).
+   * @param {string} slug np. "628-x-superpuchar-polski-bjj-nogi-gi"
+   */
+  function martialMatchEventUrl(slug) {
+    if (slug == null || typeof slug !== "string") return "";
+    var s = slug.trim();
+    if (!s) return "";
+    return (
+      "https://martialmatch.com/pl/events/" + encodeURIComponent(s)
+    );
+  }
+
   function parseEventSlug(raw) {
     if (raw == null || typeof raw !== "string") return null;
     var s = raw.trim();
@@ -74,6 +87,7 @@
       return baseUrl + p;
     },
     parseEventSlug: parseEventSlug,
+    martialMatchEventUrl: martialMatchEventUrl,
   };
 
   function shouldAppendModeToHref(href) {

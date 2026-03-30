@@ -2145,7 +2145,7 @@
       if (!getShowAllFromUrl()) {
         if (filterPanelStatusEl) {
           filterPanelStatusEl.textContent =
-            "Włącz „Pokaż wszystkie wydarzenia”, aby filtrować listę wydarzeń.";
+            "Włącz „Wszystkie wydarzenia”, aby filtrować listę.";
         }
         if (filterListRootEl) filterListRootEl.innerHTML = "";
         hideClubJumpUI();

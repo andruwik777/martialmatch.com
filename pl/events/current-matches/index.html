@@ -27,23 +27,27 @@
           class="mm-cm-events-toolbar is-hidden"
           aria-label="Lista wydarzeń"
         >
-          <label class="mm-cm-events-toolbar__check-label">
+          <label
+            class="mm-cm-events-toolbar__check-label"
+            title="Pełna lista wydarzeń i dostępny filtr uczestników (wiele zapytań do API)."
+          >
             <input
               type="checkbox"
               id="mm-show-all-events-cb"
               class="mm-show-all-events-cb"
+              aria-label="Wszystkie wydarzenia — pełna lista i filtr uczestników"
             />
-            <span>Pokaż wszystkie wydarzenia</span>
+            <span>Wszystkie wydarzenia</span>
           </label>
           <div class="mm-cm-events-toolbar__actions">
             <button
               type="button"
               id="mm-change-active-event-btn"
               class="mm-change-active-event-btn is-hidden"
-              title="Usuwa wybór wydarzenia z adresu — widać znowu całą listę (filtr zawodników w URL zostaje)."
-              aria-label="Zmień aktywne wydarzenie — usuwa slug z adresu, lista wszystkich wydarzeń"
+              title="Usuwa slug z adresu — pełna lista wydarzeń. Filtr zawodników w URL zostaje."
+              aria-label="Zmień aktywne wydarzenie — usuwa slug, pokazuje wszystkie wydarzenia"
             >
-              Zmień aktywne wydarzenie
+              Zmień aktywne
             </button>
             <button
               type="button"

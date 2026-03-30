@@ -63,6 +63,7 @@
   var filterRootEl = document.getElementById("mm-cm-filter-root");
   var eventsToolbarEl = document.getElementById("mm-cm-events-toolbar");
   var showAllEventsCb = document.getElementById("mm-show-all-events-cb");
+  var showAllEventsWrapEl = document.getElementById("mm-show-all-events-wrap");
   var changeActiveEventBtn = document.getElementById("mm-change-active-event-btn");
   var filterMainBtnEvents = document.getElementById("mm-filter-main-btn-events");
   var filterMainBtn = document.getElementById("mm-filter-main-btn");
@@ -694,7 +695,9 @@
     '<svg class="mm-ev-place__pin" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>';
 
   function getShowAllFromUrl() {
-    var v = new URLSearchParams(window.location.search).get("show_all");
+    var p = new URLSearchParams(window.location.search);
+    if (!eventSlugFromQuery(p)) return false;
+    var v = p.get("show_all");
     return v !== null && String(v).toLowerCase() === "true";
   }
 
@@ -1152,6 +1155,10 @@
         p.set("tab", "events");
         needFix = true;
       }
+      if (p.has("show_all")) {
+        p.delete("show_all");
+        needFix = true;
+      }
     } else {
       if (t !== "events" && t !== "fights" && t !== "harmonogram") {
         p.set("tab", "fights");
@@ -1237,12 +1244,16 @@
     eventsToolbarEl.classList.toggle("is-hidden", !onEvents);
     filterMainBtn.classList.toggle("is-hidden", onEvents);
 
+    if (showAllEventsWrapEl) {
+      showAllEventsWrapEl.classList.toggle("is-hidden", !Boolean(evSlug));
+    }
+
     if (changeActiveEventBtn) {
       var showChange = onEvents && !showAll && Boolean(evSlug);
       changeActiveEventBtn.classList.toggle("is-hidden", !showChange);
     }
     if (filterMainBtnEvents) {
-      var showFilEv = onEvents && showAll;
+      var showFilEv = onEvents && showAll && Boolean(evSlug);
       filterMainBtnEvents.classList.toggle("is-hidden", !showFilEv);
     }
   }
@@ -1252,6 +1263,7 @@
     var p = new URLSearchParams(window.location.search);
     p.delete("slug");
     p.delete(URL_PARAM_SLUG_FILTER);
+    p.delete("show_all");
     p.set("tab", "events");
     replaceLocationQuery(p);
     lastFightsData = null;

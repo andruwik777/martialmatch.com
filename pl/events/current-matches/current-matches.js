@@ -36,6 +36,7 @@
   var CM_TAB_HARMONOGRAM = "harmonogram";
 
   var MM_ROW_FILTER_HIDDEN = "mm-filter-row--filter-hidden";
+  var MM_ROW_SEARCH_HIDDEN = "mm-filter-row--search-hidden";
   var MM_CLUB_FILTER_HIDDEN = "mm-filter-club--filter-hidden";
 
   var filterRootEl = document.getElementById("mm-cm-filter-root");
@@ -53,6 +54,7 @@
   var filterClearAllBtn = document.getElementById("mm-filter-clear-all-btn");
   var filterOnlySelectedCb = document.getElementById("mm-filter-only-selected-cb");
   var filterOnlyEmptyHintEl = document.getElementById("mm-filter-only-empty-hint");
+  var filterSearchInputEl = document.getElementById("mm-filter-search-input");
 
   var clubJumpOutsideHandler = null;
   var clubJumpEscapeHandler = null;
@@ -807,24 +809,25 @@
     }
   }
 
-  function applyFilterOnlySelectedVisibility() {
+  function normalizeForFilterSearch(name) {
+    return String(name || "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function applyFilterPanelListVisibility() {
     if (!filterListRootEl) return;
-    if (!filterOnlySelectedCb || !filterOnlySelectedCb.checked) {
-      if (filterOnlyEmptyHintEl) {
-        filterOnlyEmptyHintEl.classList.add("is-hidden");
-        filterOnlyEmptyHintEl.textContent = "";
-      }
-      var rowsOff = filterListRootEl.querySelectorAll(".mm-filter-row");
-      for (var i = 0; i < rowsOff.length; i++) {
-        rowsOff[i].classList.remove(MM_ROW_FILTER_HIDDEN);
-      }
-      var sectionsOff = filterListRootEl.querySelectorAll(".mm-filter-club");
-      for (var so = 0; so < sectionsOff.length; so++) {
-        sectionsOff[so].classList.remove(MM_CLUB_FILTER_HIDDEN);
-      }
-      return;
-    }
+    var queryRaw = filterSearchInputEl ? filterSearchInputEl.value : "";
+    var query = String(queryRaw || "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, " ");
+    var onlySel = Boolean(filterOnlySelectedCb && filterOnlySelectedCb.checked);
+
     var anyChecked = false;
+    var anyVisible = false;
+
     var rows = filterListRootEl.querySelectorAll(".mm-filter-row");
     for (var j = 0; j < rows.length; j++) {
       var row = rows[j];
@@ -833,19 +836,38 @@
       );
       var checked = Boolean(mcb && mcb.checked);
       if (checked) anyChecked = true;
-      if (checked) {
+
+      var hay = row.getAttribute("data-mm-filter-search") || "";
+      var searchOk = !query || hay.indexOf(query) !== -1;
+      if (searchOk) {
+        row.classList.remove(MM_ROW_SEARCH_HIDDEN);
+      } else {
+        row.classList.add(MM_ROW_SEARCH_HIDDEN);
+      }
+
+      var selOk = !onlySel || checked;
+      if (selOk) {
         row.classList.remove(MM_ROW_FILTER_HIDDEN);
       } else {
         row.classList.add(MM_ROW_FILTER_HIDDEN);
       }
+
+      if (searchOk && selOk) {
+        anyVisible = true;
+      }
     }
+
     var sections = filterListRootEl.querySelectorAll(".mm-filter-club");
     for (var k = 0; k < sections.length; k++) {
       var sec = sections[k];
       var childRows = sec.querySelectorAll(".mm-filter-row");
       var vis = false;
       for (var c = 0; c < childRows.length; c++) {
-        if (!childRows[c].classList.contains(MM_ROW_FILTER_HIDDEN)) {
+        var rr = childRows[c];
+        if (
+          !rr.classList.contains(MM_ROW_SEARCH_HIDDEN) &&
+          !rr.classList.contains(MM_ROW_FILTER_HIDDEN)
+        ) {
           vis = true;
           break;
         }
@@ -856,9 +878,14 @@
         sec.classList.add(MM_CLUB_FILTER_HIDDEN);
       }
     }
+
     if (filterOnlyEmptyHintEl) {
-      if (!anyChecked) {
+      if (onlySel && !anyChecked) {
         filterOnlyEmptyHintEl.textContent = "Brak zaznaczonych zawodników.";
+        filterOnlyEmptyHintEl.classList.remove("is-hidden");
+      } else if (query && !anyVisible) {
+        filterOnlyEmptyHintEl.textContent =
+          "Brak zawodników pasujących do wyszukiwania.";
         filterOnlyEmptyHintEl.classList.remove("is-hidden");
       } else {
         filterOnlyEmptyHintEl.textContent = "";
@@ -876,7 +903,7 @@
       boxes[i].checked = false;
     }
     refreshAllClubHeaderCheckboxes();
-    applyFilterOnlySelectedVisibility();
+    applyFilterPanelListVisibility();
   }
 
   function onFilterListCheckboxChange(ev) {
@@ -893,13 +920,13 @@
         kids[i].checked = t.checked;
       }
       setClubHeaderCheckboxAria(t);
-      applyFilterOnlySelectedVisibility();
+      applyFilterPanelListVisibility();
       return;
     }
 
     if (t.hasAttribute("data-mm-filter-member")) {
       updateClubHeaderCheckboxFromMembers(section);
-      applyFilterOnlySelectedVisibility();
+      applyFilterPanelListVisibility();
     }
   }
 
@@ -945,6 +972,10 @@
         var item = list[r];
         var row = document.createElement("div");
         row.className = "mm-filter-row";
+        row.setAttribute(
+          "data-mm-filter-search",
+          normalizeForFilterSearch(item.name)
+        );
 
         var textWrap = document.createElement("div");
         textWrap.className = "mm-filter-row__text";
@@ -981,7 +1012,10 @@
     if (filterOnlySelectedCb) {
       filterOnlySelectedCb.checked = false;
     }
-    applyFilterOnlySelectedVisibility();
+    if (filterSearchInputEl) {
+      filterSearchInputEl.value = "";
+    }
+    applyFilterPanelListVisibility();
   }
 
   function syncFilterCheckboxesFromUrl() {
@@ -995,7 +1029,7 @@
       b.checked = Boolean(idSet && idSet[b.value]);
     }
     refreshAllClubHeaderCheckboxes();
-    applyFilterOnlySelectedVisibility();
+    applyFilterPanelListVisibility();
   }
 
   function countFilterIdsInUrl() {
@@ -1421,7 +1455,13 @@
   }
   if (filterOnlySelectedCb) {
     filterOnlySelectedCb.addEventListener("change", function () {
-      applyFilterOnlySelectedVisibility();
+      applyFilterPanelListVisibility();
+    });
+  }
+
+  if (filterSearchInputEl) {
+    filterSearchInputEl.addEventListener("input", function () {
+      applyFilterPanelListVisibility();
     });
   }
 

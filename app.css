@@ -814,6 +814,39 @@ body {
   margin: 0;
 }
 
+.mm-filter-search-wrap {
+  margin: 0 0 0.5rem;
+}
+
+.mm-filter-search-input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: #e8e8ec;
+  background: #1a1d26;
+  border: 1px solid #3d4a66;
+  border-radius: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-filter-search-input::placeholder {
+  color: #7a8499;
+}
+
+.mm-filter-search-input:focus {
+  outline: none;
+  border-color: #5b8cff;
+  box-shadow: 0 0 0 1px rgba(91, 140, 255, 0.35);
+}
+
+.mm-filter-search-input:focus-visible {
+  outline: 2px solid #5b8cff;
+  outline-offset: 2px;
+}
+
 .mm-filter-club-jump-wrap {
   position: relative;
   z-index: 5;
@@ -1198,6 +1231,10 @@ body {
 
 /* Tylko zaznaczone — pewne ukrycie mimo display:grid na wierszu (np. WebView) */
 .mm-filter-row.mm-filter-row--filter-hidden {
+  display: none !important;
+}
+
+.mm-filter-row.mm-filter-row--search-hidden {
   display: none !important;
 }
 

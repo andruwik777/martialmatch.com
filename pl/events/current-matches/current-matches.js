@@ -1101,11 +1101,12 @@
 
   function activateEventSlug(slugObj, preferredTab) {
     var tab =
-      preferredTab == null ? CM_TAB_FIGHTS : preferredTab;
+      preferredTab == null ? CM_TAB_EVENTS : preferredTab;
     closeFilterPanel();
     replaceSlugInUrl(slugObj.slug, tab);
     notifyUrlChanged();
     applyCmTabDom(getCmTabFromUrl());
+    updateFilterMainButtonLabel();
     highlightSelectedEventRow(slugObj.slug);
     if (placeholderEl) {
       placeholderEl.classList.remove("is-hidden");
@@ -1241,6 +1242,7 @@
     notifyUrlChanged();
     applyCmTabDom(tab);
     refreshEventsListVisibility();
+    updateFilterMainButtonLabel();
   }
 
   function initCmTabsFromUrl() {
@@ -1288,7 +1290,7 @@
         var parsed = cfg.parseEventSlug(slugStr);
         if (!parsed) return;
         evClick.preventDefault();
-        activateEventSlug(parsed, CM_TAB_FIGHTS);
+        activateEventSlug(parsed);
       });
       eventsListEl.addEventListener("keydown", function (evKd) {
         if (evKd.key !== "Enter" && evKd.key !== " ") return;
@@ -1300,7 +1302,7 @@
         evKd.preventDefault();
         var slugStr = row.getAttribute("data-mm-event-slug");
         var parsed = cfg.parseEventSlug(slugStr || "");
-        if (parsed) activateEventSlug(parsed, CM_TAB_FIGHTS);
+        if (parsed) activateEventSlug(parsed);
       });
     }
     var tabsWrap = tabFightsBtn.closest(".mm-cm-tabs");
@@ -1797,6 +1799,59 @@
     return Object.keys(idSet).length;
   }
 
+  /**
+   * PublicId lookup for the active event (walki / harmonogram context).
+   * @returns {Record<string, true> | null}
+   */
+  function buildActiveEventPublicIdLookup() {
+    if (!eventNumericId) return null;
+    var nid = eventNumericId;
+    var c = eventCache[nid];
+    var entries =
+      c && c.startingListEntries && c.startingListEntries.length
+        ? c.startingListEntries
+        : null;
+    if (
+      !entries &&
+      startingListEntries &&
+      startingListEntries.length &&
+      evSlug &&
+      String(evSlug.numericId) === String(nid)
+    ) {
+      entries = startingListEntries;
+    }
+    if (entries && entries.length) {
+      var out = Object.create(null);
+      for (var i = 0; i < entries.length; i++) {
+        out[entries[i].publicId] = true;
+      }
+      return out;
+    }
+    var pm = eventParticipantIdMap[nid];
+    if (pm && typeof pm === "object") return pm;
+    return null;
+  }
+
+  /**
+   * On Wydarzenia tab: all IDs in URL. On Walki/Harmonogram: IDs in URL that
+   * appear on the current event's starting list.
+   */
+  function countFilterIdsForMainButton() {
+    var idSet = getFilterIdSetFromUrl();
+    if (!idSet) return 0;
+    var tab = getCmTabFromUrl();
+    if (tab === CM_TAB_EVENTS) {
+      return Object.keys(idSet).length;
+    }
+    var inEvent = buildActiveEventPublicIdLookup();
+    if (!inEvent) return 0;
+    var n = 0;
+    for (var k in idSet) {
+      if (inEvent[k]) n++;
+    }
+    return n;
+  }
+
   function updateFilterMainButtonLabel() {
     if (!filterMainBtn) return;
     var lab = filterMainBtn.querySelector(".mm-filter-main-btn__label");
@@ -1811,23 +1866,55 @@
         "Collapse without applying: list and schedule stay as last Apply Filter.";
       return;
     }
-    var n = countFilterIdsInUrl();
+    var n = countFilterIdsForMainButton();
+    var tab = getCmTabFromUrl();
+    var totalUrl = countFilterIdsInUrl();
     if (lab) {
-      lab.textContent =
-        n > 0 ? "Filtr · " + n : "Filtr · wszyscy";
+      if (tab === CM_TAB_EVENTS) {
+        lab.textContent =
+          totalUrl > 0 ? "Filtr · " + totalUrl : "Filtr · wszyscy";
+      } else {
+        lab.textContent =
+          totalUrl > 0 ? "Filtr · " + n : "Filtr · wszyscy";
+      }
     }
-    filterMainBtn.setAttribute(
-      "aria-label",
-      n > 0
-        ? "Otwórz filtr — aktywnych zawodników w URL: " + n + "."
-        : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
-    );
-    filterMainBtn.title =
-      n > 0
-        ? "W filtrze zaznaczono " +
-          n +
-          " zawodników (zastosowane w URL). Kliknij, by edytować."
-        : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
+    if (tab === CM_TAB_EVENTS) {
+      filterMainBtn.setAttribute(
+        "aria-label",
+        n > 0
+          ? "Otwórz filtr — w URL wybranych zawodników: " + n + "."
+          : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
+      );
+      filterMainBtn.title =
+        n > 0
+          ? "W URL jest " +
+            n +
+            " zawodników (wszystkie wydarzenia). Kliknij, by edytować."
+          : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
+    } else {
+      filterMainBtn.setAttribute(
+        "aria-label",
+        n > 0
+          ? "Otwórz filtr — dla tego wydarzenia aktywnych z URL: " + n + " z " + totalUrl + "."
+          : totalUrl > 0
+            ? "Otwórz filtr — w URL " +
+              totalUrl +
+              " zawodników, żaden nie występuje na liście tego wydarzenia."
+            : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
+      );
+      filterMainBtn.title =
+        n > 0
+          ? "Dla tego wydarzenia " +
+            n +
+            " z " +
+            totalUrl +
+            " zawodników z URL pasuje do listy startowej. Kliknij, by edytować."
+          : totalUrl > 0
+            ? "W URL jest " +
+              totalUrl +
+              " zawodników, ale żaden nie jest na liście tego wydarzenia."
+            : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
+    }
   }
 
   function setFilterMobileBarVisible(visible) {
@@ -2274,6 +2361,7 @@
           if (lastFightsData) renderFights(lastFightsData);
           refreshHarmonogram();
           prefetchStartingListEarly();
+          updateFilterMainButtonLabel();
         })
         .catch(function (err) {
           showError(
@@ -2286,6 +2374,7 @@
       clearError();
     }
     updatePollingForTab();
+    updateFilterMainButtonLabel();
     if (getCmTabFromUrl() === CM_TAB_EVENTS && getFilterIdSetFromUrl()) {
       ensureAggregateParticipantMaps()
         .then(function () {

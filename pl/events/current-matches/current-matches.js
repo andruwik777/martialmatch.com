@@ -44,6 +44,9 @@
   var CM_TAB_FIGHTS = "fights";
   var CM_TAB_HARMONOGRAM = "harmonogram";
 
+  var URL_PARAM_EVENTS_FILTER = "events_filter";
+  var URL_PARAM_SLUG_FILTER = "slug_filter";
+
   var eventCache = Object.create(null);
   var parsedEventsList = [];
   /** @type {Record<string, Record<string, true>>} */
@@ -388,7 +391,7 @@
     }
 
     var index = buildCategoryScheduleIndex(lastSchedulesPayload);
-    var idSet = getFilterIdSetFromUrl();
+    var idSet = getSlugFilterIdSetFromUrl();
     var filtered = startingListEntries.filter(function (e) {
       if (e.categoryParameterId == null) return false;
       if (idSet && !idSet[e.publicId]) return false;
@@ -728,7 +731,7 @@
       return;
     }
 
-    var idSet = getFilterIdSetFromUrl();
+    var idSet = getEventsFilterIdSetFromUrl();
     var mapsEmpty = true;
     for (var mp in eventParticipantIdMap) {
       mapsEmpty = false;
@@ -934,10 +937,11 @@
   }
 
   /**
-   * @returns {Record<string, true> | null} null = brak filtra (wszystkie walki)
+   * @param {string} paramName
+   * @returns {Record<string, true> | null}
    */
-  function getFilterIdSetFromUrl() {
-    var raw = new URLSearchParams(window.location.search).get("filter");
+  function getPublicIdSetFromUrlParam(paramName) {
+    var raw = new URLSearchParams(window.location.search).get(paramName);
     if (raw == null || !String(raw).trim()) return null;
     var parts = String(raw).split(",");
     var map = Object.create(null);
@@ -946,6 +950,14 @@
       if (id) map[id] = true;
     }
     return Object.keys(map).length ? map : null;
+  }
+
+  function getEventsFilterIdSetFromUrl() {
+    return getPublicIdSetFromUrlParam(URL_PARAM_EVENTS_FILTER);
+  }
+
+  function getSlugFilterIdSetFromUrl() {
+    return getPublicIdSetFromUrlParam(URL_PARAM_SLUG_FILTER);
   }
 
   function fightMatchesFilter(row, idSet) {
@@ -957,13 +969,7 @@
     return Boolean((a && idSet[a]) || (b && idSet[b]));
   }
 
-  function setFilterQueryInUrl(idsUnique) {
-    var p = new URLSearchParams(window.location.search);
-    if (!idsUnique.length) {
-      p.delete("filter");
-    } else {
-      p.set("filter", idsUnique.join(","));
-    }
+  function commitSearchParamsAndRefreshFilterUi(p) {
     var qs = p.toString();
     var path = window.location.pathname || "";
     var hash = window.location.hash || "";
@@ -972,6 +978,26 @@
     refreshSlugFromLocation();
     refreshEventsListVisibility();
     updateFilterMainButtonLabel();
+  }
+
+  function setEventsFilterQueryInUrl(idsUnique) {
+    var p = new URLSearchParams(window.location.search);
+    if (!idsUnique.length) {
+      p.delete(URL_PARAM_EVENTS_FILTER);
+    } else {
+      p.set(URL_PARAM_EVENTS_FILTER, idsUnique.join(","));
+    }
+    commitSearchParamsAndRefreshFilterUi(p);
+  }
+
+  function setSlugFilterQueryInUrl(idsUnique) {
+    var p = new URLSearchParams(window.location.search);
+    if (!idsUnique.length) {
+      p.delete(URL_PARAM_SLUG_FILTER);
+    } else {
+      p.set(URL_PARAM_SLUG_FILTER, idsUnique.join(","));
+    }
+    commitSearchParamsAndRefreshFilterUi(p);
   }
 
   function replaceLocationQuery(p) {
@@ -1026,10 +1052,16 @@
 
   function replaceSlugInUrl(slugStr, tab) {
     var p = new URLSearchParams(window.location.search);
+    var prevParsed = eventSlugFromQuery(p);
+    var prevSlug = prevParsed ? prevParsed.slug : "";
     if (slugStr) {
+      if (prevSlug !== slugStr) {
+        p.delete(URL_PARAM_SLUG_FILTER);
+      }
       p.set("slug", slugStr);
     } else {
       p.delete("slug");
+      p.delete(URL_PARAM_SLUG_FILTER);
       tab = CM_TAB_EVENTS;
     }
     if (tab === CM_TAB_HARMONOGRAM) p.set("tab", "harmonogram");
@@ -1086,6 +1118,7 @@
     closeFilterPanel();
     var p = new URLSearchParams(window.location.search);
     p.delete("slug");
+    p.delete(URL_PARAM_SLUG_FILTER);
     p.set("tab", "events");
     replaceLocationQuery(p);
     lastFightsData = null;
@@ -1870,7 +1903,10 @@
 
   function syncFilterCheckboxesFromUrl() {
     if (!filterListRootEl) return;
-    var idSet = getFilterIdSetFromUrl();
+    var idSet =
+      getCmTabFromUrl() === CM_TAB_EVENTS
+        ? getEventsFilterIdSetFromUrl()
+        : getSlugFilterIdSetFromUrl();
     var boxes = filterListRootEl.querySelectorAll(
       'input[type="checkbox"][data-mm-filter-member]'
     );
@@ -1882,8 +1918,14 @@
     applyFilterPanelListVisibility();
   }
 
-  function countFilterIdsInUrl() {
-    var idSet = getFilterIdSetFromUrl();
+  function countEventsFilterIdsInUrl() {
+    var idSet = getEventsFilterIdSetFromUrl();
+    if (!idSet) return 0;
+    return Object.keys(idSet).length;
+  }
+
+  function countSlugFilterIdsInUrl() {
+    var idSet = getSlugFilterIdSetFromUrl();
     if (!idSet) return 0;
     return Object.keys(idSet).length;
   }
@@ -1926,12 +1968,13 @@
    * appear on the current event's starting list.
    */
   function countFilterIdsForMainButton() {
-    var idSet = getFilterIdSetFromUrl();
-    if (!idSet) return 0;
     var tab = getCmTabFromUrl();
     if (tab === CM_TAB_EVENTS) {
-      return Object.keys(idSet).length;
+      var es = getEventsFilterIdSetFromUrl();
+      return es ? Object.keys(es).length : 0;
     }
+    var idSet = getSlugFilterIdSetFromUrl();
+    if (!idSet) return 0;
     var inEvent = buildActiveEventPublicIdLookup();
     if (!inEvent) return 0;
     var n = 0;
@@ -1947,7 +1990,10 @@
 
     var n = countFilterIdsForMainButton();
     var tab = getCmTabFromUrl();
-    var totalUrl = countFilterIdsInUrl();
+    var totalUrl =
+      tab === CM_TAB_EVENTS
+        ? countEventsFilterIdsInUrl()
+        : countSlugFilterIdsInUrl();
 
     for (var ti = 0; ti < triggers.length; ti++) {
       var btn = triggers[ti];
@@ -2070,7 +2116,11 @@
 
   function applyFilterFromPanel() {
     var ids = collectCheckedPublicIds();
-    setFilterQueryInUrl(ids);
+    if (getCmTabFromUrl() === CM_TAB_EVENTS) {
+      setEventsFilterQueryInUrl(ids);
+    } else {
+      setSlugFilterQueryInUrl(ids);
+    }
     closeFilterPanel();
     if (getCmTabFromUrl() === CM_TAB_EVENTS) {
       refreshEventsListVisibility();
@@ -2242,7 +2292,7 @@
     lastFightsData = data;
     listEl.innerHTML = "";
 
-    var idSet = getFilterIdSetFromUrl();
+    var idSet = getSlugFilterIdSetFromUrl();
     var queue = data.fightQueueStatuses || {};
     var allRows = (data.result || []).slice();
     allRows.sort(function (a, b) {
@@ -2443,13 +2493,13 @@
         for (var ci = 0; ci < startingListEntries.length; ci++) {
           inEvent[startingListEntries[ci].publicId] = true;
         }
-        var urlSet = getFilterIdSetFromUrl();
+        var urlSet = getSlugFilterIdSetFromUrl();
         if (urlSet) {
           var remaining = [];
           for (var k in urlSet) {
             if (!inEvent[k]) remaining.push(k);
           }
-          setFilterQueryInUrl(remaining);
+          setSlugFilterQueryInUrl(remaining);
         }
         syncFilterCheckboxesFromUrl();
         if (lastFightsData) renderFights(lastFightsData);
@@ -2508,7 +2558,7 @@
     if (
       getCmTabFromUrl() === CM_TAB_EVENTS &&
       getShowAllFromUrl() &&
-      getFilterIdSetFromUrl()
+      getEventsFilterIdSetFromUrl()
     ) {
       ensureAggregateParticipantMaps()
         .then(function () {

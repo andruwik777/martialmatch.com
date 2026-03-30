@@ -35,6 +35,9 @@
   var CM_TAB_FIGHTS = "fights";
   var CM_TAB_HARMONOGRAM = "harmonogram";
 
+  var MM_ROW_FILTER_HIDDEN = "mm-filter-row--filter-hidden";
+  var MM_CLUB_FILTER_HIDDEN = "mm-filter-club--filter-hidden";
+
   var filterRootEl = document.getElementById("mm-cm-filter-root");
   var filterMainBtn = document.getElementById("mm-filter-main-btn");
   var filterPanelEl = document.getElementById("mm-filter-panel");
@@ -47,6 +50,9 @@
   var filterClubJumpRootEl = document.getElementById("mm-filter-club-jump-root");
   var filterClubJumpToggleBtn = document.getElementById("mm-filter-club-jump-toggle");
   var filterClubJumpListEl = document.getElementById("mm-filter-club-jump-list");
+  var filterClearAllBtn = document.getElementById("mm-filter-clear-all-btn");
+  var filterOnlySelectedCb = document.getElementById("mm-filter-only-selected-cb");
+  var filterOnlyEmptyHintEl = document.getElementById("mm-filter-only-empty-hint");
 
   var clubJumpOutsideHandler = null;
   var clubJumpEscapeHandler = null;
@@ -681,8 +687,8 @@
   function bindClubJumpOutside() {
     unbindClubJumpOutside();
     clubJumpOutsideHandler = function (ev) {
-      var root = filterClubJumpRootEl;
-      if (root && root.contains(ev.target)) return;
+      var wrap = filterClubJumpWrapEl;
+      if (wrap && wrap.contains(ev.target)) return;
       closeClubJumpDropdown();
     };
     clubJumpEscapeHandler = function (ev) {
@@ -729,11 +735,13 @@
     if (!filterClubJumpWrapEl || !filterClubJumpListEl) return;
     closeClubJumpDropdown();
     filterClubJumpListEl.innerHTML = "";
+    var clubCol = document.getElementById("mm-filter-club-jump-club-col");
+    filterClubJumpWrapEl.classList.remove("is-hidden");
     if (!clubNames || clubNames.length < 2) {
-      filterClubJumpWrapEl.classList.add("is-hidden");
+      if (clubCol) clubCol.classList.add("is-hidden");
       return;
     }
-    filterClubJumpWrapEl.classList.remove("is-hidden");
+    if (clubCol) clubCol.classList.remove("is-hidden");
     for (var i = 0; i < clubNames.length; i++) {
       var li = document.createElement("li");
       li.setAttribute("role", "option");
@@ -799,6 +807,78 @@
     }
   }
 
+  function applyFilterOnlySelectedVisibility() {
+    if (!filterListRootEl) return;
+    if (!filterOnlySelectedCb || !filterOnlySelectedCb.checked) {
+      if (filterOnlyEmptyHintEl) {
+        filterOnlyEmptyHintEl.classList.add("is-hidden");
+        filterOnlyEmptyHintEl.textContent = "";
+      }
+      var rowsOff = filterListRootEl.querySelectorAll(".mm-filter-row");
+      for (var i = 0; i < rowsOff.length; i++) {
+        rowsOff[i].classList.remove(MM_ROW_FILTER_HIDDEN);
+      }
+      var sectionsOff = filterListRootEl.querySelectorAll(".mm-filter-club");
+      for (var so = 0; so < sectionsOff.length; so++) {
+        sectionsOff[so].classList.remove(MM_CLUB_FILTER_HIDDEN);
+      }
+      return;
+    }
+    var anyChecked = false;
+    var rows = filterListRootEl.querySelectorAll(".mm-filter-row");
+    for (var j = 0; j < rows.length; j++) {
+      var row = rows[j];
+      var mcb = row.querySelector(
+        'input[type="checkbox"][data-mm-filter-member]'
+      );
+      var checked = Boolean(mcb && mcb.checked);
+      if (checked) anyChecked = true;
+      if (checked) {
+        row.classList.remove(MM_ROW_FILTER_HIDDEN);
+      } else {
+        row.classList.add(MM_ROW_FILTER_HIDDEN);
+      }
+    }
+    var sections = filterListRootEl.querySelectorAll(".mm-filter-club");
+    for (var k = 0; k < sections.length; k++) {
+      var sec = sections[k];
+      var childRows = sec.querySelectorAll(".mm-filter-row");
+      var vis = false;
+      for (var c = 0; c < childRows.length; c++) {
+        if (!childRows[c].classList.contains(MM_ROW_FILTER_HIDDEN)) {
+          vis = true;
+          break;
+        }
+      }
+      if (vis) {
+        sec.classList.remove(MM_CLUB_FILTER_HIDDEN);
+      } else {
+        sec.classList.add(MM_CLUB_FILTER_HIDDEN);
+      }
+    }
+    if (filterOnlyEmptyHintEl) {
+      if (!anyChecked) {
+        filterOnlyEmptyHintEl.textContent = "Brak zaznaczonych zawodników.";
+        filterOnlyEmptyHintEl.classList.remove("is-hidden");
+      } else {
+        filterOnlyEmptyHintEl.textContent = "";
+        filterOnlyEmptyHintEl.classList.add("is-hidden");
+      }
+    }
+  }
+
+  function clearAllMemberFilterCheckboxes() {
+    if (!filterListRootEl) return;
+    var boxes = filterListRootEl.querySelectorAll(
+      'input[type="checkbox"][data-mm-filter-member]'
+    );
+    for (var i = 0; i < boxes.length; i++) {
+      boxes[i].checked = false;
+    }
+    refreshAllClubHeaderCheckboxes();
+    applyFilterOnlySelectedVisibility();
+  }
+
   function onFilterListCheckboxChange(ev) {
     var t = ev.target;
     if (!t || t.type !== "checkbox" || !filterListRootEl) return;
@@ -813,11 +893,13 @@
         kids[i].checked = t.checked;
       }
       setClubHeaderCheckboxAria(t);
+      applyFilterOnlySelectedVisibility();
       return;
     }
 
     if (t.hasAttribute("data-mm-filter-member")) {
       updateClubHeaderCheckboxFromMembers(section);
+      applyFilterOnlySelectedVisibility();
     }
   }
 
@@ -896,6 +978,10 @@
       filterListRootEl.appendChild(section);
     }
     rebuildClubJumpDropdown(grouped.clubNames);
+    if (filterOnlySelectedCb) {
+      filterOnlySelectedCb.checked = false;
+    }
+    applyFilterOnlySelectedVisibility();
   }
 
   function syncFilterCheckboxesFromUrl() {
@@ -909,6 +995,7 @@
       b.checked = Boolean(idSet && idSet[b.value]);
     }
     refreshAllClubHeaderCheckboxes();
+    applyFilterOnlySelectedVisibility();
   }
 
   function countFilterIdsInUrl() {
@@ -922,13 +1009,13 @@
     var lab = filterMainBtn.querySelector(".mm-filter-main-btn__label");
     filterMainBtn.setAttribute("aria-expanded", filterPanelOpen ? "true" : "false");
     if (filterPanelOpen) {
-      if (lab) lab.textContent = "Zwiń";
+      if (lab) lab.textContent = "Hide";
       filterMainBtn.setAttribute(
         "aria-label",
-        "Zwiń panel filtra bez stosowania zmian — aby zastosować wybór, użyj Zastosuj."
+        "Collapse filter panel without applying changes — use Apply Filter to save."
       );
       filterMainBtn.title =
-        "Zwiń bez stosowania: lista i harmonogram pozostają według ostatniego Zastosuj.";
+        "Collapse without applying: list and schedule stay as last Apply Filter.";
       return;
     }
     var n = countFilterIdsInUrl();
@@ -1325,6 +1412,17 @@
 
   if (filterListRootEl) {
     filterListRootEl.addEventListener("change", onFilterListCheckboxChange);
+  }
+
+  if (filterClearAllBtn) {
+    filterClearAllBtn.addEventListener("click", function () {
+      clearAllMemberFilterCheckboxes();
+    });
+  }
+  if (filterOnlySelectedCb) {
+    filterOnlySelectedCb.addEventListener("change", function () {
+      applyFilterOnlySelectedVisibility();
+    });
   }
 
   prefetchStartingListEarly();

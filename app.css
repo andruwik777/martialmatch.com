@@ -206,6 +206,62 @@ body {
   line-height: 0;
 }
 
+/* API lane hints: starting-list (red) → schedules (yellow) → fights (green) */
+.mm-event-row__lanes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  align-self: stretch;
+  padding-left: 0.15rem;
+}
+
+.mm-event-lane-slot {
+  width: 11px;
+  height: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mm-event-lane {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.mm-event-lane--starting.mm-event-lane--filled {
+  background: #ef4444;
+}
+
+.mm-event-lane--starting.mm-event-lane--outline {
+  border: 2px solid #ef4444;
+  background: transparent;
+}
+
+.mm-event-lane--schedules.mm-event-lane--filled {
+  background: #eab308;
+}
+
+.mm-event-lane--schedules.mm-event-lane--outline {
+  border: 2px solid #eab308;
+  background: transparent;
+}
+
+.mm-event-lane--fights.mm-event-lane--filled {
+  background: #22c55e;
+}
+
+.mm-event-lane--fights.mm-event-lane--outline {
+  border: 2px solid #22c55e;
+  background: transparent;
+}
+
 .mm-event-title-link {
   text-decoration: none;
   color: #f2f2f6;

@@ -778,6 +778,106 @@
     }
   }
 
+  function schedulesPayloadHasData(payload) {
+    return Boolean(
+      payload &&
+      typeof payload === "object" &&
+      Array.isArray(payload.schedules) &&
+      payload.schedules.length > 0
+    );
+  }
+
+  function fightsDataHasData(data) {
+    return Boolean(
+      data &&
+      typeof data === "object" &&
+      Array.isArray(data.result) &&
+      data.result.length > 0
+    );
+  }
+
+  /**
+   * @param {HTMLElement} wrap
+   * @param {string} nid
+   */
+  function paintEventCardLaneStrip(wrap, nid) {
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    var c = eventCache[nid] || {};
+    var triple = [
+      {
+        lane: c.laneStarting,
+        mod: "starting",
+        tFill: "Lista startowa: są zawodnicy.",
+        tOut: "Lista startowa: brak zawodników (odpowiedź z serwera).",
+      },
+      {
+        lane: c.laneSchedules,
+        mod: "schedules",
+        tFill: "Harmonogram: w odpowiedzi API są harmonogramy.",
+        tOut: "Harmonogram: w odpowiedzi API brak harmonogramów.",
+      },
+      {
+        lane: c.laneFights,
+        mod: "fights",
+        tFill: "Walki: w odpowiedzi API jest co najmniej jedna walka.",
+        tOut: "Walki: w odpowiedzi API brak walk.",
+      },
+    ];
+    for (var i = 0; i < triple.length; i++) {
+      var slot = document.createElement("div");
+      slot.className = "mm-event-lane-slot";
+      var t = triple[i];
+      if (t.lane == null) {
+        wrap.appendChild(slot);
+        continue;
+      }
+      var dot = document.createElement("span");
+      dot.className =
+        "mm-event-lane mm-event-lane--" +
+        t.mod +
+        (t.lane.has ? " mm-event-lane--filled" : " mm-event-lane--outline");
+      dot.setAttribute(
+        "title",
+        t.lane.has ? t.tFill : t.tOut
+      );
+      slot.appendChild(dot);
+      wrap.appendChild(slot);
+    }
+  }
+
+  function buildEventLaneStrip(nid) {
+    var wrap = document.createElement("div");
+    wrap.className = "mm-event-row__lanes";
+    wrap.setAttribute("aria-hidden", "true");
+    paintEventCardLaneStrip(wrap, nid);
+    return wrap;
+  }
+
+  function refreshLanesForNumericId(nid) {
+    var idStr = String(nid);
+    if (eventsListEl) {
+      var row = eventsListEl.querySelector(
+        '[data-mm-event-id="' + idStr + '"]'
+      );
+      if (row) {
+        var w = row.querySelector(".mm-event-row__lanes");
+        if (w) paintEventCardLaneStrip(w, idStr);
+      }
+    }
+    if (
+      evSlug &&
+      String(evSlug.numericId) === idStr &&
+      headerCardRootEl
+    ) {
+      var hRow = headerCardRootEl.querySelector(".mm-event-row");
+      if (hRow) {
+        var hw = hRow.querySelector(".mm-event-row__lanes");
+        if (hw) paintEventCardLaneStrip(hw, idStr);
+      }
+    }
+  }
+
   /**
    * @param {object} ev
    * @param {{ interactive?: boolean }} opts
@@ -875,6 +975,7 @@
 
     root.appendChild(media);
     root.appendChild(body);
+    root.appendChild(buildEventLaneStrip(ev.numericId));
     return root;
   }
 
@@ -1251,8 +1352,12 @@
           startingListEntries: entries,
           matNamesById: mats,
           loaded: true,
+          laneStarting: { has: entries.length > 0 },
+          laneSchedules: { has: schedulesPayloadHasData(pack.sched) },
+          laneFights: { has: fightsDataHasData(pack.fd) },
         };
         applyCachedEventToView(nid);
+        refreshLanesForNumericId(nid);
       });
   }
 
@@ -1328,9 +1433,23 @@
                 eventCache[ev.numericId] = {};
               }
               eventCache[ev.numericId].startingListEntries = entries;
+              eventCache[ev.numericId].laneStarting = {
+                has: entries.length > 0,
+              };
+              refreshLanesForNumericId(ev.numericId);
             })
             .catch(function () {
               eventParticipantIdMap[ev.numericId] = Object.create(null);
+              var ex = eventCache[ev.numericId];
+              if (ex && ex.loaded) {
+                return;
+              }
+              if (!eventCache[ev.numericId]) {
+                eventCache[ev.numericId] = {};
+              }
+              eventCache[ev.numericId].startingListEntries = [];
+              eventCache[ev.numericId].laneStarting = { has: false };
+              refreshLanesForNumericId(ev.numericId);
             });
         });
       })(list[idx], idx);
@@ -2219,12 +2338,14 @@
       .then(function (html) {
         var entries = parseStartingListHtml(html);
         startingListLoadPromise = null;
+        if (!eventCache[nid]) eventCache[nid] = {};
+        eventCache[nid].startingListEntries = entries;
+        eventCache[nid].laneStarting = { has: entries.length > 0 };
+        refreshLanesForNumericId(nid);
         if (!entries.length) {
           throw new Error("Brak uczestników na liście (nieznany HTML?)");
         }
         startingListEntries = entries;
-        if (!eventCache[nid]) eventCache[nid] = {};
-        eventCache[nid].startingListEntries = entries;
         refreshHarmonogram();
         return entries;
       })
@@ -2458,7 +2579,12 @@
       clearError();
       renderFights(data);
       if (eventNumericId && eventCache[eventNumericId]) {
-        eventCache[eventNumericId].fightsData = data;
+        var c = eventCache[eventNumericId];
+        c.fightsData = data;
+        if (c.laneFights != null) {
+          c.laneFights = { has: fightsDataHasData(data) };
+          refreshLanesForNumericId(eventNumericId);
+        }
       }
     });
   }

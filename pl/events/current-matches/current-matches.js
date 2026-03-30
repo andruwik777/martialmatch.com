@@ -541,6 +541,7 @@
     window.addEventListener("popstate", function () {
       applyCmTabDom(getCmTabFromUrl());
       refreshHarmonogram();
+      updateFilterMainButtonLabel();
     });
     tabFightsBtn.addEventListener("click", function () {
       setCmTab(CM_TAB_FIGHTS);
@@ -910,14 +911,43 @@
     refreshAllClubHeaderCheckboxes();
   }
 
+  function countFilterIdsInUrl() {
+    var idSet = getFilterIdSetFromUrl();
+    if (!idSet) return 0;
+    return Object.keys(idSet).length;
+  }
+
   function updateFilterMainButtonLabel() {
     if (!filterMainBtn) return;
     var lab = filterMainBtn.querySelector(".mm-filter-main-btn__label");
+    filterMainBtn.setAttribute("aria-expanded", filterPanelOpen ? "true" : "false");
     if (filterPanelOpen) {
-      if (lab) lab.textContent = "Hide Filter";
+      if (lab) lab.textContent = "Zwiń";
+      filterMainBtn.setAttribute(
+        "aria-label",
+        "Zwiń panel filtra bez stosowania zmian — aby zastosować wybór, użyj Zastosuj."
+      );
+      filterMainBtn.title =
+        "Zwiń bez stosowania: lista i harmonogram pozostają według ostatniego Zastosuj.";
       return;
     }
-    if (lab) lab.textContent = "Show Filter";
+    var n = countFilterIdsInUrl();
+    if (lab) {
+      lab.textContent =
+        n > 0 ? "Filtr · " + n : "Filtr · wszyscy";
+    }
+    filterMainBtn.setAttribute(
+      "aria-label",
+      n > 0
+        ? "Otwórz filtr — aktywnych zawodników w URL: " + n + "."
+        : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
+    );
+    filterMainBtn.title =
+      n > 0
+        ? "W filtrze zaznaczono " +
+          n +
+          " zawodników (zastosowane w URL). Kliknij, by edytować."
+        : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
   }
 
   function setFilterMobileBarVisible(visible) {

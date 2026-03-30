@@ -19,8 +19,14 @@
     <div id="mm-cm-error" class="mm-alert mm-alert--error is-hidden" role="alert"></div>
     <div id="mm-cm-content">
       <div id="mm-cm-filter-root" class="mm-cm-filter is-hidden">
-        <button type="button" id="mm-filter-main-btn" class="mm-filter-main-btn">
-          <span class="mm-filter-main-btn__label">Show Filter</span>
+        <button
+          type="button"
+          id="mm-filter-main-btn"
+          class="mm-filter-main-btn"
+          aria-controls="mm-filter-panel"
+          aria-expanded="false"
+        >
+          <span class="mm-filter-main-btn__label">Filtr · wszyscy</span>
           <span class="mm-filter-main-btn__chevron" aria-hidden="true">
             <svg
               class="mm-filter-main-btn__chevron-svg"
@@ -78,8 +84,14 @@
           </div>
           <div class="mm-filter-scroll">
             <div class="mm-filter-sticky mm-filter-sticky--desktop">
-              <button type="button" class="mm-filter-apply-btn" id="mm-filter-apply-sticky">
-                Apply Filter
+              <button
+                type="button"
+                class="mm-filter-apply-btn"
+                id="mm-filter-apply-sticky"
+                title="Zapisz zaznaczenie w adresie i odśwież listę oraz harmonogram."
+                aria-label="Zastosuj filtr do listy i harmonogramu"
+              >
+                Zastosuj
               </button>
             </div>
             <div id="mm-filter-list-root" class="mm-filter-list-root"></div>
@@ -90,8 +102,14 @@
           class="mm-filter-mobile-bar is-hidden"
           aria-hidden="true"
         >
-          <button type="button" class="mm-filter-apply-btn" id="mm-filter-apply-mobile">
-            Apply
+          <button
+            type="button"
+            class="mm-filter-apply-btn"
+            id="mm-filter-apply-mobile"
+            title="Zapisz zaznaczenie w adresie i odśwież listę oraz harmonogram."
+            aria-label="Zastosuj filtr do listy i harmonogramu"
+          >
+            Zastosuj
           </button>
         </div>
       </div>

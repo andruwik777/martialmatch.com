@@ -3,16 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0;url=pl/events/">
+  <meta http-equiv="refresh" content="0;url=pl/events/current-matches/?tab=events">
   <title>Przekierowanie…</title>
   <script>
     (function () {
-      var q = window.location.search || "";
-      window.location.replace("pl/events/" + q);
+      var q = (window.location.search || "").replace(/^\?/, "");
+      var base = "pl/events/current-matches/?tab=events";
+      var href = q ? base + "&" + q : base;
+      window.location.replace(href);
     })();
   </script>
 </head>
 <body>
-  <p><a href="pl/events/">Przejdź do listy zawodów</a></p>
+  <p><a href="pl/events/current-matches/?tab=events">Przejdź do aplikacji</a></p>
 </body>
 </html>

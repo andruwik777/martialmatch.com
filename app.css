@@ -446,6 +446,59 @@ body {
   outline-offset: 2px;
 }
 
+.mm-cm-tab.mm-cm-tab--disabled,
+.mm-cm-tab:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  color: #6b7280;
+  border-color: #2d3548;
+  box-shadow: none;
+}
+
+.mm-cm-tab.mm-cm-tab--disabled:hover,
+.mm-cm-tab:disabled:hover {
+  background: #252a38;
+  border-color: #2d3548;
+  color: #6b7280;
+}
+
+.mm-cm-slug-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.mm-cm-event-title {
+  font-weight: 600;
+  color: #e8e8ec;
+  font-size: 1rem;
+}
+
+.mm-cm-event-title.is-hidden {
+  display: none;
+}
+
+.mm-cm-slug--secondary {
+  font-size: 0.875rem;
+  color: #9aa0b0;
+}
+
+.mm-cm-events-list {
+  margin-top: 0.5rem;
+}
+
+.mm-event-row--selected {
+  outline: 2px solid #5b8cff;
+  outline-offset: 1px;
+  border-color: #5b8cff;
+}
+
+.mm-event-row--filtered-out {
+  display: none !important;
+}
+
 .mm-cm-tabpanel-placeholder {
   margin: 0;
   font-size: 0.875rem;

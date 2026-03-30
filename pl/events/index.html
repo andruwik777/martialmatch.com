@@ -3,25 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nadchodzące zawody — MartialMatch viewer</title>
-  <link rel="stylesheet" href="../../app.css">
+  <title>Przekierowanie…</title>
+  <link rel="stylesheet" href="../app.css">
+  <meta http-equiv="refresh" content="0;url=current-matches/?tab=events">
+  <script src="../config.js"></script>
+  <script>
+    (function () {
+      var href =
+        window.MM_CONFIG && window.MM_CONFIG.withModeQuery
+          ? window.MM_CONFIG.withModeQuery("current-matches/?tab=events")
+          : "current-matches/?tab=events";
+      window.location.replace(href);
+    })();
+  </script>
 </head>
 <body>
-  <header class="header">
-    <h1 class="title">Nadchodzące zawody</h1>
-    <p class="subtitle">
-      Lista jak na
-      <a class="mm-nav-link" href="https://martialmatch.com/pl/events" target="_blank" rel="noopener">martialmatch.com/pl/events</a>
-      (pola „Data zawodów”, miejsce). Kliknięcie prowadzi do podglądu przebiegu walk.
-    </p>
-  </header>
-
-  <main class="main">
-    <p class="mm-status" id="mm-events-status" aria-live="polite"></p>
-    <div class="events" id="mm-events-list"></div>
-  </main>
-
-  <script src="../../config.js"></script>
-  <script src="events.js" defer></script>
+  <p><a href="current-matches/?tab=events">Przejdź do wydarzeń</a></p>
 </body>
 </html>

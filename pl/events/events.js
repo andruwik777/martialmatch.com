@@ -285,7 +285,9 @@
 
     events.forEach(function (ev) {
       var href = cfg.withModeQuery(
-        "current-matches/?slug=" + encodeURIComponent(ev.slug)
+        "current-matches/?slug=" +
+          encodeURIComponent(ev.slug) +
+          "&tab=fights"
       );
 
       var article = document.createElement("article");

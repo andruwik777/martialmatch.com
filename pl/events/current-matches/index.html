@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Przebieg walk — MartialMatch viewer</title>
+  <title>Zawody — MartialMatch viewer</title>
   <link rel="stylesheet" href="../../../app.css">
 </head>
 <body>
   <header class="header">
     <nav class="mm-nav">
-      <a class="mm-nav-link" href="../">← Lista zawodów</a>
+      <a class="mm-nav-link" href="./?tab=events" id="mm-cm-nav-home">Wydarzenia</a>
     </nav>
-    <h1 class="title">Przebieg walk</h1>
-    <p class="subtitle mm-cm-slug-line"><span id="mm-proxy-label" class="mm-cm-slug"></span></p>
+    <h1 class="title">Zawody</h1>
+    <p class="subtitle mm-cm-slug-line">
+      <span id="mm-cm-event-title" class="mm-cm-event-title is-hidden" aria-live="polite"></span>
+      <span id="mm-proxy-label" class="mm-cm-slug mm-cm-slug--secondary"></span>
+    </p>
   </header>
 
   <main class="main">
@@ -98,8 +101,8 @@
                   type="button"
                   class="mm-filter-toolbar-btn"
                   id="mm-filter-clear-all-btn"
-                  title="Odznacz wszystkich zawodników (adres zmieni się dopiero po Apply Filter)."
-                  aria-label="Odznacz wszystkich zawodników na liście"
+                  title="Odznacz zawodników (na liście walk: z URL usuwani są tylko zawodnicy z bieżącego wydarzenia)."
+                  aria-label="Odznacz zawodników na liście"
                 >
                   Wyczyść
                 </button>
@@ -131,8 +134,8 @@
                 type="button"
                 class="mm-filter-apply-btn"
                 id="mm-filter-apply-sticky"
-                title="Save selection to URL and refresh fights list and schedule."
-                aria-label="Apply filter to fights list and schedule"
+                title="Zapisz wybór w URL i odśwież widok."
+                aria-label="Zastosuj filtr"
               >
                 Apply Filter
               </button>
@@ -149,8 +152,8 @@
             type="button"
             class="mm-filter-apply-btn"
             id="mm-filter-apply-mobile"
-            title="Save selection to URL and refresh fights list and schedule."
-            aria-label="Apply filter to fights list and schedule"
+            title="Zapisz wybór w URL i odśwież widok."
+            aria-label="Zastosuj filtr"
           >
             Apply Filter
           </button>
@@ -164,31 +167,56 @@
         <button
           type="button"
           class="mm-cm-tab"
-          id="mm-cm-tab-fights"
+          id="mm-cm-tab-events"
           role="tab"
           aria-selected="true"
-          aria-controls="mm-cm-panel-fights"
+          aria-controls="mm-cm-panel-events"
           tabindex="0"
+        >
+          Wydarzenia
+        </button>
+        <button
+          type="button"
+          class="mm-cm-tab mm-cm-tab--disabled"
+          id="mm-cm-tab-fights"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mm-cm-panel-fights"
+          tabindex="-1"
+          disabled
+          aria-disabled="true"
         >
           Przebieg walk
         </button>
         <button
           type="button"
-          class="mm-cm-tab"
+          class="mm-cm-tab mm-cm-tab--disabled"
           id="mm-cm-tab-harmonogram"
           role="tab"
           aria-selected="false"
           aria-controls="mm-cm-panel-harmonogram"
           tabindex="-1"
+          disabled
+          aria-disabled="true"
         >
           Harmonogram
         </button>
+      </div>
+      <div
+        id="mm-cm-panel-events"
+        class="mm-cm-tabpanel"
+        role="tabpanel"
+        aria-labelledby="mm-cm-tab-events"
+      >
+        <p class="mm-status" id="mm-events-status" aria-live="polite"></p>
+        <div class="events mm-cm-events-list" id="mm-events-list"></div>
       </div>
       <div
         id="mm-cm-panel-fights"
         class="mm-cm-tabpanel"
         role="tabpanel"
         aria-labelledby="mm-cm-tab-fights"
+        hidden
       >
         <p class="mm-muted" id="mm-cm-placeholder">Ładowanie…</p>
         <p class="mm-cm-toolbar mm-muted is-hidden" id="mm-cm-toolbar" aria-live="polite"></p>
@@ -207,6 +235,14 @@
   </main>
 
   <script src="../../../config.js"></script>
+  <script>
+    (function () {
+      var a = document.getElementById("mm-cm-nav-home");
+      if (a && window.MM_CONFIG && window.MM_CONFIG.withModeQuery) {
+        a.href = window.MM_CONFIG.withModeQuery("./?tab=events");
+      }
+    })();
+  </script>
   <script src="current-matches.js" defer></script>
 </body>
 </html>

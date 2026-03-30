@@ -7,33 +7,49 @@
     return;
   }
 
-  var params = new URLSearchParams(window.location.search);
-
   function eventSlugFromQuery(searchParams) {
     return cfg.parseEventSlug(searchParams.get("slug") || "");
   }
 
-  var evSlug = eventSlugFromQuery(params);
-  var eventNumericId = evSlug ? evSlug.numericId : null;
+  var evSlug = null;
+  var eventNumericId = null;
+
+  function refreshSlugFromLocation() {
+    var p = new URLSearchParams(window.location.search);
+    evSlug = eventSlugFromQuery(p);
+    eventNumericId = evSlug ? evSlug.numericId : null;
+  }
+
+  refreshSlugFromLocation();
 
   var contextLabel = document.getElementById("mm-proxy-label");
-  if (contextLabel) {
-    contextLabel.textContent = evSlug ? evSlug.slug : "—";
-  }
+  var eventTitleEl = document.getElementById("mm-cm-event-title");
+  var eventsStatusEl = document.getElementById("mm-events-status");
+  var eventsListEl = document.getElementById("mm-events-list");
 
   var errEl = document.getElementById("mm-cm-error");
   var contentEl = document.getElementById("mm-cm-content");
   var placeholderEl = document.getElementById("mm-cm-placeholder");
   var toolbarEl = document.getElementById("mm-cm-toolbar");
   var listEl = document.getElementById("mm-fights-list");
+  var tabEventsBtn = document.getElementById("mm-cm-tab-events");
   var tabFightsBtn = document.getElementById("mm-cm-tab-fights");
   var tabHarmonogramBtn = document.getElementById("mm-cm-tab-harmonogram");
+  var panelEventsEl = document.getElementById("mm-cm-panel-events");
   var panelFightsEl = document.getElementById("mm-cm-panel-fights");
   var panelHarmonogramEl = document.getElementById("mm-cm-panel-harmonogram");
   var harmonogramRootEl = document.getElementById("mm-cm-harmonogram-root");
 
+  var CM_TAB_EVENTS = "events";
   var CM_TAB_FIGHTS = "fights";
   var CM_TAB_HARMONOGRAM = "harmonogram";
+
+  var eventCache = Object.create(null);
+  var parsedEventsList = [];
+  /** @type {Record<string, Record<string, true>>} */
+  var eventParticipantIdMap = Object.create(null);
+  /** @type {Promise<void>|null} */
+  var aggregateParticipantMapsPromise = null;
 
   var MM_ROW_FILTER_HIDDEN = "mm-filter-row--filter-hidden";
   var MM_ROW_SEARCH_HIDDEN = "mm-filter-row--search-hidden";
@@ -428,6 +444,446 @@
     renderHarmonogram();
   }
 
+  var KNOWN_EVENT_TYPE_KEYS = {
+    Grappling: true,
+    BjjGi: true,
+    BjjNoGi: true,
+    MMA: true,
+    CombatJuJutsu: true,
+    ADCC: true,
+    Sambo: true,
+    Judo: true,
+    SubmissionOnly: true,
+    Kickboxing: true,
+    Boxing: true,
+    Wrestling: true,
+    MuayThai: true,
+    Taekwondo: true,
+  };
+
+  function escapeHtmlEv(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function flagEmojiEv(code) {
+    if (!code || String(code).length !== 2) return "";
+    var c = String(code).toUpperCase();
+    var base = 0x1f1e6 - 0x41;
+    return String.fromCodePoint(
+      base + c.charCodeAt(0),
+      base + c.charCodeAt(1)
+    );
+  }
+
+  var POLISH_MONTH_TO_INDEX = {
+    stycznia: 0,
+    lutego: 1,
+    marca: 2,
+    kwietnia: 3,
+    maja: 4,
+    czerwca: 5,
+    lipca: 6,
+    sierpnia: 7,
+    września: 8,
+    wrzesnia: 8,
+    października: 9,
+    pazdziernika: 9,
+    listopada: 10,
+    grudnia: 11,
+  };
+
+  function parsePolishEventDate(dateText) {
+    if (!dateText || typeof dateText !== "string") return null;
+    var s = dateText.replace(/\s+/g, " ").replace(/[.,;]+$/g, "").trim();
+    var m = s.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})$/);
+    if (!m) return null;
+    var day = parseInt(m[1], 10);
+    var monthKey = m[2].toLowerCase();
+    var year = parseInt(m[3], 10);
+    var monthIdx = POLISH_MONTH_TO_INDEX[monthKey];
+    if (monthIdx === undefined || day < 1 || day > 31) return null;
+    var d = new Date(year, monthIdx, day, 12, 0, 0, 0);
+    if (
+      d.getFullYear() !== year ||
+      d.getMonth() !== monthIdx ||
+      d.getDate() !== day
+    ) {
+      return null;
+    }
+    return d;
+  }
+
+  function isSameLocalCalendarDayEv(d, ref) {
+    ref = ref || new Date();
+    return (
+      d.getFullYear() === ref.getFullYear() &&
+      d.getMonth() === ref.getMonth() &&
+      d.getDate() === ref.getDate()
+    );
+  }
+
+  function parseRegistrationEv(row) {
+    var pad = row.querySelector(".has-added-padding");
+    if (!pad) return null;
+    var ed = pad.querySelector(".event-date");
+    var regWrap = ed && ed.nextElementSibling;
+    if (!regWrap) return null;
+    var inner = regWrap.querySelector(
+      "span.has-text-success, span.has-text-info, span.has-text-warning"
+    );
+    if (!inner) return null;
+    var txt = inner.textContent.replace(/\s+/g, " ").trim();
+    var cls = inner.className || "";
+    if (cls.indexOf("has-text-warning") !== -1) {
+      return { kind: "closed", text: txt };
+    }
+    if (cls.indexOf("has-text-info") !== -1) {
+      return { kind: "start", text: txt };
+    }
+    if (cls.indexOf("has-text-success") !== -1) {
+      if (/Trwające/i.test(txt)) return { kind: "ongoing", text: txt };
+      return { kind: "end", text: txt };
+    }
+    return null;
+  }
+
+  function registrationHtmlEv(reg) {
+    if (!reg) return "";
+    var t = reg.text;
+    if (reg.kind === "start") {
+      var ms = t.match(/^(Start\s+rejestracji:)\s*(.+)$/i);
+      if (ms) {
+        return (
+          escapeHtmlEv(ms[1]) +
+          " <strong>" +
+          escapeHtmlEv(ms[2].trim()) +
+          "</strong>"
+        );
+      }
+    }
+    if (reg.kind === "end") {
+      var me = t.match(/^(Koniec\s+rejestracji:)\s*(.+)$/i);
+      if (me) {
+        return (
+          escapeHtmlEv(me[1]) +
+          " <strong>" +
+          escapeHtmlEv(me[2].trim()) +
+          "</strong>"
+        );
+      }
+    }
+    return escapeHtmlEv(t);
+  }
+
+  function parsePlaceAndFlagEv(row) {
+    var marker = row.querySelector(".fa-map-marker-alt");
+    var locRow = marker && marker.closest(".is-size-6");
+    var countryCode = "";
+    var place = "";
+    if (!locRow) return { countryCode: countryCode, place: place };
+
+    var flagEl = locRow.querySelector("i.flag-icon");
+    if (flagEl && flagEl.classList) {
+      flagEl.classList.forEach(function (c) {
+        var m = /^flag-icon-([a-z]{2})$/i.exec(c);
+        if (m) countryCode = m[1].toLowerCase();
+      });
+    }
+
+    var spans = locRow.querySelectorAll("span");
+    for (var i = 0; i < spans.length; i++) {
+      var sp = spans[i];
+      if (sp.querySelector(".fa-map-marker-alt")) continue;
+      if (sp.querySelector("i.flag-icon")) continue;
+      var t = sp.textContent.replace(/\s+/g, " ").trim();
+      if (t && t.length < 120) place = t;
+    }
+    return { countryCode: countryCode, place: place };
+  }
+
+  function parseEventTypeTagsEv(row) {
+    var out = [];
+    row.querySelectorAll(".tag.is-event-type").forEach(function (el) {
+      var typeKey = "";
+      el.classList.forEach(function (c) {
+        if (c === "tag" || c === "is-event-type") return;
+        typeKey = c;
+      });
+      if (!typeKey) return;
+      out.push({
+        key: typeKey,
+        label: el.textContent.replace(/\s+/g, " ").trim() || typeKey,
+      });
+    });
+    return out;
+  }
+
+  function parseEventsFromDocument(doc) {
+    var links = doc.querySelectorAll("a.event-image-link[href*='/events/']");
+    var out = [];
+    var seen = Object.create(null);
+
+    links.forEach(function (a) {
+      var href = a.getAttribute("href") || "";
+      var pathMatch = href.match(/\/events\/([^/?#]+)/);
+      if (!pathMatch) return;
+      var slug = pathMatch[1];
+      var parsed = cfg.parseEventSlug(slug);
+      if (!parsed) return;
+      if (seen[parsed.slug]) return;
+      seen[parsed.slug] = true;
+
+      var row = a.closest("div.columns.is-centered.is-gapless");
+      if (!row) return;
+
+      var titleEl = row.querySelector("a.has-text-white");
+      var title = titleEl
+        ? titleEl.textContent.replace(/\s+/g, " ").trim()
+        : "";
+
+      var img = a.querySelector("img.event-thumbnail");
+      var thumb = img ? (img.getAttribute("src") || "").trim() : "";
+
+      var dateEl = row.querySelector(".event-date");
+      var dateText = dateEl
+        ? dateEl.textContent
+            .replace(/\s+/g, " ")
+            .replace(/Data zawodów:\s*/i, "")
+            .trim()
+        : "";
+
+      var pf = parsePlaceAndFlagEv(row);
+      var registration = parseRegistrationEv(row);
+      var tags = parseEventTypeTagsEv(row);
+
+      var parsedEventDay = parsePolishEventDate(dateText);
+      if (parsedEventDay && isSameLocalCalendarDayEv(parsedEventDay)) {
+        registration = { kind: "ongoing", text: "Trwające zawody" };
+      }
+
+      out.push({
+        slug: parsed.slug,
+        numericId: parsed.numericId,
+        title: title,
+        thumb: thumb,
+        dateText: dateText,
+        place: pf.place,
+        countryCode: pf.countryCode,
+        registration: registration,
+        tags: tags,
+      });
+    });
+
+    return out;
+  }
+
+  var PLACE_PIN_SVG_EV =
+    '<svg class="mm-ev-place__pin" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>';
+
+  function refreshEventsListVisibility() {
+    if (!eventsListEl) return;
+    var idSet = getFilterIdSetFromUrl();
+    var articles = eventsListEl.querySelectorAll(".mm-event-row");
+    var mapsEmpty = true;
+    for (var mp in eventParticipantIdMap) {
+      mapsEmpty = false;
+      break;
+    }
+    if (idSet && mapsEmpty) {
+      for (var z = 0; z < articles.length; z++) {
+        articles[z].classList.remove("mm-event-row--filtered-out");
+      }
+      return;
+    }
+    for (var i = 0; i < articles.length; i++) {
+      var art = articles[i];
+      var nid = art.getAttribute("data-mm-event-id") || "";
+      art.classList.remove("mm-event-row--filtered-out");
+      if (!idSet) continue;
+      var map = eventParticipantIdMap[nid];
+      var show = false;
+      if (map) {
+        for (var pid in idSet) {
+          if (map[pid]) {
+            show = true;
+            break;
+          }
+        }
+      }
+      if (!show) {
+        art.classList.add("mm-event-row--filtered-out");
+      }
+    }
+  }
+
+  function setEventsStatus(msg, isError) {
+    if (!eventsStatusEl) return;
+    eventsStatusEl.textContent = msg || "";
+    eventsStatusEl.classList.toggle("mm-status--error", !!isError);
+  }
+
+  function highlightSelectedEventRow(slugStr) {
+    if (!eventsListEl) return;
+    var rows = eventsListEl.querySelectorAll(".mm-event-row");
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      var s = r.getAttribute("data-mm-event-slug") || "";
+      r.classList.toggle("mm-event-row--selected", Boolean(slugStr && s === slugStr));
+    }
+  }
+
+  function renderEventsListCm(events) {
+    if (!eventsListEl) return;
+    eventsListEl.innerHTML = "";
+
+    events.forEach(function (ev) {
+      var article = document.createElement("article");
+      article.className = "event-card mm-event-row";
+      article.setAttribute("data-mm-event-id", ev.numericId);
+      article.setAttribute("data-mm-event-slug", ev.slug);
+      article.setAttribute("role", "button");
+      article.tabIndex = 0;
+      article.setAttribute(
+        "aria-label",
+        "Wybierz wydarzenie: " + (ev.title || ev.slug)
+      );
+
+      var media = document.createElement("div");
+      media.className = "mm-event-row__media";
+      var img = document.createElement("img");
+      img.className = "event-card-thumb";
+      img.alt = "";
+      img.loading = "lazy";
+      img.src = ev.thumb || "";
+      img.draggable = false;
+      img.onerror = function () {
+        img.style.visibility = "hidden";
+      };
+      media.appendChild(img);
+
+      var body = document.createElement("div");
+      body.className = "event-card-body";
+
+      var titleEl = document.createElement("div");
+      titleEl.className = "event-card-title";
+      titleEl.textContent = ev.title || "Zawody " + ev.numericId;
+      body.appendChild(titleEl);
+
+      if (ev.dateText) {
+        var dateRow = document.createElement("div");
+        dateRow.className = "mm-ev-date";
+        var lab = document.createElement("span");
+        lab.className = "mm-ev-date__label";
+        lab.textContent = "Data zawodów:";
+        var val = document.createElement("span");
+        val.className = "mm-ev-date__value";
+        val.textContent = " " + ev.dateText;
+        dateRow.appendChild(lab);
+        dateRow.appendChild(val);
+        body.appendChild(dateRow);
+      }
+
+      if (ev.registration) {
+        var regEl = document.createElement("div");
+        regEl.className =
+          "mm-ev-reg mm-ev-reg--" + ev.registration.kind;
+        regEl.innerHTML = registrationHtmlEv(ev.registration);
+        body.appendChild(regEl);
+      }
+
+      if (ev.place || ev.countryCode) {
+        var placeRow = document.createElement("div");
+        placeRow.className = "mm-ev-place";
+        placeRow.innerHTML = PLACE_PIN_SVG_EV;
+        if (ev.countryCode) {
+          var fl = document.createElement("span");
+          fl.className = "mm-ev-place__flag";
+          fl.textContent = flagEmojiEv(ev.countryCode);
+          fl.setAttribute("aria-hidden", "true");
+          placeRow.appendChild(fl);
+        }
+        var city = document.createElement("span");
+        city.className = "mm-ev-place__city";
+        city.textContent = ev.place || "";
+        placeRow.appendChild(city);
+        body.appendChild(placeRow);
+      }
+
+      if (ev.tags && ev.tags.length) {
+        var tagRoot = document.createElement("div");
+        tagRoot.className = "mm-ev-tags";
+        ev.tags.forEach(function (t) {
+          var sp = document.createElement("span");
+          var mod = KNOWN_EVENT_TYPE_KEYS[t.key]
+            ? t.key
+            : "default";
+          sp.className = "mm-ev-tag mm-ev-tag--" + mod;
+          sp.textContent = t.label;
+          tagRoot.appendChild(sp);
+        });
+        body.appendChild(tagRoot);
+      }
+
+      article.appendChild(media);
+      article.appendChild(body);
+      eventsListEl.appendChild(article);
+    });
+
+    highlightSelectedEventRow(evSlug ? evSlug.slug : "");
+  }
+
+  function loadEventsIndex() {
+    setEventsStatus("Ładowanie…");
+    var url = cfg.url("/pl/events");
+
+    return fetch(url, { credentials: "omit", headers: { Accept: "text/html" } })
+      .then(function (res) {
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
+        }
+        return res.text();
+      })
+      .then(function (html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, "text/html");
+        var events = parseEventsFromDocument(doc);
+        if (events.length === 0) {
+          setEventsStatus(
+            "Nie znaleziono zawodów w HTML (zmieniła się struktura strony?).",
+            true
+          );
+          parsedEventsList = [];
+          return;
+        }
+        aggregateParticipantMapsPromise = null;
+        for (var ek in eventParticipantIdMap) {
+          delete eventParticipantIdMap[ek];
+        }
+        parsedEventsList = events;
+        for (var ti = 0; ti < events.length; ti++) {
+          var evo = events[ti];
+          if (eventCache[evo.numericId]) {
+            eventCache[evo.numericId].title = evo.title || "";
+          }
+        }
+        syncHeaderEventLine();
+        setEventsStatus("Nadchodzące zawody: " + events.length + ".");
+        renderEventsListCm(events);
+        refreshEventsListVisibility();
+      })
+      .catch(function (err) {
+        setEventsStatus(
+          "Błąd: " + (err.message || String(err)) + "\nURL: " + url,
+          true
+        );
+        parsedEventsList = [];
+      });
+  }
+
   function fightsUrl(eventIdStr) {
     return (
       "/api/public/events/" + encodeURIComponent(eventIdStr) + "/fights"
@@ -476,102 +932,405 @@
     var hash = window.location.hash || "";
     var next = qs ? path + "?" + qs + hash : path + hash;
     window.history.replaceState(null, "", next);
+    refreshSlugFromLocation();
+    refreshEventsListVisibility();
+    updateFilterMainButtonLabel();
   }
 
-  function getCmTabFromUrl() {
-    var raw = new URLSearchParams(window.location.search).get("tab");
-    if (raw && String(raw).toLowerCase() === "harmonogram") {
-      return CM_TAB_HARMONOGRAM;
-    }
-    return CM_TAB_FIGHTS;
-  }
-
-  /** Usuwa nieobsługiwane wartości ?tab= z adresu (zostaje tylko harmonogram). */
-  function normalizeCmTabParamInUrl() {
-    var p = new URLSearchParams(window.location.search);
-    var raw = p.get("tab");
-    if (!raw) return;
-    if (String(raw).toLowerCase() === "harmonogram") return;
-    p.delete("tab");
+  function replaceLocationQuery(p) {
     var qs = p.toString();
     var path = window.location.pathname || "";
     var hash = window.location.hash || "";
     var next = qs ? path + "?" + qs + hash : path + hash;
     window.history.replaceState(null, "", next);
+    refreshSlugFromLocation();
+  }
+
+  function normalizeCmUrlOnLoad() {
+    var p = new URLSearchParams(window.location.search);
+    var slug = eventSlugFromQuery(p);
+    var t = (p.get("tab") || "").toLowerCase();
+    var needFix = false;
+    if (!slug) {
+      if (t !== "events") {
+        p.set("tab", "events");
+        needFix = true;
+      }
+    } else {
+      if (t !== "events" && t !== "fights" && t !== "harmonogram") {
+        p.set("tab", "fights");
+        needFix = true;
+      }
+    }
+    if (needFix) replaceLocationQuery(p);
+  }
+
+  function getCmTabFromUrl() {
+    var p = new URLSearchParams(window.location.search);
+    var raw = (p.get("tab") || "").toLowerCase();
+    if (raw === "harmonogram") return CM_TAB_HARMONOGRAM;
+    if (raw === "events") return CM_TAB_EVENTS;
+    if (raw === "fights") return CM_TAB_FIGHTS;
+    if (!eventSlugFromQuery(p)) return CM_TAB_EVENTS;
+    return CM_TAB_FIGHTS;
   }
 
   function setCmTabQueryInUrl(tab) {
     var p = new URLSearchParams(window.location.search);
     if (tab === CM_TAB_HARMONOGRAM) {
       p.set("tab", "harmonogram");
+    } else if (tab === CM_TAB_EVENTS) {
+      p.set("tab", "events");
     } else {
-      p.delete("tab");
+      p.set("tab", "fights");
     }
-    var qs = p.toString();
-    var path = window.location.pathname || "";
-    var hash = window.location.hash || "";
-    var next = qs ? path + "?" + qs + hash : path + hash;
-    window.history.replaceState(null, "", next);
+    replaceLocationQuery(p);
+  }
+
+  function replaceSlugInUrl(slugStr, tab) {
+    var p = new URLSearchParams(window.location.search);
+    if (slugStr) {
+      p.set("slug", slugStr);
+    } else {
+      p.delete("slug");
+      tab = CM_TAB_EVENTS;
+    }
+    if (tab === CM_TAB_HARMONOGRAM) p.set("tab", "harmonogram");
+    else if (tab === CM_TAB_EVENTS) p.set("tab", "events");
+    else p.set("tab", "fights");
+    replaceLocationQuery(p);
+  }
+
+  function updateCmTabsDisabled() {
+    var has = Boolean(evSlug);
+    if (tabFightsBtn) {
+      tabFightsBtn.disabled = !has;
+      tabFightsBtn.classList.toggle("mm-cm-tab--disabled", !has);
+      tabFightsBtn.setAttribute("aria-disabled", has ? "false" : "true");
+    }
+    if (tabHarmonogramBtn) {
+      tabHarmonogramBtn.disabled = !has;
+      tabHarmonogramBtn.classList.toggle("mm-cm-tab--disabled", !has);
+      tabHarmonogramBtn.setAttribute("aria-disabled", has ? "false" : "true");
+    }
+  }
+
+  function updateFilterRootVisibility() {
+    if (!filterRootEl) return;
+    var tab = getCmTabFromUrl();
+    var show = tab === CM_TAB_EVENTS || Boolean(evSlug);
+    filterRootEl.classList.toggle("is-hidden", !show);
+  }
+
+  function syncHeaderEventLine() {
+    if (eventTitleEl) {
+      var title = "";
+      if (evSlug && eventNumericId && eventCache[eventNumericId]) {
+        title = eventCache[eventNumericId].title || "";
+      }
+      if (title) {
+        eventTitleEl.textContent = title;
+        eventTitleEl.classList.remove("is-hidden");
+      } else {
+        eventTitleEl.textContent = "";
+        eventTitleEl.classList.add("is-hidden");
+      }
+    }
+    if (contextLabel) {
+      contextLabel.textContent = evSlug ? evSlug.slug : "";
+    }
+  }
+
+  function notifyUrlChanged() {
+    refreshSlugFromLocation();
+    updateCmTabsDisabled();
+    updateFilterRootVisibility();
+    syncHeaderEventLine();
+  }
+
+  function applyCachedEventToView(nid) {
+    var c = eventCache[nid];
+    if (!c) return;
+    lastSchedulesPayload = c.schedulesPayload || null;
+    lastFightsData = c.fightsData || null;
+    matNamesById = c.matNamesById || Object.create(null);
+    startingListEntries = c.startingListEntries || null;
+    startingListLoadPromise = null;
+  }
+
+  function loadEventBundle(slugObj) {
+    var nid = slugObj.numericId;
+    var schPath =
+      "/api/events/" + encodeURIComponent(nid) + "/schedules";
+    return fetchJson(schPath)
+      .then(function (sched) {
+        return fetchJson(fightsUrl(nid)).then(function (fd) {
+          return fetchHtml(startingListsPath(slugObj.slug)).then(function (html) {
+            return { sched: sched, fd: fd, html: html };
+          });
+        });
+      })
+      .then(function (pack) {
+        var mats = buildMatMapFromSchedules(pack.sched);
+        var entries = parseStartingListHtml(pack.html);
+        var ev = parsedEventsList.filter(function (e) {
+          return e.numericId === nid;
+        })[0];
+        eventCache[nid] = {
+          slug: slugObj.slug,
+          numericId: nid,
+          title: ev ? ev.title || "" : "",
+          schedulesPayload: pack.sched,
+          fightsData: pack.fd,
+          startingListEntries: entries,
+          matNamesById: mats,
+          loaded: true,
+        };
+        applyCachedEventToView(nid);
+      });
+  }
+
+  function ensureEventLoaded(slugObj) {
+    var nid = slugObj.numericId;
+    if (eventCache[nid] && eventCache[nid].loaded) {
+      applyCachedEventToView(nid);
+      return Promise.resolve();
+    }
+    return loadEventBundle(slugObj);
+  }
+
+  function activateEventSlug(slugObj, preferredTab) {
+    var tab =
+      preferredTab == null ? CM_TAB_FIGHTS : preferredTab;
+    closeFilterPanel();
+    replaceSlugInUrl(slugObj.slug, tab);
+    notifyUrlChanged();
+    applyCmTabDom(getCmTabFromUrl());
+    highlightSelectedEventRow(slugObj.slug);
+    if (placeholderEl) {
+      placeholderEl.classList.remove("is-hidden");
+      placeholderEl.textContent = "Ładowanie…";
+    }
+    clearError();
+    return ensureEventLoaded(slugObj)
+      .then(function () {
+        syncHeaderEventLine();
+        if (placeholderEl) placeholderEl.classList.add("is-hidden");
+        clearError();
+        if (lastFightsData) renderFights(lastFightsData);
+        refreshHarmonogram();
+        updatePollingForTab();
+        updateFilterMainButtonLabel();
+      })
+      .catch(function (err) {
+        showError(
+          "Nie udało się wczytać wydarzenia: " +
+            (err.message || String(err))
+        );
+      });
+  }
+
+  function ensureAggregateParticipantMaps() {
+    if (aggregateParticipantMapsPromise) {
+      return aggregateParticipantMapsPromise;
+    }
+    if (!parsedEventsList.length) {
+      return Promise.reject(new Error("Brak listy wydarzeń"));
+    }
+    var list = parsedEventsList;
+    var n = list.length;
+    var chain = Promise.resolve();
+    for (var idx = 0; idx < n; idx++) {
+      (function (ev, i) {
+        chain = chain.then(function () {
+          if (filterPanelOpen && filterPanelStatusEl) {
+            filterPanelStatusEl.textContent =
+              "Listy startowe: " + (i + 1) + " / " + n + "…";
+          }
+          return fetchHtml(startingListsPath(ev.slug))
+            .then(function (html) {
+              var entries = parseStartingListHtml(html);
+              var map = Object.create(null);
+              for (var j = 0; j < entries.length; j++) {
+                map[entries[j].publicId] = true;
+              }
+              eventParticipantIdMap[ev.numericId] = map;
+              if (!eventCache[ev.numericId]) {
+                eventCache[ev.numericId] = {};
+              }
+              eventCache[ev.numericId].startingListEntries = entries;
+            })
+            .catch(function () {
+              eventParticipantIdMap[ev.numericId] = Object.create(null);
+            });
+        });
+      })(list[idx], idx);
+    }
+    aggregateParticipantMapsPromise = chain.then(function () {
+      if (filterPanelOpen && filterPanelStatusEl) {
+        filterPanelStatusEl.textContent = "";
+      }
+    });
+    return aggregateParticipantMapsPromise;
+  }
+
+  function buildAggregateFilterEntries() {
+    var byPid = Object.create(null);
+    var order = [];
+    for (var e = 0; e < parsedEventsList.length; e++) {
+      var ev = parsedEventsList[e];
+      var c = eventCache[ev.numericId];
+      if (!c || !c.startingListEntries) continue;
+      var entList = c.startingListEntries;
+      for (var k = 0; k < entList.length; k++) {
+        var ent = entList[k];
+        if (!byPid[ent.publicId]) {
+          byPid[ent.publicId] = ent;
+          order.push(ent.publicId);
+        }
+      }
+    }
+    return order.map(function (pid) {
+      return byPid[pid];
+    });
+  }
+
+  function updatePollingForTab() {
+    var tab = getCmTabFromUrl();
+    if (evSlug && tab === CM_TAB_FIGHTS) {
+      startPolling();
+    } else {
+      stopPoll();
+    }
   }
 
   function applyCmTabDom(tab) {
+    if (!evSlug && (tab === CM_TAB_FIGHTS || tab === CM_TAB_HARMONOGRAM)) {
+      tab = CM_TAB_EVENTS;
+    }
+    var isE = tab === CM_TAB_EVENTS;
+    var isF = tab === CM_TAB_FIGHTS;
     var isH = tab === CM_TAB_HARMONOGRAM;
+    if (tabEventsBtn) {
+      tabEventsBtn.setAttribute("aria-selected", isE ? "true" : "false");
+      tabEventsBtn.tabIndex = isE ? 0 : -1;
+    }
     if (tabFightsBtn) {
-      tabFightsBtn.setAttribute("aria-selected", isH ? "false" : "true");
-      tabFightsBtn.tabIndex = isH ? -1 : 0;
+      tabFightsBtn.setAttribute("aria-selected", isF ? "true" : "false");
+      tabFightsBtn.tabIndex = isF ? 0 : -1;
     }
     if (tabHarmonogramBtn) {
       tabHarmonogramBtn.setAttribute("aria-selected", isH ? "true" : "false");
       tabHarmonogramBtn.tabIndex = isH ? 0 : -1;
     }
-    if (panelFightsEl) {
-      panelFightsEl.hidden = isH;
-    }
-    if (panelHarmonogramEl) {
-      panelHarmonogramEl.hidden = !isH;
-    }
+    if (panelEventsEl) panelEventsEl.hidden = !isE;
+    if (panelFightsEl) panelFightsEl.hidden = !isF;
+    if (panelHarmonogramEl) panelHarmonogramEl.hidden = !isH;
     if (isH) {
       refreshHarmonogram();
     }
+    updatePollingForTab();
   }
 
   function setCmTab(tab) {
-    applyCmTabDom(tab);
+    if (!evSlug && (tab === CM_TAB_FIGHTS || tab === CM_TAB_HARMONOGRAM)) {
+      tab = CM_TAB_EVENTS;
+    }
+    closeFilterPanel();
     setCmTabQueryInUrl(tab);
+    notifyUrlChanged();
+    applyCmTabDom(tab);
+    refreshEventsListVisibility();
   }
 
   function initCmTabsFromUrl() {
-    if (!tabFightsBtn || !tabHarmonogramBtn || !panelFightsEl || !panelHarmonogramEl) {
+    if (
+      !tabEventsBtn ||
+      !tabFightsBtn ||
+      !tabHarmonogramBtn ||
+      !panelEventsEl ||
+      !panelFightsEl ||
+      !panelHarmonogramEl
+    ) {
       return;
     }
-    normalizeCmTabParamInUrl();
+    normalizeCmUrlOnLoad();
+    notifyUrlChanged();
     applyCmTabDom(getCmTabFromUrl());
     window.addEventListener("popstate", function () {
+      refreshSlugFromLocation();
+      notifyUrlChanged();
       applyCmTabDom(getCmTabFromUrl());
       refreshHarmonogram();
+      if (lastFightsData) renderFights(lastFightsData);
+      refreshEventsListVisibility();
       updateFilterMainButtonLabel();
     });
+    tabEventsBtn.addEventListener("click", function () {
+      setCmTab(CM_TAB_EVENTS);
+    });
     tabFightsBtn.addEventListener("click", function () {
+      if (!evSlug) return;
       setCmTab(CM_TAB_FIGHTS);
     });
     tabHarmonogramBtn.addEventListener("click", function () {
+      if (!evSlug) return;
       setCmTab(CM_TAB_HARMONOGRAM);
     });
+    if (eventsListEl) {
+      eventsListEl.addEventListener("click", function (evClick) {
+        var t = evClick.target;
+        if (!t || !t.closest) return;
+        var row = t.closest(".mm-event-row");
+        if (!row) return;
+        var slugStr = row.getAttribute("data-mm-event-slug");
+        if (!slugStr) return;
+        var parsed = cfg.parseEventSlug(slugStr);
+        if (!parsed) return;
+        evClick.preventDefault();
+        activateEventSlug(parsed, CM_TAB_FIGHTS);
+      });
+      eventsListEl.addEventListener("keydown", function (evKd) {
+        if (evKd.key !== "Enter" && evKd.key !== " ") return;
+        var row =
+          evKd.target && evKd.target.closest
+            ? evKd.target.closest(".mm-event-row")
+            : null;
+        if (!row || !eventsListEl.contains(row)) return;
+        evKd.preventDefault();
+        var slugStr = row.getAttribute("data-mm-event-slug");
+        var parsed = cfg.parseEventSlug(slugStr || "");
+        if (parsed) activateEventSlug(parsed, CM_TAB_FIGHTS);
+      });
+    }
     var tabsWrap = tabFightsBtn.closest(".mm-cm-tabs");
     if (tabsWrap) {
       tabsWrap.addEventListener("keydown", function (ev) {
         var key = ev.key;
         if (key !== "ArrowLeft" && key !== "ArrowRight") return;
         var cur = getCmTabFromUrl();
-        if (key === "ArrowRight" && cur === CM_TAB_FIGHTS) {
-          ev.preventDefault();
-          setCmTab(CM_TAB_HARMONOGRAM);
-          tabHarmonogramBtn.focus();
-        } else if (key === "ArrowLeft" && cur === CM_TAB_HARMONOGRAM) {
-          ev.preventDefault();
-          setCmTab(CM_TAB_FIGHTS);
-          tabFightsBtn.focus();
+        ev.preventDefault();
+        if (key === "ArrowRight") {
+          if (cur === CM_TAB_EVENTS && evSlug) {
+            setCmTab(CM_TAB_FIGHTS);
+          } else if (cur === CM_TAB_FIGHTS && evSlug) {
+            setCmTab(CM_TAB_HARMONOGRAM);
+          }
+        } else {
+          if (cur === CM_TAB_HARMONOGRAM) {
+            setCmTab(CM_TAB_FIGHTS);
+          } else if (cur === CM_TAB_FIGHTS) {
+            setCmTab(CM_TAB_EVENTS);
+          }
         }
+        var nt = getCmTabFromUrl();
+        var btn =
+          nt === CM_TAB_EVENTS
+            ? tabEventsBtn
+            : nt === CM_TAB_FIGHTS
+              ? tabFightsBtn
+              : tabHarmonogramBtn;
+        if (btn) btn.focus();
       });
     }
   }
@@ -1131,10 +1890,14 @@
     var ids = collectCheckedPublicIds();
     setFilterQueryInUrl(ids);
     closeFilterPanel();
-    if (lastFightsData) {
-      renderFights(lastFightsData);
+    if (getCmTabFromUrl() === CM_TAB_EVENTS) {
+      refreshEventsListVisibility();
+    } else {
+      if (lastFightsData) {
+        renderFights(lastFightsData);
+      }
+      refreshHarmonogram();
     }
-    refreshHarmonogram();
   }
 
   function fetchHtml(path) {
@@ -1148,7 +1911,20 @@
   }
 
   function ensureStartingListLoaded() {
-    if (startingListEntries) {
+    if (!evSlug) {
+      return Promise.reject(new Error("Brak slug"));
+    }
+    var nid = evSlug.numericId;
+    if (
+      eventCache[nid] &&
+      eventCache[nid].startingListEntries &&
+      eventCache[nid].startingListEntries.length
+    ) {
+      startingListEntries = eventCache[nid].startingListEntries;
+      refreshHarmonogram();
+      return Promise.resolve(startingListEntries);
+    }
+    if (startingListEntries && startingListEntries.length) {
       return Promise.resolve(startingListEntries);
     }
     if (startingListLoadPromise) {
@@ -1156,9 +1932,6 @@
         filterPanelStatusEl.textContent = "Ładowanie list startowych…";
       }
       return startingListLoadPromise;
-    }
-    if (!evSlug) {
-      return Promise.reject(new Error("Brak slug"));
     }
     if (filterPanelOpen && filterPanelStatusEl) {
       filterPanelStatusEl.textContent = "Ładowanie list startowych…";
@@ -1171,6 +1944,8 @@
           throw new Error("Brak uczestników na liście (nieznany HTML?)");
         }
         startingListEntries = entries;
+        if (!eventCache[nid]) eventCache[nid] = {};
+        eventCache[nid].startingListEntries = entries;
         refreshHarmonogram();
         return entries;
       })
@@ -1184,6 +1959,31 @@
   }
 
   function onFilterPanelOpenRequest() {
+    if (getCmTabFromUrl() === CM_TAB_EVENTS) {
+      if (filterPanelStatusEl) {
+        filterPanelStatusEl.textContent = "Ładowanie wszystkich list…";
+      }
+      ensureAggregateParticipantMaps()
+        .then(function () {
+          if (filterPanelStatusEl) filterPanelStatusEl.textContent = "";
+          var merged = buildAggregateFilterEntries();
+          if (!merged.length) {
+            throw new Error("Brak zawodników w listach");
+          }
+          renderFilterListDom(merged);
+          syncFilterCheckboxesFromUrl();
+        })
+        .catch(function (err) {
+          if (filterPanelStatusEl) {
+            filterPanelStatusEl.textContent =
+              "Nie udało się wczytać list: " +
+              (err.message || String(err));
+          }
+          if (filterListRootEl) filterListRootEl.innerHTML = "";
+          hideClubJumpUI();
+        });
+      return;
+    }
     ensureStartingListLoaded()
       .then(function (entries) {
         if (filterPanelStatusEl) filterPanelStatusEl.textContent = "";
@@ -1211,6 +2011,7 @@
   }
 
   function prefetchStartingListEarly() {
+    if (!evSlug) return;
     ensureStartingListLoaded().catch(function () {
       /* prefetch w tle — błąd pokażemy przy otwarciu panelu */
     });
@@ -1364,19 +2165,9 @@
     return fetchJson(fightsUrl(eventNumericId)).then(function (data) {
       clearError();
       renderFights(data);
-    });
-  }
-
-  function initWithMats() {
-    if (placeholderEl) {
-      placeholderEl.classList.add("is-hidden");
-    }
-    clearError();
-    return loadFights().catch(function (err) {
-      showError(
-        "Nie udało się pobrać walk: " +
-          (err.message || String(err))
-      );
+      if (eventNumericId && eventCache[eventNumericId]) {
+        eventCache[eventNumericId].fightsData = data;
+      }
     });
   }
 
@@ -1389,30 +2180,6 @@
       });
     }, ms);
   }
-
-  if (!evSlug || !eventNumericId) {
-    if (placeholderEl) {
-      placeholderEl.classList.add("is-hidden");
-    }
-    showError(
-      "Brak parametru slug w URL (np. ?slug=628-x-superpuchar-polski-bjj-nogi-gi). Wybierz zawody z listy."
-    );
-    var p = document.createElement("p");
-    p.className = "mm-muted";
-    var a = document.createElement("a");
-    a.className = "mm-nav-link";
-    a.href = cfg.withModeQuery("../");
-    a.textContent = "Przejdź do listy zawodów";
-    p.appendChild(a);
-    if (contentEl) contentEl.appendChild(p);
-    initCmTabsFromUrl();
-    return;
-  }
-
-  if (filterRootEl) {
-    filterRootEl.classList.remove("is-hidden");
-  }
-  updateFilterMainButtonLabel();
 
   if (filterMainBtn) {
     filterMainBtn.addEventListener("click", onFilterMainButtonClick);
@@ -1450,6 +2217,31 @@
 
   if (filterClearAllBtn) {
     filterClearAllBtn.addEventListener("click", function () {
+      var tab = getCmTabFromUrl();
+      if (
+        (tab === CM_TAB_FIGHTS || tab === CM_TAB_HARMONOGRAM) &&
+        evSlug &&
+        startingListEntries &&
+        startingListEntries.length
+      ) {
+        var inEvent = Object.create(null);
+        for (var ci = 0; ci < startingListEntries.length; ci++) {
+          inEvent[startingListEntries[ci].publicId] = true;
+        }
+        var urlSet = getFilterIdSetFromUrl();
+        if (urlSet) {
+          var remaining = [];
+          for (var k in urlSet) {
+            if (!inEvent[k]) remaining.push(k);
+          }
+          setFilterQueryInUrl(remaining);
+        }
+        syncFilterCheckboxesFromUrl();
+        if (lastFightsData) renderFights(lastFightsData);
+        refreshHarmonogram();
+        applyFilterPanelListVisibility();
+        return;
+      }
       clearAllMemberFilterCheckboxes();
     });
   }
@@ -1465,30 +2257,43 @@
     });
   }
 
-  prefetchStartingListEarly();
   initCmTabsFromUrl();
+  updateFilterRootVisibility();
+  updateFilterMainButtonLabel();
 
-  clearError();
-
-  var schedulesPath =
-    "/api/events/" + encodeURIComponent(eventNumericId) + "/schedules";
-
-  fetchJson(schedulesPath)
-    .then(function (sched) {
-      lastSchedulesPayload = sched;
-      matNamesById = buildMatMapFromSchedules(sched);
-      refreshHarmonogram();
-      return initWithMats();
-    })
-    .catch(function () {
-      lastSchedulesPayload = null;
-      matNamesById = Object.create(null);
-      refreshHarmonogram();
-      return initWithMats();
-    })
-    .then(function () {
-      startPolling();
-    });
+  loadEventsIndex().then(function () {
+    refreshSlugFromLocation();
+    if (evSlug && eventNumericId) {
+      highlightSelectedEventRow(evSlug.slug);
+      return ensureEventLoaded(evSlug)
+        .then(function () {
+          if (placeholderEl) placeholderEl.classList.add("is-hidden");
+          clearError();
+          syncHeaderEventLine();
+          applyCmTabDom(getCmTabFromUrl());
+          if (lastFightsData) renderFights(lastFightsData);
+          refreshHarmonogram();
+          prefetchStartingListEarly();
+        })
+        .catch(function (err) {
+          showError(
+            "Nie udało się wczytać wydarzenia: " +
+              (err.message || String(err))
+          );
+        });
+    } else {
+      if (placeholderEl) placeholderEl.classList.add("is-hidden");
+      clearError();
+    }
+    updatePollingForTab();
+    if (getCmTabFromUrl() === CM_TAB_EVENTS && getFilterIdSetFromUrl()) {
+      ensureAggregateParticipantMaps()
+        .then(function () {
+          refreshEventsListVisibility();
+        })
+        .catch(function () {});
+    }
+  });
 
   window.addEventListener("pagehide", stopPoll);
 })();

@@ -19,7 +19,10 @@ Filters are stored in the **URL**, so you can **share a link** with friends or p
 - **Report bugs or request a feature:** [GitHub Issues](https://github.com/andruwik777/martialmatch/issues)
 
 ## For developers
-use "mode=test" in query URL parameters to simulate data with active competitions. 
+
+Use "mode=test" in query URL parameters to simulate data with active competitions. 
+
+Proxy server is implemented as a Cloudflare Worker (prod and test versions).
 
 ## Disclaimer
 

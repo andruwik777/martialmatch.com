@@ -19,17 +19,6 @@ Filters are stored in the **URL**, so you can **share a link** with friends or p
 
 - **Report bugs or request a feature:** [GitHub Issues](https://github.com/andruwik777/martialmatch/issues)
 
-## Repository layout (high level)
-
-- `config.js` — proxy base URL, optional `?mode=test`, slug parsing, link to the original MartialMatch event page.
-- `pl/events/current-matches/` — main viewer: competition list, fights, harmonogram, participant filter, URL-driven state.
-- `app.css` — shared styles.
-- `research/` — saved HTML/JSON snapshots for debugging and parsing; not required to run the app.
-
-## Running locally
-
-Serve the repo root as static files (any static server). Adjust `config.js` if your proxy base URL differs.
-
 ## Disclaimer
 
 Not affiliated with MartialMatch. Behavior depends on MartialMatch’s HTML/API; changes on their side may break scraping or views.

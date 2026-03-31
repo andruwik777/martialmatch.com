@@ -1,9 +1,8 @@
 # MartialMatch viewer
 
-A lightweight web front end for [MartialMatch](https://martialmatch.com) data, focused on **filtering by multiple athletes** and **shareable links**. It is deployed as static files and talks to MartialMatch through a configurable proxy (see `config.js`).
+A lightweight web front end for [MartialMatch](https://martialmatch.com) data, focused on **filtering by multiple athletes** and **shareable links**.
 
 **Live site (GitHub Pages):** [andruwik777.github.io/martialmatch](https://andruwik777.github.io/martialmatch)  
-**Source:** [github.com/andruwik777/martialmatch](https://github.com/andruwik777/martialmatch)
 
 ## Why this exists
 

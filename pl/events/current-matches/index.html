@@ -9,7 +9,7 @@
 <body>
   <header class="header">
     <nav class="mm-nav mm-cm-header-nav" aria-label="Nawigacja">
-      <a class="mm-nav-link" href="./?tab=events" id="mm-cm-nav-home">Wydarzenia</a>
+      <a class="mm-nav-link" href="./?tab=events" id="mm-cm-nav-home">Home</a>
       <a
         class="mm-nav-link mm-cm-header-orig-link is-hidden"
         id="mm-cm-orig-mm-link"
@@ -25,7 +25,7 @@
       <div
         id="mm-cm-header-card-wrap"
         class="mm-cm-header-card-wrap is-hidden"
-        aria-label="Aktywne wydarzenie"
+        aria-label="Aktywne zawody"
       >
         <div id="mm-cm-header-card-root" class="mm-cm-header-card-root" aria-live="polite"></div>
       </div>
@@ -39,28 +39,28 @@
         <div
           id="mm-cm-events-toolbar"
           class="mm-cm-events-toolbar is-hidden"
-          aria-label="Lista wydarzeń"
+          aria-label="Lista zawodów"
         >
           <label
             id="mm-show-all-events-wrap"
             class="mm-cm-events-toolbar__check-label"
-            title="Pełna lista wydarzeń i dostępny filtr uczestników (wiele zapytań do API)."
+            title="Pełna lista zawodów i dostępny filtr uczestników (wiele zapytań do API)."
           >
             <input
               type="checkbox"
               id="mm-show-all-events-cb"
               class="mm-show-all-events-cb"
-              aria-label="Wszystkie wydarzenia — pełna lista i filtr uczestników"
+              aria-label="Wszystkie zawody — pełna lista i filtr uczestników"
             />
-            <span>Wszystkie wydarzenia</span>
+            <span>Wszystkie zawody</span>
           </label>
           <div class="mm-cm-events-toolbar__actions">
             <button
               type="button"
               id="mm-change-active-event-btn"
               class="mm-change-active-event-btn is-hidden"
-              title="Usuwa slug z adresu — pełna lista wydarzeń. Filtr zawodników w URL zostaje."
-              aria-label="Zmień aktywne wydarzenie — usuwa slug, pokazuje wszystkie wydarzenia"
+              title="Usuwa slug z adresu — pełna lista zawodów. Filtr zawodników w URL zostaje."
+              aria-label="Zmień aktywne zawody — usuwa slug, pokazuje wszystkie zawody"
             >
               Zmień aktywne
             </button>
@@ -165,7 +165,7 @@
                   type="button"
                   class="mm-filter-toolbar-btn"
                   id="mm-filter-clear-all-btn"
-                  title="Odznacz zawodników (na liście walk: z URL usuwani są tylko zawodnicy z bieżącego wydarzenia)."
+                  title="Odznacz zawodników (na liście walk: z URL usuwani są tylko zawodnicy z bieżących zawodów)."
                   aria-label="Odznacz zawodników na liście"
                 >
                   Wyczyść
@@ -237,7 +237,7 @@
           aria-controls="mm-cm-panel-events"
           tabindex="0"
         >
-          Wydarzenia
+          Zawody
         </button>
         <button
           type="button"

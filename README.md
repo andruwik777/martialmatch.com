@@ -18,6 +18,9 @@ Filters are stored in the **URL**, so you can **share a link** with friends or p
 
 - **Report bugs or request a feature:** [GitHub Issues](https://github.com/andruwik777/martialmatch/issues)
 
+## For developers
+use "mode=test" in query URL parameters to simulate data with active competitions. 
+
 ## Disclaimer
 
 Not affiliated with MartialMatch. Behavior depends on MartialMatch’s HTML/API; changes on their side may break scraping or views.

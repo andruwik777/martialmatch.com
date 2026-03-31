@@ -574,6 +574,23 @@ body {
   outline: none;
 }
 
+.mm-event-row.mm-event-row--header-clear-slug {
+  cursor: pointer;
+}
+
+.mm-event-row.mm-event-row--display-only.mm-event-row--header-clear-slug:hover {
+  border-color: #4a5570;
+}
+
+.mm-event-row.mm-event-row--display-only.mm-event-row--header-clear-slug:active {
+  background: #252936;
+}
+
+.mm-event-row.mm-event-row--display-only.mm-event-row--header-clear-slug:focus-visible {
+  outline: 2px solid #5b8cff;
+  outline-offset: 2px;
+}
+
 .mm-cm-events-list {
   margin-top: 0.5rem;
 }
@@ -891,10 +908,20 @@ body {
 
 .mm-cm-events-toolbar {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.5rem 0.65rem;
   margin-bottom: 0.55rem;
   align-items: stretch;
+}
+
+/* Tylko „Wszystkie zawody”: wiersz pełnej szerokości; z filrem — druga kolumna */
+.mm-cm-events-toolbar.mm-cm-events-toolbar--check-spans-full {
+  grid-template-columns: 1fr;
+}
+
+.mm-cm-events-toolbar.mm-cm-events-toolbar--check-spans-full
+  .mm-cm-events-toolbar__actions {
+  display: none;
 }
 
 .mm-cm-events-toolbar__check-label {

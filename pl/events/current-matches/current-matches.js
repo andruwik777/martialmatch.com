@@ -1244,17 +1244,60 @@
     eventsToolbarEl.classList.toggle("is-hidden", !onEvents);
     filterMainBtn.classList.toggle("is-hidden", onEvents);
 
+    var hasSlug = Boolean(evSlug);
+    eventsToolbarEl.classList.toggle(
+      "mm-cm-events-toolbar--check-spans-full",
+      onEvents && hasSlug && !showAll
+    );
+
     if (showAllEventsWrapEl) {
-      showAllEventsWrapEl.classList.toggle("is-hidden", !Boolean(evSlug));
+      showAllEventsWrapEl.classList.toggle("is-hidden", !hasSlug);
     }
 
     if (changeActiveEventBtn) {
-      var showChange = onEvents && !showAll && Boolean(evSlug);
-      changeActiveEventBtn.classList.toggle("is-hidden", !showChange);
+      changeActiveEventBtn.classList.add("is-hidden");
     }
     if (filterMainBtnEvents) {
-      var showFilEv = onEvents && showAll && Boolean(evSlug);
+      var showFilEv = onEvents && showAll && hasSlug;
       filterMainBtnEvents.classList.toggle("is-hidden", !showFilEv);
+    }
+  }
+
+  function onHeaderCardClearClick() {
+    if (!evSlug || getShowAllFromUrl()) return;
+    clearActiveEventSlug();
+  }
+
+  function onHeaderCardClearKeydown(e) {
+    if (!evSlug || getShowAllFromUrl()) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      clearActiveEventSlug();
+    }
+  }
+
+  /**
+   * @param {HTMLElement | null} cardEl
+   */
+  function wireHeaderCardClearBehavior(cardEl) {
+    if (!cardEl) return;
+    cardEl.removeEventListener("click", onHeaderCardClearClick);
+    cardEl.removeEventListener("keydown", onHeaderCardClearKeydown);
+    var useClear = Boolean(evSlug) && !getShowAllFromUrl();
+    cardEl.classList.toggle("mm-event-row--header-clear-slug", useClear);
+    if (useClear) {
+      cardEl.setAttribute("role", "button");
+      cardEl.tabIndex = 0;
+      cardEl.setAttribute(
+        "aria-label",
+        "Zmień aktywne zawody — pokaż listę wyboru"
+      );
+      cardEl.addEventListener("click", onHeaderCardClearClick);
+      cardEl.addEventListener("keydown", onHeaderCardClearKeydown);
+    } else {
+      cardEl.removeAttribute("role");
+      cardEl.removeAttribute("tabindex");
+      cardEl.removeAttribute("aria-label");
     }
   }
 
@@ -1309,6 +1352,9 @@
         if (sum) {
           headerCardRootEl.appendChild(
             buildEventCardNode(sum, { interactive: false })
+          );
+          wireHeaderCardClearBehavior(
+            headerCardRootEl.querySelector(".mm-event-row")
           );
         }
       }

@@ -312,7 +312,7 @@
       var titleLink = document.createElement("a");
       titleLink.className = "event-card-title mm-event-title-link";
       titleLink.href = href;
-      titleLink.textContent = ev.title || "Zawody " + ev.numericId;
+      titleLink.textContent = ev.title || "Event " + ev.numericId;
       body.appendChild(titleLink);
 
       if (ev.dateText) {
@@ -320,7 +320,7 @@
         dateRow.className = "mm-ev-date";
         var lab = document.createElement("span");
         lab.className = "mm-ev-date__label";
-        lab.textContent = "Data zawodów:";
+        lab.textContent = "Date:";
         var val = document.createElement("span");
         val.className = "mm-ev-date__value";
         val.textContent = " " + ev.dateText;
@@ -377,7 +377,7 @@
   }
 
   function load() {
-    setStatus("Ładowanie…");
+    setStatus("Loading…");
     var url = cfg.url("/pl/events");
 
     fetch(url, { credentials: "omit", headers: { Accept: "text/html" } })
@@ -393,16 +393,16 @@
         var events = parseEventsFromDocument(doc);
         if (events.length === 0) {
           setStatus(
-            "Nie znaleziono zawodów w HTML (zmieniła się struktura strony?).",
+            "No events found in HTML (site structure may have changed).",
             true
           );
           return;
         }
-        setStatus("Nadchodzące zawody: " + events.length + ".");
+        setStatus("Upcoming events: " + events.length + ".");
         renderEvents(events);
       })
       .catch(function (err) {
-        setStatus("Błąd: " + (err.message || String(err)) + "\nURL: " + url, true);
+        setStatus("Error: " + (err.message || String(err)) + "\nURL: " + url, true);
       });
   }
 

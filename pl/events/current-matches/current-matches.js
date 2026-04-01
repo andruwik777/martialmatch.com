@@ -97,7 +97,7 @@
   var startingListEntries = null;
   var startingListLoadPromise = null;
 
-  var plCollator = new Intl.Collator("pl", { sensitivity: "base" });
+  var enCollator = new Intl.Collator("en", { sensitivity: "base" });
 
   function rowHeadVariant(fightId, matId, queueStatuses) {
     var key = String(matId);
@@ -126,7 +126,7 @@
     );
   }
 
-  var timeFmt = new Intl.DateTimeFormat("pl-PL", {
+  var timeFmt = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/Warsaw",
     hour: "2-digit",
     minute: "2-digit",
@@ -157,7 +157,7 @@
     var rn = (pf.roundName || "").trim();
     var rnl = rn.toLowerCase();
     var list = [];
-    if (rnl === "final") list.push({ text: "FINAŁ", variant: "final" });
+    if (rnl === "final") list.push({ text: "Final", variant: "final" });
     else if (rnl === "semi_final") list.push({ text: "SF", variant: "round" });
     else if (rnl === "quarter_final")
       list.push({ text: "1/4", variant: "round" });
@@ -165,7 +165,7 @@
       rnl === "third_place_playoff" ||
       rnl === "repechage_3rd_place"
     )
-      list.push({ text: "o 3 miejsce", variant: "third" });
+      list.push({ text: "3rd", variant: "third" });
     else if (rnl === "repechage") list.push({ text: "REP", variant: "round" });
     else if (rn === "1/8" || rnl.indexOf("1/8") === 0)
       list.push({ text: "1/8", variant: "round" });
@@ -239,9 +239,10 @@
   }
 
   function buildMatDisplayName(matNameRaw, matId) {
-    var s = String(matNameRaw || "").trim() || "Mata " + matId;
-    s = s.replace(/^mata\s+/i, "mata ");
-    if (!/^mata\s/i.test(s)) s = "mata " + s;
+    var s = String(matNameRaw || "").trim() || "Mat " + matId;
+    s = s.replace(/^mata\s+/i, "mat ");
+    s = s.replace(/^mat\s+/i, "mat ");
+    if (!/^mat\s/i.test(s)) s = "mat " + s;
     return s.toLowerCase();
   }
 
@@ -261,7 +262,7 @@
     if (!sch || !sch.mats) return map;
     sch.mats.forEach(function (m) {
       var id = m.id;
-      map[String(id)] = m.name || "Mata " + id;
+      map[String(id)] = m.name || "Mat " + id;
     });
     return map;
   }
@@ -294,7 +295,7 @@
     if (!sch || !sch.mats) return map;
     sch.mats.forEach(function (m) {
       var matId = m.id;
-      var matNameRaw = m.name || "Mata " + matId;
+      var matNameRaw = m.name || "Mat " + matId;
       var cats = m.categories || [];
       cats.forEach(function (c) {
         var id = c.id;
@@ -380,7 +381,7 @@
     if (!lastSchedulesPayload) {
       var p = document.createElement("p");
       p.className = "mm-muted";
-      p.textContent = "Brak danych harmonogramu z API.";
+      p.textContent = "No schedule data from API.";
       harmonogramRootEl.appendChild(p);
       return;
     }
@@ -388,7 +389,7 @@
     if (!startingListEntries) {
       var p2 = document.createElement("p");
       p2.className = "mm-muted";
-      p2.textContent = "Ładowanie list startowej…";
+      p2.textContent = "Loading starting list…";
       harmonogramRootEl.appendChild(p2);
       return;
     }
@@ -436,8 +437,8 @@
       var empty = document.createElement("p");
       empty.className = "mm-muted";
       empty.textContent = idSet
-        ? "Brak wpisów harmonogramu dla wybranych zawodników (wymagany link z parameterId na liście startowej)."
-        : "Brak dopasowań: lista startowa bez parameterId lub kategorie poza harmonogramem.";
+        ? "No schedule rows for selected athletes (starting list needs parameterId links)."
+        : "No matches: starting list without parameterId or categories outside schedule.";
       harmonogramRootEl.appendChild(empty);
       return;
     }
@@ -672,7 +673,7 @@
 
       var parsedEventDay = parsePolishEventDate(dateText);
       if (parsedEventDay && isSameLocalCalendarDayEv(parsedEventDay)) {
-        registration = { kind: "ongoing", text: "Trwające zawody" };
+        registration = { kind: "ongoing", text: "Event ongoing" };
       }
 
       out.push({
@@ -807,20 +808,20 @@
       {
         lane: c.laneStarting,
         mod: "starting",
-        tFill: "Lista startowa: są zawodnicy.",
-        tOut: "Lista startowa: brak zawodników (odpowiedź z serwera).",
+        tFill: "Starting list: athletes present.",
+        tOut: "Starting list: no athletes (server response).",
       },
       {
         lane: c.laneSchedules,
         mod: "schedules",
-        tFill: "Harmonogram: w odpowiedzi API są harmonogramy.",
-        tOut: "Harmonogram: w odpowiedzi API brak harmonogramów.",
+        tFill: "Schedule: API returned schedules.",
+        tOut: "Schedule: API returned no schedules.",
       },
       {
         lane: c.laneFights,
         mod: "fights",
-        tFill: "Walki: w odpowiedzi API jest co najmniej jedna walka.",
-        tOut: "Walki: w odpowiedzi API brak walk.",
+        tFill: "Fights: API returned at least one fight.",
+        tOut: "Fights: API returned no fights.",
       },
     ];
     for (var i = 0; i < triple.length; i++) {
@@ -895,7 +896,7 @@
       root.tabIndex = 0;
       root.setAttribute(
         "aria-label",
-        "Wybierz wydarzenie: " + (ev.title || ev.slug)
+        "Select event: " + (ev.title || ev.slug)
       );
     }
 
@@ -917,7 +918,7 @@
 
     var titleEl = document.createElement("div");
     titleEl.className = "event-card-title";
-    titleEl.textContent = ev.title || "Zawody " + ev.numericId;
+    titleEl.textContent = ev.title || "Event " + ev.numericId;
     body.appendChild(titleEl);
 
     if (ev.dateText) {
@@ -925,7 +926,7 @@
       dateRow.className = "mm-ev-date";
       var lab = document.createElement("span");
       lab.className = "mm-ev-date__label";
-      lab.textContent = "Data zawodów:";
+      lab.textContent = "Date:";
       var val = document.createElement("span");
       val.className = "mm-ev-date__value";
       val.textContent = " " + ev.dateText;
@@ -998,7 +999,7 @@
       }
     }
     var c = eventCache[eventNumericId];
-    var title = (c && c.title) || "Zawody " + eventNumericId;
+    var title = (c && c.title) || "Event " + eventNumericId;
     return {
       slug: evSlug.slug,
       numericId: eventNumericId,
@@ -1013,7 +1014,7 @@
   }
 
   function loadEventsIndex() {
-    setEventsStatus("Ładowanie…");
+    setEventsStatus("Loading…");
     var url = cfg.url("/pl/events");
 
     return fetch(url, { credentials: "omit", headers: { Accept: "text/html" } })
@@ -1029,7 +1030,7 @@
         var events = parseEventsFromDocument(doc);
         if (events.length === 0) {
           setEventsStatus(
-            "Nie znaleziono zawodów w HTML (zmieniła się struktura strony?).",
+            "No events found in HTML (site structure may have changed).",
             true
           );
           parsedEventsList = [];
@@ -1047,13 +1048,13 @@
           }
         }
         syncHeaderEventLine();
-        setEventsStatus("Nadchodzące zawody: " + events.length + ".");
+        setEventsStatus("Upcoming events: " + events.length + ".");
         renderEventsListCm(events);
         refreshEventsListVisibility();
       })
       .catch(function (err) {
         setEventsStatus(
-          "Błąd: " + (err.message || String(err)) + "\nURL: " + url,
+          "Error: " + (err.message || String(err)) + "\nURL: " + url,
           true
         );
         parsedEventsList = [];
@@ -1290,7 +1291,7 @@
       cardEl.tabIndex = 0;
       cardEl.setAttribute(
         "aria-label",
-        "Zmień aktywne zawody — pokaż listę wyboru"
+        "Change active event — show picker"
       );
       cardEl.addEventListener("click", onHeaderCardClearClick);
       cardEl.addEventListener("keydown", onHeaderCardClearKeydown);
@@ -1318,7 +1319,7 @@
     if (toolbarEl) toolbarEl.classList.add("is-hidden");
     if (placeholderEl) {
       placeholderEl.classList.remove("is-hidden");
-      placeholderEl.textContent = "Wybierz wydarzenie…";
+      placeholderEl.textContent = "Select an event…";
     }
     clearError();
     notifyUrlChanged();
@@ -1436,7 +1437,7 @@
     highlightSelectedEventRow(slugObj.slug);
     if (placeholderEl) {
       placeholderEl.classList.remove("is-hidden");
-      placeholderEl.textContent = "Ładowanie…";
+      placeholderEl.textContent = "Loading…";
     }
     clearError();
     return ensureEventLoaded(slugObj)
@@ -1452,7 +1453,7 @@
       })
       .catch(function (err) {
         showError(
-          "Nie udało się wczytać wydarzenia: " +
+          "Failed to load event: " +
             (err.message || String(err))
         );
       });
@@ -1463,7 +1464,7 @@
       return aggregateParticipantMapsPromise;
     }
     if (!parsedEventsList.length) {
-      return Promise.reject(new Error("Brak listy wydarzeń"));
+      return Promise.reject(new Error("No event list"));
     }
     var list = parsedEventsList;
     var n = list.length;
@@ -1473,7 +1474,7 @@
         chain = chain.then(function () {
           if (filterPanelOpen && filterPanelStatusEl) {
             filterPanelStatusEl.textContent =
-              "Listy startowe: " + (i + 1) + " / " + n + "…";
+              "Starting lists: " + (i + 1) + " / " + n + "…";
           }
           return fetchHtml(startingListsPath(ev.slug))
             .then(function (html) {
@@ -1691,9 +1692,9 @@
   function compareEntriesByName(a, b) {
     var ka = parseNameSortKeys(a.name);
     var kb = parseNameSortKeys(b.name);
-    var c1 = plCollator.compare(ka.first, kb.first);
+    var c1 = enCollator.compare(ka.first, kb.first);
     if (c1 !== 0) return c1;
-    return plCollator.compare(ka.last, kb.last);
+    return enCollator.compare(ka.last, kb.last);
   }
 
   /**
@@ -1984,11 +1985,11 @@
 
     if (filterOnlyEmptyHintEl) {
       if (onlySel && !anyChecked) {
-        filterOnlyEmptyHintEl.textContent = "Brak zaznaczonych zawodników.";
+        filterOnlyEmptyHintEl.textContent = "No athletes selected.";
         filterOnlyEmptyHintEl.classList.remove("is-hidden");
       } else if (query && !anyVisible) {
         filterOnlyEmptyHintEl.textContent =
-          "Brak zawodników pasujących do wyszukiwania.";
+          "No athletes match search.";
         filterOnlyEmptyHintEl.classList.remove("is-hidden");
       } else {
         filterOnlyEmptyHintEl.textContent = "";
@@ -2056,7 +2057,7 @@
       clubCb.setAttribute("data-mm-filter-club", "1");
       clubCb.setAttribute(
         "aria-label",
-        "Zaznacz lub usuń zaznaczenie wszystkich z: " + clubName
+        "Select or clear all in: " + clubName
       );
       clubCb.setAttribute("aria-checked", "false");
       checkWrap.appendChild(clubCb);
@@ -2184,7 +2185,7 @@
   }
 
   /**
-   * On Wydarzenia tab: all IDs in URL. On Walki/Harmonogram: IDs in URL that
+   * On Events tab: all IDs in URL. On Fights/Schedule: IDs in URL that
    * appear on the current event's starting list.
    */
   function countFilterIdsForMainButton() {
@@ -2232,48 +2233,48 @@
       if (lab) {
         if (tab === CM_TAB_EVENTS) {
           lab.textContent =
-            totalUrl > 0 ? "Filtr · " + totalUrl : "Filtr · wszyscy";
+            totalUrl > 0 ? "Filter · " + totalUrl : "Filter · all";
         } else {
           lab.textContent =
-            totalUrl > 0 ? "Filtr · " + n : "Filtr · wszyscy";
+            totalUrl > 0 ? "Filter · " + n : "Filter · all";
         }
       }
       if (tab === CM_TAB_EVENTS) {
         btn.setAttribute(
           "aria-label",
           n > 0
-            ? "Otwórz filtr — w URL wybranych zawodników: " + n + "."
-            : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
+            ? "Open filter — URL has " + n + " athlete(s) selected."
+            : "Open filter — none selected in URL; all athletes shown."
         );
         btn.title =
           n > 0
-            ? "W URL jest " +
+            ? "URL has " +
               n +
-              " zawodników (wszystkie wydarzenia). Kliknij, by edytować."
-            : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
+              " athlete(s) (all events). Click to edit."
+            : "No filter in URL — all visible. Click to pick athletes.";
       } else {
         btn.setAttribute(
           "aria-label",
           n > 0
-            ? "Otwórz filtr — dla tego wydarzenia aktywnych z URL: " + n + " z " + totalUrl + "."
+            ? "Open filter — for this event, " + n + " of " + totalUrl + " from URL are active."
             : totalUrl > 0
-              ? "Otwórz filtr — w URL " +
+              ? "Open filter — URL has " +
                 totalUrl +
-                " zawodników, żaden nie występuje na liście tego wydarzenia."
-              : "Otwórz filtr — brak wyboru w URL, pokazywani są wszyscy zawodnicy."
+                " athlete(s), none on this event's list."
+              : "Open filter — none in URL; all athletes shown."
         );
         btn.title =
           n > 0
-            ? "Dla tego wydarzenia " +
+            ? "For this event, " +
               n +
-              " z " +
+              " of " +
               totalUrl +
-              " zawodników z URL pasuje do listy startowej. Kliknij, by edytować."
+              " athlete(s) from URL match the starting list. Click to edit."
             : totalUrl > 0
-              ? "W URL jest " +
+              ? "URL has " +
                 totalUrl +
-                " zawodników, ale żaden nie jest na liście tego wydarzenia."
-              : "Brak filtra w URL — widoczni wszyscy. Kliknij, by wybrać zawodników.";
+                " athlete(s), but none are on this event's list."
+              : "No filter in URL — all visible. Click to pick athletes.";
       }
     }
   }
@@ -2364,7 +2365,7 @@
 
   function ensureStartingListLoaded() {
     if (!evSlug) {
-      return Promise.reject(new Error("Brak slug"));
+      return Promise.reject(new Error("Missing slug"));
     }
     var nid = evSlug.numericId;
     if (
@@ -2381,12 +2382,12 @@
     }
     if (startingListLoadPromise) {
       if (filterPanelOpen && filterPanelStatusEl) {
-        filterPanelStatusEl.textContent = "Ładowanie list startowych…";
+        filterPanelStatusEl.textContent = "Loading starting lists…";
       }
       return startingListLoadPromise;
     }
     if (filterPanelOpen && filterPanelStatusEl) {
-      filterPanelStatusEl.textContent = "Ładowanie list startowych…";
+      filterPanelStatusEl.textContent = "Loading starting lists…";
     }
     startingListLoadPromise = fetchHtml(startingListsPath(evSlug.slug))
       .then(function (html) {
@@ -2397,7 +2398,7 @@
         eventCache[nid].laneStarting = { has: entries.length > 0 };
         refreshLanesForNumericId(nid);
         if (!entries.length) {
-          throw new Error("Brak uczestników na liście (nieznany HTML?)");
+          throw new Error("No participants on list (unknown HTML?)");
         }
         startingListEntries = entries;
         refreshHarmonogram();
@@ -2417,7 +2418,7 @@
       if (!getShowAllFromUrl()) {
         if (filterPanelStatusEl) {
           filterPanelStatusEl.textContent =
-            "Włącz „Wszystkie zawody”, aby filtrować listę.";
+            "Turn on “All events” to filter the list.";
         }
         if (filterListRootEl) filterListRootEl.innerHTML = "";
         hideClubJumpUI();
@@ -2425,14 +2426,14 @@
         return;
       }
       if (filterPanelStatusEl) {
-        filterPanelStatusEl.textContent = "Ładowanie wszystkich list…";
+        filterPanelStatusEl.textContent = "Loading all lists…";
       }
       ensureAggregateParticipantMaps()
         .then(function () {
           if (filterPanelStatusEl) filterPanelStatusEl.textContent = "";
           var merged = buildAggregateFilterEntries();
           if (!merged.length) {
-            throw new Error("Brak zawodników w listach");
+            throw new Error("No athletes in lists");
           }
           renderFilterListDom(merged);
           syncFilterCheckboxesFromUrl();
@@ -2440,7 +2441,7 @@
         .catch(function (err) {
           if (filterPanelStatusEl) {
             filterPanelStatusEl.textContent =
-              "Nie udało się wczytać list: " +
+              "Failed to load lists: " +
               (err.message || String(err));
           }
           if (filterListRootEl) filterListRootEl.innerHTML = "";
@@ -2457,7 +2458,7 @@
       .catch(function (err) {
         if (filterPanelStatusEl) {
           filterPanelStatusEl.textContent =
-            "Nie udało się wczytać list: " +
+            "Failed to load lists: " +
             (err.message || String(err));
         }
         if (filterListRootEl) filterListRootEl.innerHTML = "";
@@ -2603,12 +2604,12 @@
       var shown = rows.length;
       var parts = [];
       if (idSet) {
-        parts.push("Walki: " + shown + " z " + total + " (filtr)");
+        parts.push("Fights: " + shown + " of " + total + " (filter)");
       } else {
-        parts.push("Walki: " + shown);
+        parts.push("Fights: " + shown);
       }
       parts.push(
-        "Ostatnie odświeżenie: " +
+        "Last refresh: " +
           timeFmt.format(now) +
           " (co " +
           Math.round(cfg.currentMatchesRefreshMs / 1000) +
@@ -2772,7 +2773,7 @@
         })
         .catch(function (err) {
           showError(
-            "Nie udało się wczytać wydarzenia: " +
+            "Failed to load event: " +
               (err.message || String(err))
           );
         });

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zawody — MartialMatch viewer</title>
+  <title>Events — MartialMatch viewer</title>
   <link rel="stylesheet" href="../../../app.css">
 </head>
 <body>
   <header class="header">
-    <nav class="mm-nav mm-cm-header-nav" aria-label="Nawigacja">
+    <nav class="mm-nav mm-cm-header-nav" aria-label="Navigation">
       <a
         class="mm-nav-link mm-cm-header-nav__home"
         href="./?tab=events"
@@ -32,12 +32,12 @@
     </nav>
     <div class="mm-cm-header-context">
       <p id="mm-cm-header-prompt" class="mm-cm-header-prompt">
-        Wybierz aktywne zawody…
+        Pick an active event…
       </p>
       <div
         id="mm-cm-header-card-wrap"
         class="mm-cm-header-card-wrap is-hidden"
-        aria-label="Aktywne zawody"
+        aria-label="Active event"
       >
         <div id="mm-cm-header-card-root" class="mm-cm-header-card-root" aria-live="polite"></div>
       </div>
@@ -51,30 +51,30 @@
         <div
           id="mm-cm-events-toolbar"
           class="mm-cm-events-toolbar is-hidden"
-          aria-label="Lista zawodów"
+          aria-label="Event list toolbar"
         >
           <label
             id="mm-show-all-events-wrap"
             class="mm-cm-events-toolbar__check-label"
-            title="Pełna lista zawodów i dostępny filtr uczestników (wiele zapytań do API)."
+            title="Full event list and athlete filter (multiple API calls)."
           >
             <input
               type="checkbox"
               id="mm-show-all-events-cb"
               class="mm-show-all-events-cb"
-              aria-label="Wszystkie zawody — pełna lista i filtr uczestników"
+              aria-label="All events — full list and athlete filter"
             />
-            <span>Wszystkie zawody</span>
+            <span>All events</span>
           </label>
           <div class="mm-cm-events-toolbar__actions">
             <button
               type="button"
               id="mm-change-active-event-btn"
               class="mm-change-active-event-btn is-hidden"
-              title="Usuwa slug z adresu — pełna lista zawodów. Filtr zawodników w URL zostaje."
-              aria-label="Zmień aktywne zawody — usuwa slug, pokazuje wszystkie zawody"
+              title="Remove slug from URL — full event list. Athlete filter in URL is kept."
+              aria-label="Change active event — removes slug, shows all events"
             >
-              Zmień aktywne
+              Change active
             </button>
             <button
               type="button"
@@ -83,7 +83,7 @@
               aria-controls="mm-filter-panel"
               aria-expanded="false"
             >
-              <span class="mm-filter-main-btn__label">Filtr · wszyscy</span>
+              <span class="mm-filter-main-btn__label">Filter · all</span>
               <span class="mm-filter-main-btn__chevron" aria-hidden="true">
                 <svg
                   class="mm-filter-main-btn__chevron-svg"
@@ -105,7 +105,7 @@
           aria-controls="mm-filter-panel"
           aria-expanded="false"
         >
-          <span class="mm-filter-main-btn__label">Filtr · wszyscy</span>
+          <span class="mm-filter-main-btn__label">Filter · all</span>
           <span class="mm-filter-main-btn__chevron" aria-hidden="true">
             <svg
               class="mm-filter-main-btn__chevron-svg"
@@ -129,11 +129,11 @@
               type="search"
               id="mm-filter-search-input"
               class="mm-filter-search-input"
-              placeholder="Wpisz imię lub nazwisko…"
+              placeholder="Search name…"
               autocomplete="off"
               enterkeyhint="search"
               inputmode="text"
-              aria-label="Szukaj zawodnika po imieniu lub nazwisku"
+              aria-label="Search athletes by name"
             />
           </div>
           <div
@@ -177,18 +177,18 @@
                   type="button"
                   class="mm-filter-toolbar-btn"
                   id="mm-filter-clear-all-btn"
-                  title="Odznacz zawodników (na liście walk: z URL usuwani są tylko zawodnicy z bieżących zawodów)."
-                  aria-label="Odznacz zawodników na liście"
+                  title="Clear checkboxes (fights tab: only athletes on this event are removed from URL)."
+                  aria-label="Clear checkboxes on list"
                 >
-                  Wyczyść
+                  Clear
                 </button>
                 <label class="mm-filter-only-selected">
                   <input
                     type="checkbox"
                     id="mm-filter-only-selected-cb"
-                    aria-label="Pokaż tylko zaznaczonych zawodników na liście"
+                    aria-label="Show only selected athletes on list"
                   />
-                  <span class="mm-filter-only-selected__text">Tylko zaznaczone</span>
+                  <span class="mm-filter-only-selected__text">Selected only</span>
                 </label>
               </div>
             </div>
@@ -210,10 +210,10 @@
                 type="button"
                 class="mm-filter-apply-btn"
                 id="mm-filter-apply-sticky"
-                title="Zapisz wybór w URL i odśwież widok."
-                aria-label="Zastosuj filtr"
+                title="Save selection to URL and refresh."
+                aria-label="Apply filter"
               >
-                Apply Filter
+                Apply
               </button>
             </div>
             <div id="mm-filter-list-root" class="mm-filter-list-root"></div>
@@ -228,17 +228,17 @@
             type="button"
             class="mm-filter-apply-btn"
             id="mm-filter-apply-mobile"
-            title="Zapisz wybór w URL i odśwież widok."
-            aria-label="Zastosuj filtr"
+            title="Save selection to URL and refresh."
+            aria-label="Apply filter"
           >
-            Apply Filter
+            Apply
           </button>
         </div>
       </div>
       <div
         class="mm-cm-tabs"
         role="tablist"
-        aria-label="Widok zawodów"
+        aria-label="Event view"
       >
         <button
           type="button"
@@ -249,7 +249,7 @@
           aria-controls="mm-cm-panel-events"
           tabindex="0"
         >
-          Zawody
+          Events
         </button>
         <button
           type="button"
@@ -262,7 +262,7 @@
           disabled
           aria-disabled="true"
         >
-          Przebieg walk
+          Fights
         </button>
         <button
           type="button"
@@ -275,7 +275,7 @@
           disabled
           aria-disabled="true"
         >
-          Harmonogram
+          Schedule
         </button>
       </div>
       <div
@@ -294,7 +294,7 @@
         aria-labelledby="mm-cm-tab-fights"
         hidden
       >
-        <p class="mm-muted" id="mm-cm-placeholder">Ładowanie…</p>
+        <p class="mm-muted" id="mm-cm-placeholder">Loading…</p>
         <p class="mm-cm-toolbar mm-muted is-hidden" id="mm-cm-toolbar" aria-live="polite"></p>
         <div class="mm-fights" id="mm-fights-list"></div>
       </div>

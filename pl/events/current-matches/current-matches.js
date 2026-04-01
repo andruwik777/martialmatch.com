@@ -1743,7 +1743,7 @@
     }
     var clubNames = Object.keys(byClub);
     clubNames.sort(function (a, b) {
-      return plCollator.compare(a, b);
+      return enCollator.compare(a, b);
     });
     for (var j = 0; j < clubNames.length; j++) {
       byClub[clubNames[j]].sort(compareEntriesByName);

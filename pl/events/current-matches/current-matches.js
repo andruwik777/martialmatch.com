@@ -388,11 +388,28 @@
       return;
     }
 
-    if (!startingListEntries) {
+    if (!schedulesPayloadHasData(lastSchedulesPayload)) {
+      var pSched = document.createElement("p");
+      pSched.className = "mm-muted";
+      pSched.textContent = "No schedule slots in API response.";
+      harmonogramRootEl.appendChild(pSched);
+      return;
+    }
+
+    if (startingListEntries == null) {
       var p2 = document.createElement("p");
       p2.className = "mm-muted";
       p2.textContent = "Loading starting list…";
       harmonogramRootEl.appendChild(p2);
+      return;
+    }
+
+    if (!startingListEntries.length) {
+      var pEmpty = document.createElement("p");
+      pEmpty.className = "mm-muted";
+      pEmpty.textContent =
+        "No athletes on the starting list for this event.";
+      harmonogramRootEl.appendChild(pEmpty);
       return;
     }
 
@@ -1360,7 +1377,9 @@
     lastSchedulesPayload = c.schedulesPayload || null;
     lastFightsData = c.fightsData || null;
     matNamesById = c.matNamesById || Object.create(null);
-    startingListEntries = c.startingListEntries || null;
+    startingListEntries = Array.isArray(c.startingListEntries)
+      ? c.startingListEntries
+      : null;
     startingListLoadPromise = null;
   }
 
@@ -2144,20 +2163,17 @@
     if (!eventNumericId) return null;
     var nid = eventNumericId;
     var c = eventCache[nid];
-    var entries =
-      c && c.startingListEntries && c.startingListEntries.length
-        ? c.startingListEntries
-        : null;
-    if (
-      !entries &&
-      startingListEntries &&
-      startingListEntries.length &&
+    var entries = null;
+    if (c && Array.isArray(c.startingListEntries)) {
+      entries = c.startingListEntries;
+    } else if (
       evSlug &&
-      String(evSlug.numericId) === String(nid)
+      String(evSlug.numericId) === String(nid) &&
+      Array.isArray(startingListEntries)
     ) {
       entries = startingListEntries;
     }
-    if (entries && entries.length) {
+    if (entries) {
       var out = Object.create(null);
       for (var i = 0; i < entries.length; i++) {
         out[entries[i].publicId] = true;
@@ -2353,16 +2369,15 @@
       return Promise.reject(new Error("Missing slug"));
     }
     var nid = evSlug.numericId;
-    if (
-      eventCache[nid] &&
-      eventCache[nid].startingListEntries &&
-      eventCache[nid].startingListEntries.length
-    ) {
+    if (eventCache[nid] && Array.isArray(eventCache[nid].startingListEntries)) {
       startingListEntries = eventCache[nid].startingListEntries;
       refreshHarmonogram();
       return Promise.resolve(startingListEntries);
     }
-    if (startingListEntries && startingListEntries.length) {
+    if (
+      String(eventNumericId) === String(nid) &&
+      Array.isArray(startingListEntries)
+    ) {
       return Promise.resolve(startingListEntries);
     }
     if (startingListLoadPromise) {
@@ -2382,9 +2397,6 @@
         eventCache[nid].startingListEntries = entries;
         eventCache[nid].laneStarting = { has: entries.length > 0 };
         refreshLanesForNumericId(nid);
-        if (!entries.length) {
-          throw new Error("No participants on list (unknown HTML?)");
-        }
         startingListEntries = entries;
         refreshHarmonogram();
         return entries;
@@ -2436,7 +2448,11 @@
     }
     ensureStartingListLoaded()
       .then(function (entries) {
-        if (filterPanelStatusEl) filterPanelStatusEl.textContent = "";
+        if (filterPanelStatusEl) {
+          filterPanelStatusEl.textContent = entries.length
+            ? ""
+            : "No athletes on the starting list.";
+        }
         renderFilterListDom(entries);
         syncFilterCheckboxesFromUrl();
       })

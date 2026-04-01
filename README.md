@@ -24,6 +24,8 @@ Use "mode=test" in query URL parameters to simulate data with active competition
 
 Proxy server is implemented as a Cloudflare Worker (prod and test versions).
 
+Test worker reads static fixtures from `server/test-martialmatch/data/` (served via `raw.githubusercontent.com` after you push). Regenerate them with `python server/test-martialmatch/build_test_data.py`.
+
 ## Disclaimer
 
 Not affiliated with MartialMatch. Behavior depends on MartialMatch’s HTML/API; changes on their side may break scraping or views.

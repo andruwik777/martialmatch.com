@@ -1470,6 +1470,21 @@
     if (!parsedEventsList.length) {
       return Promise.reject(new Error("No event list"));
     }
+    function applyStartingListAggregate(ev, entries) {
+      var map = Object.create(null);
+      for (var j = 0; j < entries.length; j++) {
+        map[entries[j].publicId] = true;
+      }
+      eventParticipantIdMap[ev.numericId] = map;
+      if (!eventCache[ev.numericId]) {
+        eventCache[ev.numericId] = {};
+      }
+      eventCache[ev.numericId].startingListEntries = entries;
+      eventCache[ev.numericId].laneStarting = {
+        has: entries.length > 0,
+      };
+      refreshLanesForNumericId(ev.numericId);
+    }
     var list = parsedEventsList;
     var n = list.length;
     var chain = Promise.resolve();
@@ -1480,22 +1495,15 @@
             filterPanelStatusEl.textContent =
               "Starting lists: " + (i + 1) + " / " + n + "…";
           }
+          var cached = eventCache[ev.numericId];
+          if (cached && Array.isArray(cached.startingListEntries)) {
+            applyStartingListAggregate(ev, cached.startingListEntries);
+            return Promise.resolve();
+          }
           return fetchHtml(startingListsPath(ev.slug))
             .then(function (html) {
               var entries = parseStartingListHtml(html);
-              var map = Object.create(null);
-              for (var j = 0; j < entries.length; j++) {
-                map[entries[j].publicId] = true;
-              }
-              eventParticipantIdMap[ev.numericId] = map;
-              if (!eventCache[ev.numericId]) {
-                eventCache[ev.numericId] = {};
-              }
-              eventCache[ev.numericId].startingListEntries = entries;
-              eventCache[ev.numericId].laneStarting = {
-                has: entries.length > 0,
-              };
-              refreshLanesForNumericId(ev.numericId);
+              applyStartingListAggregate(ev, entries);
             })
             .catch(function () {
               eventParticipantIdMap[ev.numericId] = Object.create(null);

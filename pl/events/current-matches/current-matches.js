@@ -51,6 +51,8 @@
 
   var eventCache = Object.create(null);
   var parsedEventsList = [];
+  /** True after the /pl/events index fetch settles (success or error). */
+  var eventsIndexLoaded = false;
   /** @type {Record<string, Record<string, true>>} */
   var eventParticipantIdMap = Object.create(null);
   /** @type {Promise<void>|null} */
@@ -716,17 +718,9 @@
     if (!eventsListEl) return;
     var articles = eventsListEl.querySelectorAll(".mm-event-row");
     var showAll = getShowAllFromUrl();
-    var slugActive = evSlug ? evSlug.slug : "";
 
     for (var c = 0; c < articles.length; c++) {
       articles[c].classList.remove("mm-event-row--filtered-out");
-    }
-
-    if (!showAll && slugActive) {
-      for (var f = 0; f < articles.length; f++) {
-        articles[f].classList.add("mm-event-row--filtered-out");
-      }
-      return;
     }
 
     if (!showAll) {
@@ -1047,7 +1041,6 @@
             eventCache[evo.numericId].title = evo.title || "";
           }
         }
-        syncHeaderEventLine();
         setEventsStatus("Upcoming events: " + events.length + ".");
         renderEventsListCm(events);
         refreshEventsListVisibility();
@@ -1058,6 +1051,9 @@
           true
         );
         parsedEventsList = [];
+      })
+      .finally(function () {
+        eventsIndexLoaded = true;
       });
   }
 
@@ -1264,45 +1260,26 @@
     }
   }
 
-  function onHeaderCardClearClick() {
-    if (!evSlug || getShowAllFromUrl()) return;
-    clearActiveEventSlug();
-  }
-
-  function onHeaderCardClearKeydown(e) {
-    if (!evSlug || getShowAllFromUrl()) return;
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      clearActiveEventSlug();
-    }
-  }
-
   /**
+   * Header card is display-only on all tabs (pick another event on Events tab).
    * @param {HTMLElement | null} cardEl
    */
   function wireHeaderCardClearBehavior(cardEl) {
     if (!cardEl) return;
-    cardEl.removeEventListener("click", onHeaderCardClearClick);
-    cardEl.removeEventListener("keydown", onHeaderCardClearKeydown);
-    var useClear = Boolean(evSlug) && !getShowAllFromUrl();
-    cardEl.classList.toggle("mm-event-row--header-clear-slug", useClear);
-    if (useClear) {
-      cardEl.setAttribute("role", "button");
-      cardEl.tabIndex = 0;
-      cardEl.setAttribute(
-        "aria-label",
-        "Change active event — show picker"
-      );
-      cardEl.addEventListener("click", onHeaderCardClearClick);
-      cardEl.addEventListener("keydown", onHeaderCardClearKeydown);
-    } else {
-      cardEl.removeAttribute("role");
-      cardEl.removeAttribute("tabindex");
-      cardEl.removeAttribute("aria-label");
-    }
+    cardEl.classList.remove("mm-event-row--header-clear-slug");
+    cardEl.removeAttribute("role");
+    cardEl.removeAttribute("tabindex");
+    cardEl.removeAttribute("aria-label");
   }
 
   function clearActiveEventSlug() {
+    if (parsedEventsList.length) {
+      activateEventSlug(
+        cfg.parseEventSlug(parsedEventsList[0].slug),
+        CM_TAB_EVENTS
+      );
+      return;
+    }
     closeFilterPanel();
     var p = new URLSearchParams(window.location.search);
     p.delete("slug");
@@ -1319,7 +1296,7 @@
     if (toolbarEl) toolbarEl.classList.add("is-hidden");
     if (placeholderEl) {
       placeholderEl.classList.remove("is-hidden");
-      placeholderEl.textContent = "Select an event…";
+      placeholderEl.textContent = "No upcoming events.";
     }
     clearError();
     notifyUrlChanged();
@@ -1342,11 +1319,18 @@
     }
     if (headerPromptEl && headerCardWrapEl && headerCardRootEl) {
       if (!evSlug) {
-        headerPromptEl.classList.remove("is-hidden");
         headerCardWrapEl.classList.add("is-hidden");
         headerCardRootEl.innerHTML = "";
+        if (eventsIndexLoaded && parsedEventsList.length === 0) {
+          headerPromptEl.classList.remove("is-hidden");
+          headerPromptEl.textContent = "No upcoming events.";
+        } else {
+          headerPromptEl.classList.add("is-hidden");
+          headerPromptEl.textContent = "";
+        }
       } else {
         headerPromptEl.classList.add("is-hidden");
+        headerPromptEl.textContent = "";
         headerCardWrapEl.classList.remove("is-hidden");
         headerCardRootEl.innerHTML = "";
         var sum = getEventSummaryForHeader();
@@ -1447,6 +1431,7 @@
         clearError();
         if (lastFightsData) renderFights(lastFightsData);
         refreshHarmonogram();
+        prefetchStartingListEarly();
         updatePollingForTab();
         updateFilterMainButtonLabel();
         refreshEventsListVisibility();
@@ -2418,7 +2403,7 @@
       if (!getShowAllFromUrl()) {
         if (filterPanelStatusEl) {
           filterPanelStatusEl.textContent =
-            "Turn on “All events” to filter the list.";
+            "Turn on “Show filter” to open the athlete filter.";
         }
         if (filterListRootEl) filterListRootEl.innerHTML = "";
         hideClubJumpUI();
@@ -2750,6 +2735,21 @@
     });
   }
 
+  function maybeAggregateForEventsTab() {
+    if (
+      getCmTabFromUrl() === CM_TAB_EVENTS &&
+      getShowAllFromUrl() &&
+      getEventsFilterIdSetFromUrl()
+    ) {
+      return ensureAggregateParticipantMaps()
+        .then(function () {
+          refreshEventsListVisibility();
+        })
+        .catch(function () {});
+    }
+    return Promise.resolve();
+  }
+
   initCmTabsFromUrl();
   updateFilterRootVisibility();
   updateFilterMainButtonLabel();
@@ -2757,44 +2757,70 @@
 
   loadEventsIndex().then(function () {
     refreshSlugFromLocation();
-    if (evSlug && eventNumericId) {
-      highlightSelectedEventRow(evSlug.slug);
-      return ensureEventLoaded(evSlug)
+    var p = new URLSearchParams(window.location.search);
+    var fromUrl = eventSlugFromQuery(p);
+    var inList =
+      fromUrl &&
+      parsedEventsList.some(function (e) {
+        return e.slug === fromUrl.slug;
+      });
+
+    if (!parsedEventsList.length) {
+      if (placeholderEl) placeholderEl.classList.add("is-hidden");
+      clearError();
+      syncHeaderEventLine();
+      refreshEventsListVisibility();
+      updatePollingForTab();
+      updateFilterMainButtonLabel();
+      return;
+    }
+
+    if (!fromUrl || !inList) {
+      return activateEventSlug(
+        cfg.parseEventSlug(parsedEventsList[0].slug),
+        getCmTabFromUrl()
+      )
         .then(function () {
-          if (placeholderEl) placeholderEl.classList.add("is-hidden");
-          clearError();
-          syncHeaderEventLine();
-          applyCmTabDom(getCmTabFromUrl());
-          if (lastFightsData) renderFights(lastFightsData);
-          refreshHarmonogram();
-          prefetchStartingListEarly();
-          updateFilterMainButtonLabel();
-          refreshEventsListVisibility();
+          return maybeAggregateForEventsTab();
         })
         .catch(function (err) {
           showError(
             "Failed to load event: " +
               (err.message || String(err))
           );
-        });
-    } else {
-      if (placeholderEl) placeholderEl.classList.add("is-hidden");
-      clearError();
-      refreshEventsListVisibility();
-    }
-    updatePollingForTab();
-    updateFilterMainButtonLabel();
-    if (
-      getCmTabFromUrl() === CM_TAB_EVENTS &&
-      getShowAllFromUrl() &&
-      getEventsFilterIdSetFromUrl()
-    ) {
-      ensureAggregateParticipantMaps()
-        .then(function () {
-          refreshEventsListVisibility();
         })
-        .catch(function () {});
+        .then(function () {
+          updatePollingForTab();
+          updateFilterMainButtonLabel();
+        });
     }
+
+    highlightSelectedEventRow(evSlug.slug);
+    return ensureEventLoaded(evSlug)
+      .then(function () {
+        if (placeholderEl) placeholderEl.classList.add("is-hidden");
+        clearError();
+        syncHeaderEventLine();
+        applyCmTabDom(getCmTabFromUrl());
+        if (lastFightsData) renderFights(lastFightsData);
+        refreshHarmonogram();
+        prefetchStartingListEarly();
+        updateFilterMainButtonLabel();
+        refreshEventsListVisibility();
+      })
+      .catch(function (err) {
+        showError(
+          "Failed to load event: " +
+            (err.message || String(err))
+        );
+      })
+      .then(function () {
+        return maybeAggregateForEventsTab();
+      })
+      .then(function () {
+        updatePollingForTab();
+        updateFilterMainButtonLabel();
+      });
   });
 
   window.addEventListener("pagehide", stopPoll);

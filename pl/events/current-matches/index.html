@@ -31,9 +31,7 @@
         >Help</a>
     </nav>
     <div class="mm-cm-header-context">
-      <p id="mm-cm-header-prompt" class="mm-cm-header-prompt">
-        Pick an active event…
-      </p>
+      <p id="mm-cm-header-prompt" class="mm-cm-header-prompt is-hidden" aria-live="polite"></p>
       <div
         id="mm-cm-header-card-wrap"
         class="mm-cm-header-card-wrap is-hidden"
@@ -56,15 +54,15 @@
           <label
             id="mm-show-all-events-wrap"
             class="mm-cm-events-toolbar__check-label"
-            title="Full event list and athlete filter (multiple API calls)."
+            title="Show the athlete filter for all events (extra API calls when loading the filter)."
           >
             <input
               type="checkbox"
               id="mm-show-all-events-cb"
               class="mm-show-all-events-cb"
-              aria-label="All events — full list and athlete filter"
+              aria-label="Show filter — athlete list across all events"
             />
-            <span>All events</span>
+            <span>Show filter</span>
           </label>
           <div class="mm-cm-events-toolbar__actions">
             <button

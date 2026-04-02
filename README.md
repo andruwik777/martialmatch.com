@@ -1,5 +1,13 @@
 # MartialMatch viewer
 
+## Disclaimer
+
+This project is **not affiliated with** MartialMatch. Functionality depends on MartialMatch’s public HTML and API; changes on their side may break scraping or views.
+
+**Compliance (proxy):** The official **[Regulamin / terms and conditions](https://martialmatch.com/pl/terms-and-conditions)** do not forbid using a **proxy server** to reach the site, and do not spell out a separate **software or API license** that would prohibit a third-party, read-only viewer built on the same public URLs your browser would load. This app is meant as a convenience layer (filtering, shareable links) over that public surface—not to bypass paywalls, authentication, or stated restrictions. *MartialMatch can change their terms at any time; re-read the Regulamin if in doubt. This is the maintainer’s reading, not legal advice.*
+
+---
+
 A lightweight web front end for [MartialMatch](https://martialmatch.com) data, focused on **filtering by multiple athletes** and **shareable links**.
 
 **Live site (GitHub Pages):** [andruwik777.github.io/dev.martialmatch.com](https://andruwik777.github.io/dev.martialmatch.com)  
@@ -56,10 +64,6 @@ python server/test-martialmatch/build_test_data.py
 3. **`server/martialmatch/worker.js`** (prod proxy) — deploy to your prod Worker; update `allowedOrigins` if the app is served from a custom domain.
 
 After changing fixtures, run the script, commit `data/`, push, then the test Worker can fetch the new raw URLs.
-
-## Disclaimer
-
-Not affiliated with MartialMatch. Behavior depends on MartialMatch’s HTML/API; changes on their side may break scraping or views.
 
 ## Challenges & learnings
 

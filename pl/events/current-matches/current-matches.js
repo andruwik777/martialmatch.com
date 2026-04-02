@@ -886,7 +886,6 @@
       return;
     }
     var total = parsedEventsList.length;
-    var filtered = eventsUrlFilterActive();
     if (!eventsListEl) {
       tabEventsBtn.textContent = total === 0 ? "Events 0" : "Events " + total;
       tabEventsBtn.setAttribute(
@@ -909,6 +908,7 @@
       tabEventsBtn.setAttribute("aria-label", "Events tab, no events");
       return;
     }
+    var filtered = eventsUrlFilterActive();
     if (filtered) {
       tabEventsBtn.textContent = "Events " + visible + "/" + denom;
       tabEventsBtn.setAttribute(
@@ -1420,13 +1420,18 @@
     }
     var s = fightsTabStats.shown;
     var t = fightsTabStats.total;
+    var slugFilter = getSlugFilterIdSetFromUrl();
+    var filtered =
+      Boolean(slugFilter && Object.keys(slugFilter).length);
     var parens =
       fightsPollingActive && fightsTabSecondsLeft != null
         ? " (" + fightsTabSecondsLeft + "s)"
         : "";
-    tabFightsBtn.textContent = "Fights " + s + "/" + t + parens;
-    var aria =
-      "Fights tab, " + s + " of " + t + " fights shown";
+    var body = filtered ? "Fights " + s + "/" + t : "Fights " + t;
+    tabFightsBtn.textContent = body + parens;
+    var aria = filtered
+      ? "Fights tab, " + s + " of " + t + " fights match filter"
+      : "Fights tab, " + t + " fights";
     if (fightsPollingActive && fightsTabSecondsLeft != null) {
       aria += ", next refresh in " + fightsTabSecondsLeft + " seconds";
     }

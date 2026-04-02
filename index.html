@@ -3,13 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0;url=pl/events/current-matches/?tab=events">
   <title>Redirecting…</title>
+  <link rel="stylesheet" href="app.css">
+  <script src="theme-loader.js"></script>
+  <meta http-equiv="refresh" content="0;url=pl/events/current-matches/?tab=events">
+  <script src="config.js"></script>
   <script>
     (function () {
       var q = (window.location.search || "").replace(/^\?/, "");
       var base = "pl/events/current-matches/?tab=events";
       var href = q ? base + "&" + q : base;
+      if (window.MM_CONFIG && window.MM_CONFIG.withModeQuery) {
+        href = window.MM_CONFIG.withModeQuery(href);
+      }
       window.location.replace(href);
     })();
   </script>

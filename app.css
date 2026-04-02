@@ -519,12 +519,25 @@ body {
   color: #6b7280;
 }
 
+/* Current-matches: same column as .main (36rem), not full viewport */
+.header.mm-cm-page-header {
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .mm-cm-header-nav {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  align-items: baseline;
+  align-items: center;
   gap: 0.5rem 0.75rem;
   width: 100%;
+}
+
+.mm-cm-header-nav .mm-nav-link {
+  line-height: 1.45;
 }
 
 .mm-cm-header-nav__home {
@@ -536,6 +549,10 @@ body {
   justify-self: center;
   text-align: center;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.45;
 }
 
 .mm-cm-header-nav__help {
@@ -549,13 +566,12 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.45;
+  vertical-align: middle;
 }
 
 .mm-cm-header-context {
   margin-top: 0.25rem;
-  max-width: 36rem;
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
   box-sizing: border-box;
 }

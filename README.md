@@ -2,7 +2,7 @@
 
 A lightweight web front end for [MartialMatch](https://martialmatch.com) data, focused on **filtering by multiple athletes** and **shareable links**.
 
-**Live site (GitHub Pages):** [andruwik777.github.io/martialmatch](https://andruwik777.github.io/martialmatch)  
+**Live site (GitHub Pages):** [andruwik777.github.io/dev.martialmatch.com](https://andruwik777.github.io/dev.martialmatch.com)  
 
 ## Why this exists
 
@@ -16,17 +16,17 @@ Filters are stored in the **URL**, so you can **share a link** with friends or p
 
 ## Feedback & feature requests
 
-- **Report bugs or request a feature:** [GitHub Issues](https://github.com/andruwik777/martialmatch/issues)
+- **Report bugs or request a feature:** [GitHub Issues](https://github.com/andruwik777/dev.martialmatch.com/issues)
 
 ## For developers
 
 Use "mode=test" in query URL parameters to simulate data with active competitions. 
 
-Proxy server is implemented as a Cloudflare Worker (prod and test versions).
+Proxy server is implemented as Cloudflare Workers: **prod** source is `server/martialmatch/worker.js`, **test** (fixtures) is `server/test-martialmatch/worker.js`.
 
 ### Test worker fixtures
 
-The test Cloudflare Worker serves files from `server/test-martialmatch/data/` via `raw.githubusercontent.com/<user>/<repo>/master/server/test-martialmatch/data/...` (use `main` instead of `master` in `worker.js` if that is your default branch).
+The test Cloudflare Worker serves files from `server/test-martialmatch/data/` via `https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/test-martialmatch/data/...` (use `main` instead of `master` in `worker.js` if that is your default branch).
 
 **Regenerate everything** (from the repo root):
 
@@ -50,10 +50,12 @@ python server/test-martialmatch/build_test_data.py
    - Source paths at the top (`SRC`, `EVENTS_SRC`, `SCHED_SRC`, `FIGHTS_SRC`) if you snapshot new research files.
 
 2. **`server/test-martialmatch/worker.js`**
-   - `REPO_RAW_BASE` — GitHub user, repo, and branch.
+   - `REPO_RAW_BASE` — must match this repo on GitHub (`andruwik777/dev.martialmatch.com`) and default branch.
    - `NUMERIC_TO_SLUG` — must list every numeric event id the app can request in test mode and match the folders under `data/`.
 
-After changing fixtures, run the script, commit `data/`, push, then the Worker can fetch the new raw URLs.
+3. **`server/martialmatch/worker.js`** (prod proxy) — deploy to your prod Worker; update `allowedOrigins` if the app is served from a custom domain.
+
+After changing fixtures, run the script, commit `data/`, push, then the test Worker can fetch the new raw URLs.
 
 ## Disclaimer
 

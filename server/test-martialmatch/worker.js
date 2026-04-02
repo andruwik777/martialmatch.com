@@ -3,12 +3,12 @@
  * Serves fixtures from repo:
  *   server/test-martialmatch/data/
  * Raw URLs (after push to default branch):
- *   https://raw.githubusercontent.com/andruwik777/martialmatch/master/server/test-martialmatch/data/...
+ *   https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/test-martialmatch/data/...
  *
  * Regenerate fixtures: `python server/test-martialmatch/build_test_data.py`
  */
 const REPO_RAW_BASE =
-  "https://raw.githubusercontent.com/andruwik777/martialmatch/master/server/test-martialmatch/data";
+  "https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/test-martialmatch/data";
 
 /** numeric API id → folder name under data/ */
 const NUMERIC_TO_SLUG = {
@@ -23,6 +23,7 @@ const ALLOWED_SLUGS = new Set(Object.values(NUMERIC_TO_SLUG));
 function corsHeaders(origin, contentType) {
   var allowedOrigins = [
     "https://andruwik777.github.io",
+    "https://dev.martialmatch.com",
     "http://localhost:8080",
   ];
   var allowOrigin = allowedOrigins.includes(origin) ? origin : null;

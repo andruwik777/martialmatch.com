@@ -975,15 +975,17 @@
 
   /**
    * @param {object} ev
-   * @param {{ interactive?: boolean }} opts
+   * @param {{ interactive?: boolean, headerCompact?: boolean }} opts
    */
   function buildEventCardNode(ev, opts) {
     opts = opts || {};
     var interactive = !!opts.interactive;
+    var headerCompact = !!opts.headerCompact;
     var root = document.createElement(interactive ? "article" : "div");
     root.className =
       "event-card mm-event-row" +
-      (interactive ? "" : " mm-event-row--display-only");
+      (interactive ? "" : " mm-event-row--display-only") +
+      (headerCompact ? " mm-event-row--header-compact" : "");
     root.setAttribute("data-mm-event-id", ev.numericId);
     root.setAttribute("data-mm-event-slug", ev.slug);
     if (interactive) {
@@ -1016,56 +1018,58 @@
     titleEl.textContent = ev.title || "Event " + ev.numericId;
     body.appendChild(titleEl);
 
-    if (ev.dateText) {
-      var dateRow = document.createElement("div");
-      dateRow.className = "mm-ev-date";
-      var lab = document.createElement("span");
-      lab.className = "mm-ev-date__label";
-      lab.textContent = "Date:";
-      var val = document.createElement("span");
-      val.className = "mm-ev-date__value";
-      val.textContent = " " + ev.dateText;
-      dateRow.appendChild(lab);
-      dateRow.appendChild(val);
-      body.appendChild(dateRow);
-    }
-
-    if (ev.registration) {
-      var regEl = document.createElement("div");
-      regEl.className = "mm-ev-reg mm-ev-reg--" + ev.registration.kind;
-      regEl.innerHTML = registrationHtmlEv(ev.registration);
-      body.appendChild(regEl);
-    }
-
-    if (ev.place || ev.countryCode) {
-      var placeRow = document.createElement("div");
-      placeRow.className = "mm-ev-place";
-      placeRow.innerHTML = PLACE_PIN_SVG_EV;
-      if (ev.countryCode) {
-        var fl = document.createElement("span");
-        fl.className = "mm-ev-place__flag";
-        fl.textContent = flagEmojiEv(ev.countryCode);
-        fl.setAttribute("aria-hidden", "true");
-        placeRow.appendChild(fl);
+    if (!headerCompact) {
+      if (ev.dateText) {
+        var dateRow = document.createElement("div");
+        dateRow.className = "mm-ev-date";
+        var lab = document.createElement("span");
+        lab.className = "mm-ev-date__label";
+        lab.textContent = "Date:";
+        var val = document.createElement("span");
+        val.className = "mm-ev-date__value";
+        val.textContent = " " + ev.dateText;
+        dateRow.appendChild(lab);
+        dateRow.appendChild(val);
+        body.appendChild(dateRow);
       }
-      var city = document.createElement("span");
-      city.className = "mm-ev-place__city";
-      city.textContent = ev.place || "";
-      placeRow.appendChild(city);
-      body.appendChild(placeRow);
-    }
 
-    if (ev.tags && ev.tags.length) {
-      var tagRoot = document.createElement("div");
-      tagRoot.className = "mm-ev-tags";
-      ev.tags.forEach(function (t) {
-        var sp = document.createElement("span");
-        var mod = KNOWN_EVENT_TYPE_KEYS[t.key] ? t.key : "default";
-        sp.className = "mm-ev-tag mm-ev-tag--" + mod;
-        sp.textContent = t.label;
-        tagRoot.appendChild(sp);
-      });
-      body.appendChild(tagRoot);
+      if (ev.registration) {
+        var regEl = document.createElement("div");
+        regEl.className = "mm-ev-reg mm-ev-reg--" + ev.registration.kind;
+        regEl.innerHTML = registrationHtmlEv(ev.registration);
+        body.appendChild(regEl);
+      }
+
+      if (ev.place || ev.countryCode) {
+        var placeRow = document.createElement("div");
+        placeRow.className = "mm-ev-place";
+        placeRow.innerHTML = PLACE_PIN_SVG_EV;
+        if (ev.countryCode) {
+          var fl = document.createElement("span");
+          fl.className = "mm-ev-place__flag";
+          fl.textContent = flagEmojiEv(ev.countryCode);
+          fl.setAttribute("aria-hidden", "true");
+          placeRow.appendChild(fl);
+        }
+        var city = document.createElement("span");
+        city.className = "mm-ev-place__city";
+        city.textContent = ev.place || "";
+        placeRow.appendChild(city);
+        body.appendChild(placeRow);
+      }
+
+      if (ev.tags && ev.tags.length) {
+        var tagRoot = document.createElement("div");
+        tagRoot.className = "mm-ev-tags";
+        ev.tags.forEach(function (t) {
+          var sp = document.createElement("span");
+          var mod = KNOWN_EVENT_TYPE_KEYS[t.key] ? t.key : "default";
+          sp.className = "mm-ev-tag mm-ev-tag--" + mod;
+          sp.textContent = t.label;
+          tagRoot.appendChild(sp);
+        });
+        body.appendChild(tagRoot);
+      }
     }
 
     root.appendChild(media);
@@ -1443,7 +1447,10 @@
         var sum = getEventSummaryForHeader();
         if (sum) {
           headerCardRootEl.appendChild(
-            buildEventCardNode(sum, { interactive: false })
+            buildEventCardNode(sum, {
+              interactive: false,
+              headerCompact: true,
+            })
           );
           wireHeaderCardClearBehavior(
             headerCardRootEl.querySelector(".mm-event-row")

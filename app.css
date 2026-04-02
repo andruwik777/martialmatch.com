@@ -553,6 +553,11 @@ body {
 
 .mm-cm-header-context {
   margin-top: 0.25rem;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mm-cm-header-prompt {
@@ -583,6 +588,26 @@ body {
 .event-card.mm-event-row--display-only:focus-visible,
 .mm-event-row.mm-event-row--display-only:focus-visible {
   outline: none;
+}
+
+/* Header active event: same column as .main; thumb + title + lane dots only */
+.mm-event-row.mm-event-row--header-compact {
+  align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.mm-event-row.mm-event-row--header-compact .event-card-title {
+  margin-bottom: 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.mm-event-row.mm-event-row--header-compact .mm-event-row__lanes {
+  align-self: center;
 }
 
 .mm-event-row.mm-event-row--header-clear-slug {

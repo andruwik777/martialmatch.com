@@ -2638,7 +2638,7 @@
       if (!getShowAllFromUrl()) {
         if (filterPanelStatusEl) {
           filterPanelStatusEl.textContent =
-            "Turn on “Show filter” to open the athlete filter.";
+            "Turn on “Heavy filter (load all starting lists)” to open the athlete filter.";
         }
         if (filterListRootEl) filterListRootEl.innerHTML = "";
         hideClubJumpUI();

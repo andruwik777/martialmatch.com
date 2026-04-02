@@ -6,6 +6,8 @@
 (function (global) {
   "use strict";
 
+  
+
   var BASE_BY_MODE = {
     prod: "https://dev-martialmatch-v1.andruwik777.workers.dev",
     test: "https://dev-test-martialmatch-v1.andruwik777.workers.dev",

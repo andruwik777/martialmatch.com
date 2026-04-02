@@ -32,6 +32,20 @@ Use "mode=test" in query URL parameters to simulate data with active competition
 
 Proxy server is implemented as Cloudflare Workers: **prod** source is `server/martialmatch/worker.js`, **test** (fixtures) is `server/test-martialmatch/worker.js`.
 
+### Dev vs prod styling (two repos)
+
+After `app.css`, `theme-loader.js` sends a `HEAD` request for **`prod.css`** at the site root (next to `app.css`).
+
+| `prod.css` at root | URL | Extra CSS |
+|--------------------|-----|-----------|
+| Yes (200) | any | `prod.css` — production look (file can be empty). |
+| No | without `mode=test` | `dev.css` |
+| No | with `mode=test` | `dev.css` + `dev-test.css` |
+
+**Dev repo:** commit `dev.css`, `dev-test.css`, and `theme-loader.js`; do **not** commit `prod.css`. Use `prod.css.example` as a template.
+
+**Prod repo:** after cloning or merging from dev, add **`prod.css`** (copy from `prod.css.example` or leave empty) and commit it there only.
+
 ### Test worker fixtures
 
 The test Cloudflare Worker serves files from `server/test-martialmatch/data/` via `https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/test-martialmatch/data/...` (use `main` instead of `master` in `worker.js` if that is your default branch).

@@ -1,0 +1,7 @@
+/**
+ * Production theme overlay — rename to prod.css on the production repo only.
+ * May be empty: then the site is app.css alone (no dev / dev-test frames).
+ * Do not commit prod.css in the dev repo if you want dev styling there.
+ *
+ * cp prod.css.example prod.css   # on prod after clone, then commit prod.css
+ */

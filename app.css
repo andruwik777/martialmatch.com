@@ -577,7 +577,8 @@ body {
   width: 100%;
   box-sizing: border-box;
   border-bottom: none;
-  padding: 1rem 1rem 0.2rem;
+  /* Match gap below nav (~0.25rem nav + ~0.1rem context) */
+  padding: 0.35rem 1rem 0.2rem;
 }
 
 .header.mm-cm-page-header .mm-cm-header-nav {

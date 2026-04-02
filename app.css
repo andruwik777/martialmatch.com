@@ -166,6 +166,10 @@ body {
   color: #ffb4b4;
 }
 
+#mm-events-status:empty {
+  display: none;
+}
+
 .mm-muted {
   margin: 0;
   font-size: 0.875rem;

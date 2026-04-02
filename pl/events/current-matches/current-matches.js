@@ -53,6 +53,8 @@
   var parsedEventsList = [];
   /** True after the /pl/events index fetch settles (success or error). */
   var eventsIndexLoaded = false;
+  /** True while /pl/events fetch is in flight (for Events tab label). */
+  var eventsIndexLoading = false;
   /** @type {Record<string, Record<string, true>>} */
   var eventParticipantIdMap = Object.create(null);
   /** @type {Promise<void>|null} */
@@ -816,7 +818,10 @@
   }
 
   function refreshEventsListVisibility() {
-    if (!eventsListEl) return;
+    if (!eventsListEl) {
+      updateEventsTabLabel();
+      return;
+    }
     var articles = eventsListEl.querySelectorAll(".mm-event-row");
     var showAll = getShowAllFromUrl();
 
@@ -825,6 +830,7 @@
     }
 
     if (!showAll) {
+      updateEventsTabLabel();
       return;
     }
 
@@ -835,6 +841,7 @@
       break;
     }
     if (idSet && mapsEmpty) {
+      updateEventsTabLabel();
       return;
     }
     for (var i = 0; i < articles.length; i++) {
@@ -855,6 +862,44 @@
         art.classList.add("mm-event-row--filtered-out");
       }
     }
+    updateEventsTabLabel();
+  }
+
+  function updateEventsTabLabel() {
+    if (!tabEventsBtn) return;
+    if (eventsIndexLoading) {
+      tabEventsBtn.textContent = "Events …";
+      tabEventsBtn.setAttribute("aria-label", "Events tab, loading list");
+      return;
+    }
+    var total = parsedEventsList.length;
+    if (!eventsListEl) {
+      tabEventsBtn.textContent = total ? "Events " + total + "/" + total : "Events 0/0";
+      tabEventsBtn.setAttribute(
+        "aria-label",
+        "Events tab, " + total + " events"
+      );
+      return;
+    }
+    var rows = eventsListEl.querySelectorAll(".mm-event-row");
+    var visible = 0;
+    var ri;
+    for (ri = 0; ri < rows.length; ri++) {
+      if (!rows[ri].classList.contains("mm-event-row--filtered-out")) {
+        visible++;
+      }
+    }
+    var denom = total > 0 ? total : rows.length;
+    if (denom === 0) {
+      tabEventsBtn.textContent = "Events 0/0";
+      tabEventsBtn.setAttribute("aria-label", "Events tab, no events");
+      return;
+    }
+    tabEventsBtn.textContent = "Events " + visible + "/" + denom;
+    tabEventsBtn.setAttribute(
+      "aria-label",
+      "Events tab, " + visible + " of " + denom + " events shown"
+    );
   }
 
   function setEventsStatus(msg, isError) {
@@ -1113,7 +1158,9 @@
   }
 
   function loadEventsIndex() {
-    setEventsStatus("Loading…");
+    eventsIndexLoading = true;
+    setEventsStatus("");
+    updateEventsTabLabel();
     var url = cfg.url("/pl/events");
 
     return fetch(url, { credentials: "omit", headers: { Accept: "text/html" } })
@@ -1133,6 +1180,7 @@
             true
           );
           parsedEventsList = [];
+          updateEventsTabLabel();
           return;
         }
         aggregateParticipantMapsPromise = null;
@@ -1152,7 +1200,8 @@
           eventCache[enid].thumb = evo.thumb || "";
           eventCache[enid].tags = evo.tags || [];
         }
-        setEventsStatus("Upcoming events: " + events.length + ".");
+        eventsIndexLoading = false;
+        setEventsStatus("");
         renderEventsListCm(events);
         refreshEventsListVisibility();
       })
@@ -1162,9 +1211,12 @@
           true
         );
         parsedEventsList = [];
+        updateEventsTabLabel();
       })
       .finally(function () {
+        eventsIndexLoading = false;
         eventsIndexLoaded = true;
+        updateEventsTabLabel();
       });
   }
 

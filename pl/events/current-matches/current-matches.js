@@ -91,6 +91,12 @@
 
   var matNamesById = Object.create(null);
   var pollTimerId = null;
+  /** @type {number|null} */
+  var fightsTabCountdownId = null;
+  var fightsPollingActive = false;
+  /** @type {number|null} seconds until next poll (only while fightsPollingActive) */
+  var fightsTabSecondsLeft = null;
+  var fightsTabStats = { shown: 0, total: 0 };
   /** @type {object | null} ostatnia poprawna odpowiedź /api/.../fights */
   var lastFightsData = null;
   /** @type {object | null} pełna odpowiedź /api/events/.../schedules */
@@ -1382,6 +1388,33 @@
       tabHarmonogramBtn.classList.toggle("mm-cm-tab--disabled", !has);
       tabHarmonogramBtn.setAttribute("aria-disabled", has ? "false" : "true");
     }
+    updateFightsTabLabel();
+  }
+
+  function getFightsRefreshPeriodSec() {
+    return Math.max(1, Math.round((cfg.currentMatchesRefreshMs || 30000) / 1000));
+  }
+
+  function updateFightsTabLabel() {
+    if (!tabFightsBtn) return;
+    if (!evSlug || tabFightsBtn.disabled) {
+      tabFightsBtn.textContent = "Fights";
+      tabFightsBtn.setAttribute("aria-label", "Fights tab");
+      return;
+    }
+    var s = fightsTabStats.shown;
+    var t = fightsTabStats.total;
+    var parens =
+      fightsPollingActive && fightsTabSecondsLeft != null
+        ? " (" + fightsTabSecondsLeft + "s)"
+        : "";
+    tabFightsBtn.textContent = "Fights " + s + "/" + t + parens;
+    var aria =
+      "Fights tab, " + s + " of " + t + " fights shown";
+    if (fightsPollingActive && fightsTabSecondsLeft != null) {
+      aria += ", next refresh in " + fightsTabSecondsLeft + " seconds";
+    }
+    tabFightsBtn.setAttribute("aria-label", aria);
   }
 
   function updateFilterRootVisibility() {
@@ -2668,10 +2701,17 @@
   }
 
   function stopPoll() {
+    fightsPollingActive = false;
+    fightsTabSecondsLeft = null;
     if (pollTimerId !== null) {
       clearInterval(pollTimerId);
       pollTimerId = null;
     }
+    if (fightsTabCountdownId !== null) {
+      clearInterval(fightsTabCountdownId);
+      fightsTabCountdownId = null;
+    }
+    updateFightsTabLabel();
   }
 
   function renderFights(data) {
@@ -2762,25 +2802,13 @@
       listEl.appendChild(article);
     });
 
+    fightsTabStats.shown = rows.length;
+    fightsTabStats.total = allRows.length;
+    fightsTabSecondsLeft = getFightsRefreshPeriodSec();
+    updateFightsTabLabel();
     if (toolbarEl) {
-      toolbarEl.classList.remove("is-hidden");
-      var now = new Date();
-      var total = allRows.length;
-      var shown = rows.length;
-      var parts = [];
-      if (idSet) {
-        parts.push("Fights: " + shown + " of " + total + " (filter)");
-      } else {
-        parts.push("Fights: " + shown);
-      }
-      parts.push(
-        "Last refresh: " +
-          timeFmt.format(now) +
-          " (co " +
-          Math.round(cfg.currentMatchesRefreshMs / 1000) +
-          " s)."
-      );
-      toolbarEl.textContent = parts.join(" ");
+      toolbarEl.classList.add("is-hidden");
+      toolbarEl.textContent = "";
     }
   }
 
@@ -2811,12 +2839,24 @@
 
   function startPolling() {
     stopPoll();
+    fightsPollingActive = true;
     var ms = cfg.currentMatchesRefreshMs || 30000;
-    pollTimerId = setInterval(function () {
+    var periodSec = getFightsRefreshPeriodSec();
+    if (fightsTabSecondsLeft == null) {
+      fightsTabSecondsLeft = periodSec;
+    }
+    fightsTabCountdownId = window.setInterval(function () {
+      if (fightsTabSecondsLeft != null && fightsTabSecondsLeft > 0) {
+        fightsTabSecondsLeft--;
+      }
+      updateFightsTabLabel();
+    }, 1000);
+    pollTimerId = window.setInterval(function () {
       loadFights().catch(function () {
         /* zostaw poprzednią listę */
       });
     }, ms);
+    updateFightsTabLabel();
   }
 
   if (filterMainBtn) {

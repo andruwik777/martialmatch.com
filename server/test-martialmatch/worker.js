@@ -23,7 +23,6 @@ const ALLOWED_SLUGS = new Set(Object.values(NUMERIC_TO_SLUG));
 function corsHeaders(origin, contentType) {
   var allowedOrigins = [
     "https://andruwik777.github.io",
-    "https://dev.martialmatch.com",
     "http://localhost:8080",
   ];
   var allowOrigin = allowedOrigins.includes(origin) ? origin : null;

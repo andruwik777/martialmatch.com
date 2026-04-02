@@ -1252,8 +1252,7 @@ body {
 }
 
 .mm-filter-toolbar-row__club {
-  flex: 0 0 auto;
-  max-width: 26%;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -1262,11 +1261,10 @@ body {
 }
 
 .mm-filter-toolbar-row__actions {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   display: flex;
   align-items: stretch;
   gap: 0.28rem;
-  min-width: 0;
 }
 
 .mm-filter-toolbar-btn {
@@ -1295,11 +1293,10 @@ body {
 }
 
 .mm-filter-only-selected {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: 0.28rem;
-  min-width: 0;
   padding: 0.3rem 0.35rem;
   font-size: 0.65rem;
   font-weight: 600;
@@ -1329,6 +1326,8 @@ body {
 
 .mm-filter-club-jump {
   position: relative;
+  min-width: 0;
+  width: 100%;
 }
 
 .mm-filter-club-jump__toggle {

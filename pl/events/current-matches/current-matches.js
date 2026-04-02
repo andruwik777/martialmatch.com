@@ -547,36 +547,121 @@
     return d;
   }
 
-  function isSameLocalCalendarDayEv(d, ref) {
-    ref = ref || new Date();
-    return (
-      d.getFullYear() === ref.getFullYear() &&
-      d.getMonth() === ref.getMonth() &&
-      d.getDate() === ref.getDate()
-    );
+  function startOfLocalDayEv(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   }
 
+  /**
+   * @returns {{ start: Date, end: Date } | null}
+   */
+  function parsePolishEventDateSpan(dateText) {
+    if (!dateText || typeof dateText !== "string") return null;
+    var s = dateText.replace(/\s+/g, " ").replace(/[.,;]+$/g, "").trim();
+    var rm = s.match(/^(\d{1,2})\s*[–-]\s*(\d{1,2})\s+(\S+)\s+(\d{4})$/);
+    if (rm) {
+      var dayA = parseInt(rm[1], 10);
+      var dayB = parseInt(rm[2], 10);
+      var monthKey = rm[3].toLowerCase();
+      var year = parseInt(rm[4], 10);
+      var monthIdx = POLISH_MONTH_TO_INDEX[monthKey];
+      if (monthIdx === undefined) return null;
+      var lo = Math.min(dayA, dayB);
+      var hi = Math.max(dayA, dayB);
+      var start = new Date(year, monthIdx, lo, 12, 0, 0, 0);
+      var end = new Date(year, monthIdx, hi, 12, 0, 0, 0);
+      if (
+        start.getFullYear() !== year ||
+        end.getFullYear() !== year ||
+        start.getMonth() !== monthIdx ||
+        end.getMonth() !== monthIdx ||
+        start.getDate() !== lo ||
+        end.getDate() !== hi
+      ) {
+        return null;
+      }
+      return { start: start, end: end };
+    }
+    var single = parsePolishEventDate(s);
+    if (!single) return null;
+    return { start: single, end: single };
+  }
+
+  function isLocalDateInEventSpanEv(ref, span) {
+    if (!span) return false;
+    ref = ref || new Date();
+    var r = startOfLocalDayEv(ref).getTime();
+    var a = startOfLocalDayEv(span.start).getTime();
+    var b = startOfLocalDayEv(span.end).getTime();
+    return r >= a && r <= b;
+  }
+
+  /** When HTML has no registration row: infer "ongoing" from competition date span. */
+  function registrationFallbackFromEventDates(dateText) {
+    var span = parsePolishEventDateSpan(dateText);
+    if (!span) return null;
+    if (isLocalDateInEventSpanEv(new Date(), span)) {
+      return { kind: "ongoing", text: "Event ongoing" };
+    }
+    return null;
+  }
+
+  /**
+   * Status rejestracji / „Trwające zawody” — szukamy po całym wierszu karty (nie po
+   * pierwszym .has-added-padding, bo to często kolumna z miniaturą bez .event-date).
+   */
   function parseRegistrationEv(row) {
-    var pad = row.querySelector(".has-added-padding");
-    if (!pad) return null;
-    var ed = pad.querySelector(".event-date");
-    var regWrap = ed && ed.nextElementSibling;
-    if (!regWrap) return null;
-    var inner = regWrap.querySelector(
+    var candidates = row.querySelectorAll(
       "span.has-text-success, span.has-text-info, span.has-text-warning"
     );
-    if (!inner) return null;
-    var txt = inner.textContent.replace(/\s+/g, " ").trim();
-    var cls = inner.className || "";
-    if (cls.indexOf("has-text-warning") !== -1) {
-      return { kind: "closed", text: txt };
+    var i;
+    var maxLen = 200;
+
+    function skipContext(el) {
+      if (!el) return true;
+      if (el.closest(".tags")) return true;
+      if (el.closest(".event-date")) return true;
+      return false;
     }
-    if (cls.indexOf("has-text-info") !== -1) {
-      return { kind: "start", text: txt };
+
+    for (i = 0; i < candidates.length; i++) {
+      var el = candidates[i];
+      if (skipContext(el)) continue;
+      var txt = el.textContent.replace(/\s+/g, " ").trim();
+      if (!txt || txt.length > maxLen) continue;
+
+      if (/Trwające\s+zawody/i.test(txt)) {
+        return { kind: "ongoing", text: txt };
+      }
+      if (/Rejestracja\s+zakończona/i.test(txt)) {
+        return { kind: "closed", text: txt };
+      }
+      if (/Rejestracja\s+zakonczona/i.test(txt)) {
+        return { kind: "closed", text: txt };
+      }
+      if (/Start\s+rejestracji/i.test(txt)) {
+        return { kind: "start", text: txt };
+      }
+      if (/Koniec\s+rejestracji/i.test(txt)) {
+        return { kind: "end", text: txt };
+      }
     }
-    if (cls.indexOf("has-text-success") !== -1) {
-      if (/Trwające/i.test(txt)) return { kind: "ongoing", text: txt };
-      return { kind: "end", text: txt };
+
+    for (i = 0; i < candidates.length; i++) {
+      var el2 = candidates[i];
+      if (skipContext(el2)) continue;
+      var t2 = el2.textContent.replace(/\s+/g, " ").trim();
+      if (!t2 || t2.length > maxLen) continue;
+      var cls = el2.className || "";
+      if (cls.indexOf("has-text-warning") !== -1) {
+        return { kind: "closed", text: t2 };
+      }
+      if (cls.indexOf("has-text-info") !== -1) {
+        return { kind: "start", text: t2 };
+      }
+      if (cls.indexOf("has-text-success") !== -1) {
+        if (/Trwające/i.test(t2)) return { kind: "ongoing", text: t2 };
+        return { kind: "end", text: t2 };
+      }
     }
     return null;
   }
@@ -690,9 +775,8 @@
       var registration = parseRegistrationEv(row);
       var tags = parseEventTypeTagsEv(row);
 
-      var parsedEventDay = parsePolishEventDate(dateText);
-      if (parsedEventDay && isSameLocalCalendarDayEv(parsedEventDay)) {
-        registration = { kind: "ongoing", text: "Event ongoing" };
+      if (!registration) {
+        registration = registrationFallbackFromEventDates(dateText);
       }
 
       out.push({
@@ -1015,12 +1099,12 @@
       slug: evSlug.slug,
       numericId: eventNumericId,
       title: title,
-      thumb: "",
-      dateText: "",
-      place: "",
-      countryCode: "",
-      registration: null,
-      tags: [],
+      thumb: (c && c.thumb) || "",
+      dateText: (c && c.dateText) || "",
+      place: (c && c.place) || "",
+      countryCode: (c && c.countryCode) || "",
+      registration: c ? c.registration : null,
+      tags: (c && c.tags) || [],
     };
   }
 
@@ -1054,9 +1138,15 @@
         parsedEventsList = events;
         for (var ti = 0; ti < events.length; ti++) {
           var evo = events[ti];
-          if (eventCache[evo.numericId]) {
-            eventCache[evo.numericId].title = evo.title || "";
-          }
+          var enid = evo.numericId;
+          if (!eventCache[enid]) eventCache[enid] = {};
+          eventCache[enid].title = evo.title || "";
+          eventCache[enid].registration = evo.registration;
+          eventCache[enid].dateText = evo.dateText || "";
+          eventCache[enid].place = evo.place || "";
+          eventCache[enid].countryCode = evo.countryCode || "";
+          eventCache[enid].thumb = evo.thumb || "";
+          eventCache[enid].tags = evo.tags || [];
         }
         setEventsStatus("Upcoming events: " + events.length + ".");
         renderEventsListCm(events);
@@ -1401,10 +1491,17 @@
         var ev = parsedEventsList.filter(function (e) {
           return e.numericId === nid;
         })[0];
+        var prev = eventCache[nid] || {};
         eventCache[nid] = {
           slug: slugObj.slug,
           numericId: nid,
-          title: ev ? ev.title || "" : "",
+          title: ev ? ev.title || "" : prev.title || "",
+          registration: ev ? ev.registration : prev.registration,
+          dateText: ev ? ev.dateText || "" : prev.dateText || "",
+          place: ev ? ev.place || "" : prev.place || "",
+          countryCode: ev ? ev.countryCode || "" : prev.countryCode || "",
+          thumb: ev ? ev.thumb || "" : prev.thumb || "",
+          tags: ev ? ev.tags || [] : prev.tags || [],
           schedulesPayload: pack.sched,
           fightsData: pack.fd,
           startingListEntries: entries,

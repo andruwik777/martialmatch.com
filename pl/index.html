@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redirecting…</title>
+  <link rel="stylesheet" href="../app.css">
+  <script src="../theme-loader.js"></script>
+  <meta http-equiv="refresh" content="0;url=events/current-matches/?tab=events">
+  <script src="../config.js"></script>
+  <script>
+    (function () {
+      var q = (window.location.search || "").replace(/^\?/, "");
+      var base = "events/current-matches/?tab=events";
+      var href = q ? base + "&" + q : base;
+      if (window.MM_CONFIG && window.MM_CONFIG.withModeQuery) {
+        href = window.MM_CONFIG.withModeQuery(href);
+      }
+      window.location.replace(href);
+    })();
+  </script>
+</head>
+<body>
+  <p><a href="events/current-matches/?tab=events">Open app</a></p>
+</body>
+</html>

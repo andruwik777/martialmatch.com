@@ -610,6 +610,12 @@ body {
   align-self: center;
 }
 
+/* ~30% smaller thumb than list cards (4.5rem → 3.15rem) */
+.mm-event-row.mm-event-row--header-compact .event-card-thumb {
+  width: 3.15rem;
+  height: 3.15rem;
+}
+
 .mm-event-row.mm-event-row--header-clear-slug {
   cursor: pointer;
 }

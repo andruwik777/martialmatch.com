@@ -464,8 +464,16 @@ body {
   margin: 0 0 0.75rem;
 }
 
+/* ~30% / 40% / 30% — środkowa zakładka Fights szersza */
+.mm-cm-tab:not(.mm-cm-tab--fights) {
+  flex: 3 1 0;
+}
+
+.mm-cm-tab--fights {
+  flex: 4 1 0;
+}
+
 .mm-cm-tab {
-  flex: 1;
   min-width: 0;
   padding: 0.5rem 0.6rem;
   font: inherit;
@@ -517,6 +525,44 @@ body {
   background: #252a38;
   border-color: #2d3548;
   color: #6b7280;
+}
+
+/* Fights — wyróżnienie (jak zielony pasek aktywnej walki) */
+.mm-cm-tab--fights {
+  color: #c6f6d5;
+  background: #1e3a2f;
+  border-color: #2f6f4e;
+}
+
+.mm-cm-tab--fights:hover:not(:disabled) {
+  color: #f0fff4;
+  background: #234836;
+  border-color: #38a169;
+}
+
+.mm-cm-tab--fights[aria-selected="true"] {
+  color: #f0fff4;
+  background: #276749;
+  border-color: #48bb78;
+  box-shadow:
+    0 0 0 1px rgba(72, 187, 120, 0.45),
+    0 0 12px rgba(39, 103, 73, 0.35);
+}
+
+.mm-cm-tab--fights.mm-cm-tab--disabled,
+.mm-cm-tab--fights:disabled {
+  opacity: 0.58;
+  color: #68a082;
+  background: #172924;
+  border-color: #234536;
+  box-shadow: none;
+}
+
+.mm-cm-tab--fights.mm-cm-tab--disabled:hover,
+.mm-cm-tab--fights:disabled:hover {
+  background: #172924;
+  border-color: #234536;
+  color: #68a082;
 }
 
 /* Current-matches: same column as .main (36rem), not full viewport */

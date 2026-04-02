@@ -30,7 +30,7 @@ Filters are stored in the **URL**, so you can **share a link** with friends or p
 
 Use "mode=test" in query URL parameters to simulate data with active competitions. 
 
-Proxy server is implemented as Cloudflare Workers: **prod** source is `server/martialmatch/worker.js`, **test** (fixtures) is `server/test-martialmatch/worker.js`.
+Proxy server is implemented as Cloudflare Workers: **prod** source is `server/prod-martialmatch`, **dev** is `server/dev-martialmatch`, **dev-test** (fixtures) is `server/dev-test-martialmatch`.
 
 ### Dev vs prod styling (two repos)
 

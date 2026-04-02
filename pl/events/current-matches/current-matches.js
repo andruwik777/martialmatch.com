@@ -887,10 +887,12 @@
     }
     var total = parsedEventsList.length;
     if (!eventsListEl) {
-      tabEventsBtn.textContent = total === 0 ? "Events 0" : "Events " + total;
+      tabEventsBtn.textContent = "Events";
       tabEventsBtn.setAttribute(
         "aria-label",
-        "Events tab, " + total + " events"
+        total === 0
+          ? "Events tab, no events loaded"
+          : "Events tab, " + total + " events"
       );
       return;
     }
@@ -904,7 +906,7 @@
     }
     var denom = total > 0 ? total : rows.length;
     if (denom === 0) {
-      tabEventsBtn.textContent = "Events 0";
+      tabEventsBtn.textContent = "Events";
       tabEventsBtn.setAttribute("aria-label", "Events tab, no events");
       return;
     }
@@ -916,7 +918,7 @@
         "Events tab, " + visible + " of " + denom + " events match filter"
       );
     } else {
-      tabEventsBtn.textContent = "Events " + denom;
+      tabEventsBtn.textContent = "Events";
       tabEventsBtn.setAttribute(
         "aria-label",
         "Events tab, " + denom + " events"

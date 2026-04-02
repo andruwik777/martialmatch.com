@@ -871,6 +871,13 @@
     updateEventsTabLabel();
   }
 
+  /** Events tab filter: show_all + non-empty events_filter in URL. */
+  function eventsUrlFilterActive() {
+    if (!getShowAllFromUrl()) return false;
+    var idSet = getEventsFilterIdSetFromUrl();
+    return Boolean(idSet && Object.keys(idSet).length);
+  }
+
   function updateEventsTabLabel() {
     if (!tabEventsBtn) return;
     if (eventsIndexLoading) {
@@ -879,8 +886,9 @@
       return;
     }
     var total = parsedEventsList.length;
+    var filtered = eventsUrlFilterActive();
     if (!eventsListEl) {
-      tabEventsBtn.textContent = total ? "Events " + total + "/" + total : "Events 0/0";
+      tabEventsBtn.textContent = total === 0 ? "Events 0" : "Events " + total;
       tabEventsBtn.setAttribute(
         "aria-label",
         "Events tab, " + total + " events"
@@ -897,15 +905,23 @@
     }
     var denom = total > 0 ? total : rows.length;
     if (denom === 0) {
-      tabEventsBtn.textContent = "Events 0/0";
+      tabEventsBtn.textContent = "Events 0";
       tabEventsBtn.setAttribute("aria-label", "Events tab, no events");
       return;
     }
-    tabEventsBtn.textContent = "Events " + visible + "/" + denom;
-    tabEventsBtn.setAttribute(
-      "aria-label",
-      "Events tab, " + visible + " of " + denom + " events shown"
-    );
+    if (filtered) {
+      tabEventsBtn.textContent = "Events " + visible + "/" + denom;
+      tabEventsBtn.setAttribute(
+        "aria-label",
+        "Events tab, " + visible + " of " + denom + " events match filter"
+      );
+    } else {
+      tabEventsBtn.textContent = "Events " + denom;
+      tabEventsBtn.setAttribute(
+        "aria-label",
+        "Events tab, " + denom + " events"
+      );
+    }
   }
 
   function setEventsStatus(msg, isError) {

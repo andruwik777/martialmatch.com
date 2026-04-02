@@ -60,3 +60,28 @@ After changing fixtures, run the script, commit `data/`, push, then the test Wor
 ## Disclaimer
 
 Not affiliated with MartialMatch. Behavior depends on MartialMatch’s HTML/API; changes on their side may break scraping or views.
+
+## Challenges & learnings
+
+*This section is a running log of non-obvious issues while building the app; it will keep growing.*
+
+1. **CORS** — Browsers block calling the official site’s HTML/API from a GitHub Pages origin. **Mitigation:** route requests through a **Cloudflare Worker** proxy on a Workers origin, with an explicit `Access-Control-Allow-Origin` for allowed page origins (not `*` when using credentials-sensitive patterns).
+
+2. **Bad CORS advice from ChatGPT ready-to-go solution** — A copy-paste suggestion along the lines of `const allowOrigin = allowedOrigins.includes(origin) ? origin : '*'` is **unsafe**: falling back to `*` (or reflecting arbitrary origins) breaks the point of an allowlist and can create a **cross-origin data leak**. Stick to **either** a matched allowed origin **or** no CORS header / deny.
+
+3. **Two public repos instead of fork** — GitHub does not let you fork your own repo into the same account in the usual way. **Approach:** keep **two** repositories and treat “release” as **merging** early work from dev into prod:
+   - **PROD (stable):** [github.com/andruwik777/martialmatch](https://github.com/andruwik777/martialmatch) → GitHub Pages e.g. `https://andruwik777.github.io/martialmatch/…`
+   - **DEV (early access):** [github.com/andruwik777/dev.martialmatch.com](https://github.com/andruwik777/dev.martialmatch.com) → `https://andruwik777.github.io/dev.martialmatch.com/…`
+
+4. **URL shape vs the official site** — Reuse the **same path** as the official site so you only swap the host: conceptually, prefix `https://andruwik777.github.io/` **before** the original host, so the path after it stays `…/pl/events/…`:
+   - Original: `https://martialmatch.com/pl/events`
+   - Wrapper (if the Pages project name matches): `https://andruwik777.github.io/martialmatch.com/pl/events`  
+   In practice, GitHub Pages puts the **repository name** as the first path segment (`…/github.io/<repo>/pl/events/…`), e.g. stable **`martialmatch`** → `https://andruwik777.github.io/martialmatch/pl/events`.
+
+5. **`mode=test` and fixture data** — The **dev** repo includes a **test data** path: the Worker serves **pre-collected** snapshots from the official site, so in that mode the browser **does not** talk to the live official origin for those resources. Enable with the query parameter **`mode=test`**.
+
+6. **Two Cloudflare Workers** — Same split as above:
+   - **Dev / test** — small, curated fixture set covering many edge cases (served from repo raw + test worker).
+   - **Prod** — thin **proxy** to the **live** official site.
+
+7. **CSS theming** — The dev app UI uses one visual theme; **`mode=test`** uses **another** theme so test mode is visually distinct at a glance.

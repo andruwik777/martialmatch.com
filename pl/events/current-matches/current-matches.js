@@ -1840,13 +1840,10 @@
     });
     tabFightsBtn.addEventListener("click", function () {
       if (!evSlug) return;
-      var wasFights = getCmTabFromUrl() === CM_TAB_FIGHTS;
       setCmTab(CM_TAB_FIGHTS);
-      if (wasFights) {
-        loadFights().catch(function () {
-          /* zostaw poprzednią listę */
-        });
-      }
+      loadFights().catch(function () {
+        /* zostaw poprzednią listę */
+      });
     });
     tabHarmonogramBtn.addEventListener("click", function () {
       if (!evSlug) return;

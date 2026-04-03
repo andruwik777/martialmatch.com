@@ -1069,6 +1069,19 @@
     }
   }
 
+  function buildEventThumbPlaceholder() {
+    var ph = document.createElement("div");
+    ph.className = "mm-event-thumb-placeholder";
+    ph.setAttribute("role", "img");
+    ph.setAttribute(
+      "aria-label",
+      "Placeholder — no event thumbnail"
+    );
+    ph.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.3"/><path d="M21 15l-4.5-4.5L5 21"/></svg>';
+    return ph;
+  }
+
   /**
    * @param {object} ev
    * @param {{ interactive?: boolean, headerCompact?: boolean }} opts
@@ -1095,16 +1108,21 @@
 
     var media = document.createElement("div");
     media.className = "mm-event-row__media";
-    var img = document.createElement("img");
-    img.className = "event-card-thumb";
-    img.alt = "";
-    img.loading = "lazy";
-    img.src = ev.thumb || "";
-    img.draggable = false;
-    img.onerror = function () {
-      img.style.visibility = "hidden";
-    };
-    media.appendChild(img);
+    var thumbUrl = (ev.thumb && String(ev.thumb).trim()) || "";
+    if (thumbUrl) {
+      var img = document.createElement("img");
+      img.className = "event-card-thumb";
+      img.alt = "";
+      img.loading = "lazy";
+      img.src = thumbUrl;
+      img.draggable = false;
+      img.onerror = function () {
+        img.replaceWith(buildEventThumbPlaceholder());
+      };
+      media.appendChild(img);
+    } else {
+      media.appendChild(buildEventThumbPlaceholder());
+    }
 
     var body = document.createElement("div");
     body.className = "event-card-body";

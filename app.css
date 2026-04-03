@@ -83,6 +83,30 @@ body {
   background: #2a2e3a;
 }
 
+.mm-event-thumb-placeholder {
+  width: 4.5rem;
+  height: 4.5rem;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px dashed #4a5568;
+  background: repeating-linear-gradient(
+    -45deg,
+    #22262f,
+    #22262f 4px,
+    #1c1f28 4px,
+    #1c1f28 8px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.mm-event-thumb-placeholder svg {
+  opacity: 0.85;
+}
+
 .event-card-body {
   min-width: 0;
   flex: 1;
@@ -729,9 +753,15 @@ body {
 }
 
 /* ~30% smaller thumb than list cards (4.5rem → 3.15rem) */
-.mm-event-row.mm-event-row--header-compact .event-card-thumb {
+.mm-event-row.mm-event-row--header-compact .event-card-thumb,
+.mm-event-row.mm-event-row--header-compact .mm-event-thumb-placeholder {
   width: 3.15rem;
   height: 3.15rem;
+}
+
+.mm-event-row.mm-event-row--header-compact .mm-event-thumb-placeholder svg {
+  width: 16px;
+  height: 16px;
 }
 
 .mm-event-row.mm-event-row--header-clear-slug {

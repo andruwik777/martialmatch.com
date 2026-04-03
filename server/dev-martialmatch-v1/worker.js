@@ -1,5 +1,7 @@
 /** Edge cache TTL for cached proxy routes (seconds). */
 const EDGE_CACHE_MAX_AGE = 3600;
+/** Same TTL for browser HTTP cache on client responses (HIT/MISS 200). */
+const BROWSER_CACHE_CONTROL = "public, max-age=" + EDGE_CACHE_MAX_AGE;
 
 function corsHeaders(allowOrigin, extra) {
   const h = Object.assign({ Vary: "Origin" }, extra || {});
@@ -10,7 +12,7 @@ function corsHeaders(allowOrigin, extra) {
 }
 
 /**
- * GET only. Cache API stores body + Cache-Control; CORS + X-Cache on each client response.
+ * GET only. Cache API stores body + Cache-Control; CORS + X-Cache + browser Cache-Control on 200.
  * @param {string} contentType e.g. text/html or application/json
  */
 async function fetchWithEdgeCache(request, targetUrl, allowOrigin, contentType) {
@@ -32,6 +34,7 @@ async function fetchWithEdgeCache(request, targetUrl, allowOrigin, contentType) 
       headers: corsHeaders(allowOrigin, {
         "Content-Type": contentType,
         "X-Cache": "HIT",
+        "Cache-Control": BROWSER_CACHE_CONTROL,
       }),
     });
   }
@@ -60,6 +63,7 @@ async function fetchWithEdgeCache(request, targetUrl, allowOrigin, contentType) 
     headers: corsHeaders(allowOrigin, {
       "Content-Type": contentType,
       "X-Cache": "MISS",
+      "Cache-Control": BROWSER_CACHE_CONTROL,
     }),
   });
 }

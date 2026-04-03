@@ -1595,6 +1595,18 @@
     return fetchJson(schPath)
       .then(function (sched) {
         return fetchJson(fightsUrl(nid)).then(function (fd) {
+          var prev = eventCache[nid];
+          var cachedList =
+            prev && Array.isArray(prev.startingListEntries)
+              ? prev.startingListEntries
+              : null;
+          if (cachedList) {
+            return Promise.resolve({
+              sched: sched,
+              fd: fd,
+              startingListEntries: cachedList,
+            });
+          }
           return fetchHtml(startingListsPath(slugObj.slug)).then(function (html) {
             return { sched: sched, fd: fd, html: html };
           });
@@ -1602,7 +1614,10 @@
       })
       .then(function (pack) {
         var mats = buildMatMapFromSchedules(pack.sched);
-        var entries = parseStartingListHtml(pack.html);
+        var entries =
+          pack.startingListEntries != null
+            ? pack.startingListEntries
+            : parseStartingListHtml(pack.html);
         var ev = parsedEventsList.filter(function (e) {
           return e.numericId === nid;
         })[0];

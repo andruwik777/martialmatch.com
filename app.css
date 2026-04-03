@@ -266,6 +266,51 @@ body {
   background: transparent;
 }
 
+/* HTTP / network error (distinct from empty successful response) */
+.mm-event-lane--error {
+  position: relative;
+  background: transparent !important;
+  border-width: 2px;
+  border-style: solid;
+  box-sizing: border-box;
+}
+
+.mm-event-lane--starting.mm-event-lane--error {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.mm-event-lane--schedules.mm-event-lane--error {
+  border-color: #eab308;
+  color: #eab308;
+}
+
+.mm-event-lane--fights.mm-event-lane--error {
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.mm-event-lane--error::before,
+.mm-event-lane--error::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 1.5px;
+  background: currentColor;
+  transform-origin: center;
+  border-radius: 0.5px;
+}
+
+.mm-event-lane--error::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.mm-event-lane--error::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
 .mm-event-title-link {
   text-decoration: none;
   color: #f2f2f6;

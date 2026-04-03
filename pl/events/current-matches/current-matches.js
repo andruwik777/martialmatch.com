@@ -960,6 +960,20 @@
     );
   }
 
+  function httpStatusFromFetchError(err) {
+    if (!err || err.message == null) return 0;
+    var m = String(err.message).match(/HTTP (\d+)/);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+
+  function laneOk(has) {
+    return { error: false, has: !!has };
+  }
+
+  function laneHttpError(status) {
+    return { error: true, has: false, status: status || 0 };
+  }
+
   /**
    * @param {HTMLElement} wrap
    * @param {string} nid
@@ -974,18 +988,21 @@
         mod: "starting",
         tFill: "Starting list: athletes present.",
         tOut: "Starting list: no athletes (server response).",
+        tErr: "Starting list: request failed",
       },
       {
         lane: c.laneSchedules,
         mod: "schedules",
         tFill: "Schedule: API returned schedules.",
         tOut: "Schedule: API returned no schedules.",
+        tErr: "Schedule: request failed",
       },
       {
         lane: c.laneFights,
         mod: "fights",
         tFill: "Fights: API returned at least one fight.",
         tOut: "Fights: API returned no fights.",
+        tErr: "Fights: request failed",
       },
     ];
     for (var i = 0; i < triple.length; i++) {
@@ -997,14 +1014,24 @@
         continue;
       }
       var dot = document.createElement("span");
-      dot.className =
-        "mm-event-lane mm-event-lane--" +
-        t.mod +
-        (t.lane.has ? " mm-event-lane--filled" : " mm-event-lane--outline");
-      dot.setAttribute(
-        "title",
-        t.lane.has ? t.tFill : t.tOut
-      );
+      var ln = t.lane;
+      if (ln.error) {
+        dot.className =
+          "mm-event-lane mm-event-lane--" + t.mod + " mm-event-lane--error";
+        var st = ln.status;
+        dot.setAttribute(
+          "title",
+          st
+            ? t.tErr + " (HTTP " + st + ")."
+            : t.tErr + " (network or unknown error)."
+        );
+      } else {
+        dot.className =
+          "mm-event-lane mm-event-lane--" +
+          t.mod +
+          (ln.has ? " mm-event-lane--filled" : " mm-event-lane--outline");
+        dot.setAttribute("title", ln.has ? t.tFill : t.tOut);
+      }
       slot.appendChild(dot);
       wrap.appendChild(slot);
     }
@@ -1592,36 +1619,61 @@
     var nid = slugObj.numericId;
     var schPath =
       "/api/events/" + encodeURIComponent(nid) + "/schedules";
+    var pack = {
+      sched: null,
+      fd: null,
+      entries: null,
+      errSched: null,
+      errFights: null,
+      errStart: null,
+    };
     return fetchJson(schPath)
       .then(function (sched) {
-        return fetchJson(fightsUrl(nid)).then(function (fd) {
-          var prev = eventCache[nid];
-          var cachedList =
-            prev && Array.isArray(prev.startingListEntries)
-              ? prev.startingListEntries
-              : null;
-          if (cachedList) {
-            return Promise.resolve({
-              sched: sched,
-              fd: fd,
-              startingListEntries: cachedList,
-            });
-          }
-          return fetchHtml(startingListsPath(slugObj.slug)).then(function (html) {
-            return { sched: sched, fd: fd, html: html };
-          });
-        });
+        pack.sched = sched;
       })
-      .then(function (pack) {
-        var mats = buildMatMapFromSchedules(pack.sched);
-        var entries =
-          pack.startingListEntries != null
-            ? pack.startingListEntries
-            : parseStartingListHtml(pack.html);
+      .catch(function (err) {
+        pack.errSched = httpStatusFromFetchError(err);
+        pack.sched = null;
+      })
+      .then(function () {
+        return fetchJson(fightsUrl(nid))
+          .then(function (fd) {
+            pack.fd = fd;
+          })
+          .catch(function (err) {
+            pack.errFights = httpStatusFromFetchError(err);
+            pack.fd = null;
+          });
+      })
+      .then(function () {
+        var prev = eventCache[nid];
+        var cachedList =
+          prev && Array.isArray(prev.startingListEntries)
+            ? prev.startingListEntries
+            : null;
+        if (cachedList) {
+          pack.entries = cachedList;
+          return;
+        }
+        return fetchHtml(startingListsPath(slugObj.slug))
+          .then(function (html) {
+            pack.entries = parseStartingListHtml(html);
+          })
+          .catch(function (err) {
+            pack.errStart = httpStatusFromFetchError(err);
+            pack.entries = null;
+          });
+      })
+      .then(function () {
+        var prev = eventCache[nid] || {};
+        var entriesList =
+          Array.isArray(pack.entries) ? pack.entries : [];
+        var mats = pack.sched
+          ? buildMatMapFromSchedules(pack.sched)
+          : prev.matNamesById || Object.create(null);
         var ev = parsedEventsList.filter(function (e) {
           return e.numericId === nid;
         })[0];
-        var prev = eventCache[nid] || {};
         eventCache[nid] = {
           slug: slugObj.slug,
           numericId: nid,
@@ -1634,12 +1686,22 @@
           tags: ev ? ev.tags || [] : prev.tags || [],
           schedulesPayload: pack.sched,
           fightsData: pack.fd,
-          startingListEntries: entries,
+          startingListEntries:
+            pack.errStart != null ? null : entriesList,
           matNamesById: mats,
           loaded: true,
-          laneStarting: { has: entries.length > 0 },
-          laneSchedules: { has: schedulesPayloadHasData(pack.sched) },
-          laneFights: { has: fightsDataHasData(pack.fd) },
+          laneStarting:
+            pack.errStart != null
+              ? laneHttpError(pack.errStart)
+              : laneOk(entriesList.length > 0),
+          laneSchedules:
+            pack.errSched != null
+              ? laneHttpError(pack.errSched)
+              : laneOk(schedulesPayloadHasData(pack.sched)),
+          laneFights:
+            pack.errFights != null
+              ? laneHttpError(pack.errFights)
+              : laneOk(fightsDataHasData(pack.fd)),
         };
         applyCachedEventToView(nid);
         refreshLanesForNumericId(nid);
@@ -1707,9 +1769,7 @@
         eventCache[ev.numericId] = {};
       }
       eventCache[ev.numericId].startingListEntries = entries;
-      eventCache[ev.numericId].laneStarting = {
-        has: entries.length > 0,
-      };
+      eventCache[ev.numericId].laneStarting = laneOk(entries.length > 0);
       refreshLanesForNumericId(ev.numericId);
     }
     var list = parsedEventsList;
@@ -1732,7 +1792,7 @@
               var entries = parseStartingListHtml(html);
               applyStartingListAggregate(ev, entries);
             })
-            .catch(function () {
+            .catch(function (err) {
               eventParticipantIdMap[ev.numericId] = Object.create(null);
               var ex = eventCache[ev.numericId];
               if (ex && ex.loaded) {
@@ -1741,8 +1801,10 @@
               if (!eventCache[ev.numericId]) {
                 eventCache[ev.numericId] = {};
               }
-              eventCache[ev.numericId].startingListEntries = [];
-              eventCache[ev.numericId].laneStarting = { has: false };
+              delete eventCache[ev.numericId].startingListEntries;
+              eventCache[ev.numericId].laneStarting = laneHttpError(
+                httpStatusFromFetchError(err)
+              );
               refreshLanesForNumericId(ev.numericId);
             });
         });
@@ -2633,7 +2695,7 @@
         startingListLoadPromise = null;
         if (!eventCache[nid]) eventCache[nid] = {};
         eventCache[nid].startingListEntries = entries;
-        eventCache[nid].laneStarting = { has: entries.length > 0 };
+        eventCache[nid].laneStarting = laneOk(entries.length > 0);
         refreshLanesForNumericId(nid);
         startingListEntries = entries;
         refreshHarmonogram();
@@ -2642,6 +2704,12 @@
       .catch(function (err) {
         startingListLoadPromise = null;
         startingListEntries = null;
+        if (!eventCache[nid]) eventCache[nid] = {};
+        delete eventCache[nid].startingListEntries;
+        eventCache[nid].laneStarting = laneHttpError(
+          httpStatusFromFetchError(err)
+        );
+        refreshLanesForNumericId(nid);
         refreshHarmonogram();
         throw err;
       });
@@ -2864,18 +2932,29 @@
   }
 
   function loadFights() {
-    return fetchJson(fightsUrl(eventNumericId)).then(function (data) {
-      clearError();
-      renderFights(data);
-      if (eventNumericId && eventCache[eventNumericId]) {
-        var c = eventCache[eventNumericId];
-        c.fightsData = data;
-        if (c.laneFights != null) {
-          c.laneFights = { has: fightsDataHasData(data) };
-          refreshLanesForNumericId(eventNumericId);
+    return fetchJson(fightsUrl(eventNumericId))
+      .then(function (data) {
+        clearError();
+        renderFights(data);
+        if (eventNumericId && eventCache[eventNumericId]) {
+          var c = eventCache[eventNumericId];
+          c.fightsData = data;
+          if (c.laneFights != null) {
+            c.laneFights = laneOk(fightsDataHasData(data));
+            refreshLanesForNumericId(eventNumericId);
+          }
         }
-      }
-    });
+      })
+      .catch(function (err) {
+        if (eventNumericId && eventCache[eventNumericId]) {
+          var c2 = eventCache[eventNumericId];
+          if (c2.laneFights != null) {
+            c2.laneFights = laneHttpError(httpStatusFromFetchError(err));
+            refreshLanesForNumericId(eventNumericId);
+          }
+        }
+        throw err;
+      });
   }
 
   function startPolling() {

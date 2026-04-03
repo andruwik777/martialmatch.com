@@ -32,6 +32,8 @@ Use "mode=test" in query URL parameters to simulate data with active competition
 
 Proxy server is implemented as Cloudflare Workers: **prod** source is `server/prod-martialmatch`, **dev** is `server/dev-martialmatch`, **dev-test** (fixtures) is `server/dev-test-martialmatch`.
 
+**Caching:** The app relies on **server-side** caching (Cloudflare edge / Worker cache for stable HTML and schedule JSON) and **client-side** caching (browser HTTP cache via response headers) so repeat visits do not hammer the original site. Live or frequently changing data (e.g. fights) is not cached the same way.
+
 ### Dev vs prod styling (two repos)
 
 After `app.css`, `theme-loader.js` sends a `HEAD` request for **`prod.css`** at the site root (next to `app.css`).

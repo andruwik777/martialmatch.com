@@ -1,5 +1,5 @@
-/** Edge cache TTL for HTML starting-lists (seconds). */
-const STARTING_LISTS_CACHE_MAX_AGE = 3600;
+/** Edge cache TTL for cached proxy routes (seconds). */
+const EDGE_CACHE_MAX_AGE = 3600;
 
 function corsHeaders(allowOrigin, extra) {
   const h = Object.assign({ Vary: "Origin" }, extra || {});
@@ -11,9 +11,9 @@ function corsHeaders(allowOrigin, extra) {
 
 /**
  * GET only. Cache API stores body + Cache-Control; CORS + X-Cache on each client response.
+ * @param {string} contentType e.g. text/html or application/json
  */
-async function fetchStartingListsWithCache(request, targetUrl, allowOrigin) {
-  const contentType = "text/html; charset=utf-8";
+async function fetchWithEdgeCache(request, targetUrl, allowOrigin, contentType) {
   if (request.method !== "GET") {
     return new Response("Method Not Allowed", {
       status: 405,
@@ -50,7 +50,7 @@ async function fetchStartingListsWithCache(request, targetUrl, allowOrigin) {
     status: 200,
     headers: {
       "Content-Type": contentType,
-      "Cache-Control": "public, max-age=" + STARTING_LISTS_CACHE_MAX_AGE,
+      "Cache-Control": "public, max-age=" + EDGE_CACHE_MAX_AGE,
     },
   });
   await cache.put(cacheKey, toCache.clone());
@@ -62,6 +62,20 @@ async function fetchStartingListsWithCache(request, targetUrl, allowOrigin) {
       "X-Cache": "MISS",
     }),
   });
+}
+
+async function tryCachedRoute(request, targetUrl, allowOrigin, contentType) {
+  try {
+    return await fetchWithEdgeCache(request, targetUrl, allowOrigin, contentType);
+  } catch (err) {
+    return new Response("Proxy error", {
+      status: 500,
+      headers: corsHeaders(allowOrigin, {
+        "Content-Type": contentType,
+        "X-Cache": "MISS",
+      }),
+    });
+  }
 }
 
 export default {
@@ -79,43 +93,49 @@ export default {
 
     const path = url.pathname;
 
-    let targetUrl;
-    let contentType = "text/plain";
+    const html = "text/html; charset=utf-8";
+    const json = "application/json";
 
+    // /pl/events — Cache API + X-Cache
     if (path === "/pl/events") {
-      targetUrl = "https://martialmatch.com/pl/events";
-      contentType = "text/html; charset=utf-8";
+      return tryCachedRoute(
+        request,
+        "https://martialmatch.com/pl/events",
+        allowOrigin,
+        html
+      );
     }
 
     // pl/events/{slug}/starting-lists — Cache API + X-Cache
-    else if (path.startsWith("/pl/events/") && path.endsWith("/starting-lists")) {
+    if (path.startsWith("/pl/events/") && path.endsWith("/starting-lists")) {
       const id = path.split("/")[3];
-      targetUrl = `https://martialmatch.com/pl/events/${id}/starting-lists`;
-      try {
-        return await fetchStartingListsWithCache(request, targetUrl, allowOrigin);
-      } catch (err) {
-        return new Response("Proxy error", {
-          status: 500,
-          headers: corsHeaders(allowOrigin, {
-            "Content-Type": "text/html; charset=utf-8",
-            "X-Cache": "MISS",
-          }),
-        });
-      }
+      return tryCachedRoute(
+        request,
+        `https://martialmatch.com/pl/events/${id}/starting-lists`,
+        allowOrigin,
+        html
+      );
     }
 
-    // /api/public/events/628/fights
-    else if (path.startsWith("/api/public/events/") && path.endsWith("/fights")) {
+    let targetUrl;
+    let contentType = "text/plain";
+
+    // /api/public/events/628/fights — no edge cache (live data)
+    if (path.startsWith("/api/public/events/") && path.endsWith("/fights")) {
       const id = path.split("/")[4];
       targetUrl = `https://martialmatch.com/api/public/events/${id}/fights`;
-      contentType = "application/json";
+      contentType = json;
     }
 
-    // /api/events/723/schedules
+    // /api/events/723/schedules — Cache API + X-Cache
     else if (path.startsWith("/api/events/") && path.endsWith("/schedules")) {
       const id = path.split("/")[3];
-      targetUrl = `https://martialmatch.com/api/events/${id}/schedules`;
-      contentType = "application/json";
+      return tryCachedRoute(
+        request,
+        `https://martialmatch.com/api/events/${id}/schedules`,
+        allowOrigin,
+        json
+      );
     }
 
     else {

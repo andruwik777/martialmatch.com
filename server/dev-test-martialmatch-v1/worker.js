@@ -3,12 +3,12 @@
  * Serves fixtures from repo:
  *   server/test-martialmatch/data/
  * Raw URLs (after push to default branch):
- *   https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/test-martialmatch/data/...
+ *   https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/dev-test-martialmatch-v1/data/...
  *
- * Regenerate fixtures: `python server/test-martialmatch/build_test_data.py`
+ * Regenerate fixtures: `python server/dev-test-martialmatch-v1/build_test_data.py`
  */
 const REPO_RAW_BASE =
-  "https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/test-martialmatch/data";
+  "https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/dev-test-martialmatch-v1/data";
 
 /** numeric API id → folder name under data/ */
 const NUMERIC_TO_SLUG = {
@@ -84,7 +84,7 @@ export default {
     var targetUrl = null;
 
     if (path === "/pl/events") {
-      targetUrl = REPO_RAW_BASE + "/events.html";
+      targetUrl = REPO_RAW_BASE + "/pl/events.html";
       contentType = "text/html; charset=utf-8";
     } else if (path.startsWith("/pl/events/") && path.endsWith("/starting-lists")) {
       var segs = path.split("/").filter(Boolean);

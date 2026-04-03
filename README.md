@@ -103,3 +103,74 @@ After changing fixtures, run the script, commit `data/`, push, then the test Wor
    - **Prod** — thin **proxy** to the **live** official site.
 
 7. **CSS theming** — The dev app UI uses one visual theme; **`mode=test`** uses **another** theme so test mode is visually distinct at a glance.
+
+## Releasing a new version (dev → prod)
+
+**Dev repo:** [github.com/andruwik777/dev.martialmatch.com](https://github.com/andruwik777/dev.martialmatch.com)  
+**Prod repo:** [github.com/andruwik777/martialmatch.com](https://github.com/andruwik777/martialmatch.com) — add it as remote **`origin_release`**. Default branch on both workflows below is **`master`**.
+
+### One-time setup (local dev clone)
+
+1. Add the production remote:
+
+   ```bash
+   git remote add origin_release https://github.com/andruwik777/martialmatch.com.git
+   ```
+
+2. Create a local **`release`** branch (from up-to-date **`master`** if you prefer):
+
+   ```bash
+   git checkout master
+   git pull origin master
+   git checkout -b release
+   ```
+
+3. Set upstream for **`release`** to **`origin_release`** (first push):
+
+   ```bash
+   git push -u origin_release release
+   ```
+
+   Later, when publishing a prepared release commit directly to prod’s **`master`**, you typically use:
+
+   ```bash
+   git push origin_release HEAD:master
+   ```
+
+**Verify:**
+
+```bash
+git remote -v
+git branch -vv
+```
+
+### Steps to cut a new release
+
+Work in the **dev** repo clone, on branch **`release`** (or create/update it from **`master`**).
+
+1. `git checkout release`
+2. `git merge master` (bring in latest dev work)
+3. Remove non-production paths under **`server/`** that must not ship in the prod repo (e.g. dev-only workers and large fixture trees—keep only what prod deploys and document your own rule here).
+4. Edit **`config.js`**: set **`BASE_BY_MODE`** **`prod`** and **`test`** URLs to the **released** Cloudflare Worker hostnames (align with folders you keep under **`server/`** and what you deployed).
+5. Rename **`prod.css.example`** → **`prod.css`** so the production site picks up the prod theme (see [Dev vs prod styling](#dev-vs-prod-styling-two-repos)).
+6. Commit, e.g. `Release v1.0.0`, then tag:
+
+   ```bash
+   git tag v1.0.0
+   ```
+
+7. Push the **current HEAD** to prod’s **`master`** and push **tags**:
+
+   ```bash
+   git push origin_release HEAD:master
+   git push origin_release v1.0.0
+   ```
+
+8. Return to daily work: `git checkout master`
+
+**Notes**
+
+- **`origin_release`** is used for **every** push to the prod GitHub repo in this workflow; do not mix in `release_origin`.
+- If you merge **`release`** back into **`master`** on the **dev** repo, **`prod.css`** can reappear on dev—usually you keep **`prod.css`** only on commits that exist on **`origin_release`**, or you revert **`prod.css`** on **`master`** after the release.
+- Update **`REPO_RAW_BASE`** (and similar) in any **test** Worker bundled for prod if fixture raw URLs must point at the **prod** repo or branch.
+- Deploying Workers is separate from **`git push`**; align Worker code with what you kept under **`server/`**.

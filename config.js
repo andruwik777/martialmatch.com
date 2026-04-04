@@ -9,8 +9,8 @@
 
 
   var BASE_BY_MODE = {
-    prod: "https://martialmatch-v1.andruwik777.workers.dev",
-    test: "https://martialmatch-v1.andruwik777.workers.dev",
+    prod: "https://prod-martialmatch-v1.andruwik777.workers.dev",
+    test: "https://prod-martialmatch-v1.andruwik777.workers.dev",
   };
 
   var loc = global.location;

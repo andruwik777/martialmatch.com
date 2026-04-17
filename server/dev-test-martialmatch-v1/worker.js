@@ -13,6 +13,7 @@ const REPO_RAW_BASE =
 /** numeric API id → folder name under data/ */
 const NUMERIC_TO_SLUG = {
   628: "628-x-superpuchar-polski-bjj-nogi-gi",
+  694: "694-draft",
   707: "707-puchar-polski-poludniowej-adcc",
   723: "723-grand-prix-polski-combat-ju-jutsu-",
   703: "703-puchar-polski-seniorow-juniorow-i-juniorow-mlodszych-w-grappling",

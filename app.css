@@ -411,8 +411,8 @@ body {
 
 .mm-ev-place {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  flex-wrap: nowrap;
   gap: 0.3rem 0.4rem;
   margin: 0.35rem 0 0;
   font-size: 0.8125rem;
@@ -427,12 +427,16 @@ body {
 }
 
 .mm-ev-place__flag {
+  flex-shrink: 0;
   font-size: 1rem;
   line-height: 1;
 }
 
 .mm-ev-place__city {
+  flex: 1 1 0;
+  min-width: 0;
   color: #cbd5e0;
+  overflow-wrap: break-word;
 }
 
 .mm-ev-tags {
@@ -530,7 +534,7 @@ body {
   color: #edf2f7;
 }
 
-/* Current matches — zakładki (Przebieg / Harmonogram) */
+/* Current matches — trzy zakładki (Events / Fights / Harmonogram) */
 .mm-cm-tabs {
   display: flex;
   gap: 0.35rem;
@@ -544,6 +548,36 @@ body {
 
 .mm-cm-tab--fights {
   flex: 2 1 0;
+}
+
+.mm-cm-tab__label {
+  display: block;
+  min-width: 0;
+}
+
+.mm-cm-tab.mm-cm-lane-badge-host {
+  position: relative;
+}
+
+.mm-cm-lane-badge-wrap {
+  position: absolute;
+  top: 0.125rem;
+  right: 0.2rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+}
+
+.mm-cm-lane-badge-wrap.is-hidden {
+  display: none !important;
+}
+
+.mm-filter-main-btn.mm-cm-lane-badge-host {
+  position: relative;
 }
 
 .mm-cm-tab {
@@ -562,7 +596,10 @@ body {
   transition:
     color 0.15s ease,
     background 0.15s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    transform 0.1s ease,
+    filter 0.1s ease,
+    box-shadow 0.1s ease;
 }
 
 .mm-cm-tab:hover {
@@ -576,6 +613,11 @@ body {
   background: #2a3248;
   border-color: #5b8cff;
   box-shadow: 0 0 0 1px rgba(91, 140, 255, 0.35);
+}
+
+.mm-cm-tab:active:not(:disabled) {
+  transform: scale(0.985);
+  filter: brightness(0.9);
 }
 
 .mm-cm-tab:focus-visible {
@@ -598,44 +640,6 @@ body {
   background: #252a38;
   border-color: #2d3548;
   color: #6b7280;
-}
-
-/* Fights — wyróżnienie (jak zielony pasek aktywnej walki) */
-.mm-cm-tab--fights {
-  color: #c6f6d5;
-  background: #1e3a2f;
-  border-color: #2f6f4e;
-}
-
-.mm-cm-tab--fights:hover:not(:disabled) {
-  color: #f0fff4;
-  background: #234836;
-  border-color: #38a169;
-}
-
-.mm-cm-tab--fights[aria-selected="true"] {
-  color: #f0fff4;
-  background: #276749;
-  border-color: #48bb78;
-  box-shadow:
-    0 0 0 1px rgba(72, 187, 120, 0.45),
-    0 0 12px rgba(39, 103, 73, 0.35);
-}
-
-.mm-cm-tab--fights.mm-cm-tab--disabled,
-.mm-cm-tab--fights:disabled {
-  opacity: 0.58;
-  color: #68a082;
-  background: #172924;
-  border-color: #234536;
-  box-shadow: none;
-}
-
-.mm-cm-tab--fights.mm-cm-tab--disabled:hover,
-.mm-cm-tab--fights:disabled:hover {
-  background: #172924;
-  border-color: #234536;
-  color: #68a082;
 }
 
 /* Current-matches: same column as .main (36rem), not full viewport */
@@ -732,7 +736,7 @@ body {
   outline: none;
 }
 
-/* Header active event: same column as .main; thumb + title + lane dots only */
+/* Header active event: thumb + title + date (same row markup as list) + lane dots */
 .mm-event-row.mm-event-row--header-compact {
   align-items: center;
   padding-top: 0.5rem;
@@ -811,6 +815,23 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
+}
+
+.mm-hg-day-heading {
+  margin: 0.35rem 0 0.1rem;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #e2e8f0;
+  background: linear-gradient(90deg, #1a365d 0%, #2c5282 55%, transparent 100%);
+  border-left: 3px solid #63b3ed;
+  border-radius: 6px;
+}
+
+.mm-hg-list > .mm-hg-day-heading:first-child {
+  margin-top: 0;
 }
 
 .mm-hg-card {
@@ -1227,6 +1248,26 @@ body {
   margin: 0;
 }
 
+.mm-filter-panel-hint {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #a0aec0;
+}
+
+.mm-filter-panel-hint.is-hidden {
+  display: none;
+}
+
+/* Events tab: while all starting lists load, only progress + hint (no list / apply). */
+.mm-cm-filter.mm-cm-filter--aggregate-loading .mm-filter-panel-body {
+  display: none !important;
+}
+
+.mm-cm-filter.mm-cm-filter--aggregate-loading .mm-filter-mobile-bar {
+  display: none !important;
+}
+
 .mm-filter-search-wrap {
   margin: 0 0 0.5rem;
 }
@@ -1237,7 +1278,8 @@ body {
   width: 100%;
   padding: 0.45rem 0.6rem;
   font: inherit;
-  font-size: 0.875rem;
+  /* 16px avoids iOS WebKit auto-zoom on focus (all browsers on iPhone). */
+  font-size: 16px;
   color: #e8e8ec;
   background: #1a1d26;
   border: 1px solid #3d4a66;
@@ -1287,31 +1329,6 @@ body {
   display: flex;
   align-items: stretch;
   gap: 0.28rem;
-}
-
-.mm-filter-toolbar-btn {
-  flex: 0 0 auto;
-  padding: 0.35rem 0.42rem;
-  font: inherit;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: #e8e8ec;
-  text-align: center;
-  white-space: nowrap;
-  background: #3d4a66;
-  border: 1px solid #5a6a8a;
-  border-radius: 8px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.mm-filter-toolbar-btn:active {
-  background: #4a5878;
-}
-
-.mm-filter-toolbar-btn:focus-visible {
-  outline: 2px solid #5b8cff;
-  outline-offset: 2px;
 }
 
 .mm-filter-only-selected {
@@ -1460,6 +1477,49 @@ body {
   z-index: 2;
   padding: 0.5rem 0.6rem;
   background: linear-gradient(180deg, #161922 85%, transparent);
+}
+
+.mm-filter-actions-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+.mm-filter-actions-row > .mm-filter-apply-btn,
+.mm-filter-actions-row > .mm-filter-clear-action-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+}
+
+.mm-filter-clear-action-btn {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.65rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #e8e8ec;
+  text-align: center;
+  line-height: 1.2;
+  background: #3d4a66;
+  border: 1px solid #5a6a8a;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-filter-clear-action-btn:active {
+  background: #4a5878;
+}
+
+.mm-filter-clear-action-btn:focus-visible {
+  outline: 2px solid #5b8cff;
+  outline-offset: 2px;
 }
 
 /* Mobile (Galaxy-class): jedna Apply przyklejona do dołu viewport — patrz .mm-filter-mobile-bar */

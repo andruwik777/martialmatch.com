@@ -71,7 +71,7 @@
               aria-controls="mm-filter-panel"
               aria-expanded="false"
             >
-              <span class="mm-filter-main-btn__label">Filter · all</span>
+              <span class="mm-filter-main-btn__label">All Fighters</span>
               <span class="mm-filter-main-btn__chevron" aria-hidden="true">
                 <svg
                   class="mm-filter-main-btn__chevron-svg"
@@ -93,7 +93,7 @@
           aria-controls="mm-filter-panel"
           aria-expanded="false"
         >
-          <span class="mm-filter-main-btn__label">Filter · all</span>
+          <span class="mm-filter-main-btn__label">This Event Fighters · all</span>
           <span class="mm-filter-main-btn__chevron" aria-hidden="true">
             <svg
               class="mm-filter-main-btn__chevron-svg"
@@ -112,6 +112,12 @@
           aria-hidden="true"
         >
           <p id="mm-filter-panel-status" class="mm-filter-panel-status mm-muted"></p>
+          <p
+            id="mm-filter-panel-hint"
+            class="mm-filter-panel-hint mm-muted is-hidden"
+            aria-live="polite"
+          ></p>
+          <div id="mm-filter-panel-body" class="mm-filter-panel-body">
           <div class="mm-filter-search-wrap">
             <input
               type="search"
@@ -161,15 +167,6 @@
                 </div>
               </div>
               <div class="mm-filter-toolbar-row__actions">
-                <button
-                  type="button"
-                  class="mm-filter-toolbar-btn"
-                  id="mm-filter-clear-all-btn"
-                  title="Clear checkboxes (fights tab: only athletes on this event are removed from URL)."
-                  aria-label="Clear checkboxes on list"
-                >
-                  Clear
-                </button>
                 <label class="mm-filter-only-selected">
                   <input
                     type="checkbox"
@@ -194,17 +191,29 @@
               aria-live="polite"
             ></p>
             <div class="mm-filter-sticky mm-filter-sticky--desktop">
-              <button
-                type="button"
-                class="mm-filter-apply-btn"
-                id="mm-filter-apply-sticky"
-                title="Save selection to URL and refresh."
-                aria-label="Apply filter"
-              >
-                Apply
-              </button>
+              <div class="mm-filter-actions-row">
+                <button
+                  type="button"
+                  class="mm-filter-clear-action-btn"
+                  id="mm-filter-clear-all-btn"
+                  title="Clear Filter: remove filter from URL, refresh, and close panel (fights: only athletes on this event are removed from URL)."
+                  aria-label="Clear Filter — apply empty filter and close panel"
+                >
+                  Clear Filter
+                </button>
+                <button
+                  type="button"
+                  class="mm-filter-apply-btn"
+                  id="mm-filter-apply-sticky"
+                  title="Apply Filter: save selection to URL and refresh."
+                  aria-label="Apply Filter — save selection to URL and refresh"
+                >
+                  Apply Filter
+                </button>
+              </div>
             </div>
             <div id="mm-filter-list-root" class="mm-filter-list-root"></div>
+          </div>
           </div>
         </div>
         <div
@@ -212,15 +221,26 @@
           class="mm-filter-mobile-bar is-hidden"
           aria-hidden="true"
         >
-          <button
-            type="button"
-            class="mm-filter-apply-btn"
-            id="mm-filter-apply-mobile"
-            title="Save selection to URL and refresh."
-            aria-label="Apply filter"
-          >
-            Apply
-          </button>
+          <div class="mm-filter-actions-row">
+            <button
+              type="button"
+              class="mm-filter-clear-action-btn"
+              id="mm-filter-clear-all-btn-mobile"
+              title="Clear Filter: remove filter from URL, refresh, and close panel (fights: only athletes on this event are removed from URL)."
+              aria-label="Clear Filter — apply empty filter and close panel"
+            >
+              Clear Filter
+            </button>
+            <button
+              type="button"
+              class="mm-filter-apply-btn"
+              id="mm-filter-apply-mobile"
+              title="Apply Filter: save selection to URL and refresh."
+              aria-label="Apply Filter — save selection to URL and refresh"
+            >
+              Apply Filter
+            </button>
+          </div>
         </div>
       </div>
       <div
@@ -250,7 +270,7 @@
           disabled
           aria-disabled="true"
         >
-          Fights
+          <span id="mm-cm-tab-fights-label" class="mm-cm-tab__label">Fights</span>
         </button>
         <button
           type="button"
@@ -263,7 +283,7 @@
           disabled
           aria-disabled="true"
         >
-          Schedule
+          <span class="mm-cm-tab__label">Schedule</span>
         </button>
       </div>
       <div

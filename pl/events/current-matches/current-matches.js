@@ -37,6 +37,7 @@
   var tabEventsBtn = document.getElementById("mm-cm-tab-events");
   var tabFightsBtn = document.getElementById("mm-cm-tab-fights");
   var tabHarmonogramBtn = document.getElementById("mm-cm-tab-harmonogram");
+  var tabFightsLabelEl = document.getElementById("mm-cm-tab-fights-label");
   var panelEventsEl = document.getElementById("mm-cm-panel-events");
   var panelFightsEl = document.getElementById("mm-cm-panel-fights");
   var panelHarmonogramEl = document.getElementById("mm-cm-panel-harmonogram");
@@ -45,6 +46,12 @@
   var CM_TAB_EVENTS = "events";
   var CM_TAB_FIGHTS = "fights";
   var CM_TAB_HARMONOGRAM = "harmonogram";
+
+  /** Shown when schedule/fights data is empty — short, no “API” jargon. */
+  var MSG_SCHEDULE_NOT_READY =
+    "Schedule isn't ready yet — organizers may still be preparing it.";
+  var MSG_FIGHTS_NOT_READY =
+    "Fight list isn't ready yet — organizers may still be preparing it.";
 
   var URL_PARAM_EVENTS_FILTER = "events_filter";
   var URL_PARAM_SLUG_FILTER = "slug_filter";
@@ -71,6 +78,7 @@
   var filterMainBtn = document.getElementById("mm-filter-main-btn");
   var filterPanelEl = document.getElementById("mm-filter-panel");
   var filterPanelStatusEl = document.getElementById("mm-filter-panel-status");
+  var filterPanelHintEl = document.getElementById("mm-filter-panel-hint");
   var filterListRootEl = document.getElementById("mm-filter-list-root");
   var filterApplyStickyBtn = document.getElementById("mm-filter-apply-sticky");
   var filterMobileBarEl = document.getElementById("mm-filter-mobile-bar");
@@ -80,6 +88,9 @@
   var filterClubJumpToggleBtn = document.getElementById("mm-filter-club-jump-toggle");
   var filterClubJumpListEl = document.getElementById("mm-filter-club-jump-list");
   var filterClearAllBtn = document.getElementById("mm-filter-clear-all-btn");
+  var filterClearAllBtnMobile = document.getElementById(
+    "mm-filter-clear-all-btn-mobile"
+  );
   var filterOnlySelectedCb = document.getElementById("mm-filter-only-selected-cb");
   var filterOnlyEmptyHintEl = document.getElementById("mm-filter-only-empty-hint");
   var filterSearchInputEl = document.getElementById("mm-filter-search-input");
@@ -257,21 +268,15 @@
   function buildMatMapFromSchedules(payload) {
     var map = Object.create(null);
     if (!payload || typeof payload !== "object") return map;
-    var activeId = payload.activeScheduleId;
     var schedules = payload.schedules || [];
-    var sch = null;
-    for (var i = 0; i < schedules.length; i++) {
-      if (schedules[i].id === activeId) {
-        sch = schedules[i];
-        break;
-      }
+    for (var si = 0; si < schedules.length; si++) {
+      var sch = schedules[si];
+      if (!sch || !sch.mats) continue;
+      sch.mats.forEach(function (m) {
+        var id = m.id;
+        map[String(id)] = m.name || "Mat " + id;
+      });
     }
-    if (!sch && schedules.length) sch = schedules[0];
-    if (!sch || !sch.mats) return map;
-    sch.mats.forEach(function (m) {
-      var id = m.id;
-      map[String(id)] = m.name || "Mat " + id;
-    });
     return map;
   }
 
@@ -285,41 +290,39 @@
 
   /**
    * @param {object} payload
-   * @returns {Record<string, {categoryId:number,categoryName:string,matId:number,matNameRaw:string,start:string,end:string}>}
+   * @returns {Record<string, {categoryId:number,categoryName:string,matId:number,matNameRaw:string,start:string,end:string,scheduleId:number,scheduleName:string}>}
    */
   function buildCategoryScheduleIndex(payload) {
     var map = Object.create(null);
     if (!payload || typeof payload !== "object") return map;
-    var activeId = payload.activeScheduleId;
     var schedules = payload.schedules || [];
-    var sch = null;
-    for (var i = 0; i < schedules.length; i++) {
-      if (schedules[i].id === activeId) {
-        sch = schedules[i];
-        break;
-      }
-    }
-    if (!sch && schedules.length) sch = schedules[0];
-    if (!sch || !sch.mats) return map;
-    sch.mats.forEach(function (m) {
-      var matId = m.id;
-      var matNameRaw = m.name || "Mat " + matId;
-      var cats = m.categories || [];
-      cats.forEach(function (c) {
-        var id = c.id;
-        if (id == null) return;
-        var key = String(id);
-        var t = c.scheduledCategoryTime || {};
-        map[key] = {
-          categoryId: id,
-          categoryName: c.name || "",
-          matId: matId,
-          matNameRaw: matNameRaw,
-          start: t.start || "",
-          end: t.end || "",
-        };
+    for (var si = 0; si < schedules.length; si++) {
+      var sch = schedules[si];
+      if (!sch || !sch.mats) continue;
+      var scheduleId = sch.id;
+      var scheduleName = sch.name != null ? String(sch.name) : "";
+      sch.mats.forEach(function (m) {
+        var matId = m.id;
+        var matNameRaw = m.name || "Mat " + matId;
+        var cats = m.categories || [];
+        cats.forEach(function (c) {
+          var id = c.id;
+          if (id == null) return;
+          var key = String(id);
+          var t = c.scheduledCategoryTime || {};
+          map[key] = {
+            categoryId: id,
+            categoryName: c.name || "",
+            matId: matId,
+            matNameRaw: matNameRaw,
+            start: t.start || "",
+            end: t.end || "",
+            scheduleId: scheduleId,
+            scheduleName: scheduleName,
+          };
+        });
       });
-    });
+    }
     return map;
   }
 
@@ -389,7 +392,7 @@
     if (!lastSchedulesPayload) {
       var p = document.createElement("p");
       p.className = "mm-muted";
-      p.textContent = "No schedule data from API.";
+      p.textContent = MSG_SCHEDULE_NOT_READY;
       harmonogramRootEl.appendChild(p);
       return;
     }
@@ -397,7 +400,7 @@
     if (!schedulesPayloadHasData(lastSchedulesPayload)) {
       var pSched = document.createElement("p");
       pSched.className = "mm-muted";
-      pSched.textContent = "No schedule slots in API response.";
+      pSched.textContent = MSG_SCHEDULE_NOT_READY;
       harmonogramRootEl.appendChild(pSched);
       return;
     }
@@ -470,8 +473,29 @@
 
     var wrap = document.createElement("div");
     wrap.className = "mm-hg-list";
+    var multiDay =
+      Array.isArray(lastSchedulesPayload.schedules) &&
+      lastSchedulesPayload.schedules.length > 1;
+    var prevScheduleKey = null;
     for (var r = 0; r < rows.length; r++) {
-      wrap.appendChild(buildHarmonogramCard(rows[r]));
+      var row = rows[r];
+      var slot = row.slot;
+      if (multiDay) {
+        var sk =
+          slot.scheduleId != null ? String(slot.scheduleId) : "__none__";
+        if (sk !== prevScheduleKey) {
+          prevScheduleKey = sk;
+          var head = document.createElement("div");
+          head.className = "mm-hg-day-heading";
+          head.setAttribute("role", "heading");
+          head.setAttribute("aria-level", "3");
+          head.textContent =
+            (slot.scheduleName && String(slot.scheduleName).trim()) ||
+            "Schedule";
+          wrap.appendChild(head);
+        }
+      }
+      wrap.appendChild(buildHarmonogramCard(row));
     }
     harmonogramRootEl.appendChild(wrap);
   }
@@ -1044,6 +1068,110 @@
         if (hw) paintEventCardLaneStrip(hw, idStr);
       }
     }
+    refreshCmToolbarLaneBadges();
+  }
+
+  function ensureTabLaneBadgeWrap(btn) {
+    if (!btn) return null;
+    var w = btn.querySelector(".mm-cm-lane-badge-wrap");
+    if (!w) {
+      btn.classList.add("mm-cm-lane-badge-host");
+      w = document.createElement("span");
+      w.className = "mm-cm-lane-badge-wrap is-hidden";
+      w.setAttribute("aria-hidden", "true");
+      var dot = document.createElement("span");
+      dot.className = "mm-event-lane";
+      w.appendChild(dot);
+      btn.appendChild(w);
+    }
+    return w;
+  }
+
+  function paintTabLaneBadgeWrap(wrap, lane, mod, labels) {
+    if (!wrap) return;
+    var dot = wrap.querySelector(".mm-event-lane");
+    if (!dot) return;
+    if (lane == null) {
+      wrap.classList.add("is-hidden");
+      dot.removeAttribute("title");
+      return;
+    }
+    wrap.classList.remove("is-hidden");
+    if (lane.error) {
+      dot.className =
+        "mm-event-lane mm-event-lane--" + mod + " mm-event-lane--error";
+      var st = lane.status;
+      dot.setAttribute(
+        "title",
+        st
+          ? labels.tErr + " (HTTP " + st + ")."
+          : labels.tErr + " (network or unknown error)."
+      );
+    } else {
+      dot.className =
+        "mm-event-lane mm-event-lane--" +
+        mod +
+        (lane.has ? " mm-event-lane--filled" : " mm-event-lane--outline");
+      dot.setAttribute("title", lane.has ? labels.tFill : labels.tOut);
+    }
+  }
+
+  function hideTabLaneBadgeWrap(btn) {
+    var w = btn && btn.querySelector(".mm-cm-lane-badge-wrap");
+    if (w) {
+      w.classList.add("is-hidden");
+      var d = w.querySelector(".mm-event-lane");
+      if (d) d.removeAttribute("title");
+    }
+  }
+
+  /**
+   * On Fights / Harmonogram tabs only: lane dots on Filter (starting),
+   * Schedule tab (schedules), Fights tab (fights) — same semantics as event cards.
+   */
+  function refreshCmToolbarLaneBadges() {
+    var tab = getCmTabFromUrl();
+    var onFH = tab === CM_TAB_FIGHTS || tab === CM_TAB_HARMONOGRAM;
+    var c =
+      onFH && evSlug && eventNumericId
+        ? eventCache[eventNumericId]
+        : null;
+    if (!onFH || !c) {
+      hideTabLaneBadgeWrap(filterMainBtn);
+      hideTabLaneBadgeWrap(tabFightsBtn);
+      hideTabLaneBadgeWrap(tabHarmonogramBtn);
+      return;
+    }
+    paintTabLaneBadgeWrap(
+      ensureTabLaneBadgeWrap(filterMainBtn),
+      c.laneStarting,
+      "starting",
+      {
+        tFill: "Starting list: athletes present.",
+        tOut: "Starting list: no athletes (server response).",
+        tErr: "Starting list: request failed",
+      }
+    );
+    paintTabLaneBadgeWrap(
+      ensureTabLaneBadgeWrap(tabHarmonogramBtn),
+      c.laneSchedules,
+      "schedules",
+      {
+        tFill: "Schedule: API returned schedules.",
+        tOut: "Schedule: API returned no schedules.",
+        tErr: "Schedule: request failed",
+      }
+    );
+    paintTabLaneBadgeWrap(
+      ensureTabLaneBadgeWrap(tabFightsBtn),
+      c.laneFights,
+      "fights",
+      {
+        tFill: "Fights: API returned at least one fight.",
+        tOut: "Fights: API returned no fights.",
+        tErr: "Fights: request failed",
+      }
+    );
   }
 
   function buildEventThumbPlaceholder() {
@@ -1109,21 +1237,21 @@
     titleEl.textContent = ev.title || "Event " + ev.numericId;
     body.appendChild(titleEl);
 
-    if (!headerCompact) {
-      if (ev.dateText) {
-        var dateRow = document.createElement("div");
-        dateRow.className = "mm-ev-date";
-        var lab = document.createElement("span");
-        lab.className = "mm-ev-date__label";
-        lab.textContent = "Date:";
-        var val = document.createElement("span");
-        val.className = "mm-ev-date__value";
-        val.textContent = " " + ev.dateText;
-        dateRow.appendChild(lab);
-        dateRow.appendChild(val);
-        body.appendChild(dateRow);
-      }
+    if (ev.dateText) {
+      var dateRow = document.createElement("div");
+      dateRow.className = "mm-ev-date";
+      var lab = document.createElement("span");
+      lab.className = "mm-ev-date__label";
+      lab.textContent = "Date:";
+      var val = document.createElement("span");
+      val.className = "mm-ev-date__value";
+      val.textContent = " " + ev.dateText;
+      dateRow.appendChild(lab);
+      dateRow.appendChild(val);
+      body.appendChild(dateRow);
+    }
 
+    if (!headerCompact) {
       if (ev.registration) {
         var regEl = document.createElement("div");
         regEl.className = "mm-ev-reg mm-ev-reg--" + ev.registration.kind;
@@ -1434,8 +1562,10 @@
   function updateFightsTabLabel() {
     if (!tabFightsBtn) return;
     if (!evSlug || tabFightsBtn.disabled) {
-      tabFightsBtn.textContent = "Fights";
+      if (tabFightsLabelEl) tabFightsLabelEl.textContent = "Fights";
+      else tabFightsBtn.textContent = "Fights";
       tabFightsBtn.setAttribute("aria-label", "Fights tab");
+      refreshCmToolbarLaneBadges();
       return;
     }
     var s = fightsTabStats.shown;
@@ -1448,7 +1578,8 @@
         ? " (" + fightsTabSecondsLeft + "s)"
         : "";
     var body = filtered ? "Fights " + s + "/" + t : "Fights " + t;
-    tabFightsBtn.textContent = body + parens;
+    if (tabFightsLabelEl) tabFightsLabelEl.textContent = body + parens;
+    else tabFightsBtn.textContent = body + parens;
     var aria = filtered
       ? "Fights tab, " + s + " of " + t + " fights match filter"
       : "Fights tab, " + t + " fights";
@@ -1456,6 +1587,7 @@
       aria += ", next refresh in " + fightsTabSecondsLeft + " seconds";
     }
     tabFightsBtn.setAttribute("aria-label", aria);
+    refreshCmToolbarLaneBadges();
   }
 
   function updateFilterRootVisibility() {
@@ -1729,6 +1861,47 @@
       });
   }
 
+  /** Progress text for loading all events' starting lists belongs on Events tab only. */
+  function shouldShowEventsAggregateFilterStatus() {
+    return (
+      filterPanelOpen &&
+      filterPanelStatusEl &&
+      getCmTabFromUrl() === CM_TAB_EVENTS
+    );
+  }
+
+  var AGGREGATE_FILTER_LOAD_HINT =
+    "The athlete list and Apply / Clear actions will appear when every event's starting list has finished loading.";
+
+  /**
+   * While true, Events-tab aggregate load hides list, search, and apply/clear (see app.css).
+   */
+  function setEventsAggregateFilterLoadingUi(active) {
+    if (filterRootEl) {
+      filterRootEl.classList.toggle(
+        "mm-cm-filter--aggregate-loading",
+        !!active
+      );
+    }
+    if (filterPanelEl) {
+      filterPanelEl.setAttribute("aria-busy", active ? "true" : "false");
+    }
+    if (filterPanelHintEl) {
+      filterPanelHintEl.classList.toggle("is-hidden", !active);
+      if (active) {
+        filterPanelHintEl.textContent = AGGREGATE_FILTER_LOAD_HINT;
+      } else {
+        filterPanelHintEl.textContent = "";
+      }
+    }
+    if (!active && filterPanelOpen) {
+      setFilterMobileBarVisible(true);
+    }
+    if (active && filterPanelOpen) {
+      setFilterMobileBarVisible(false);
+    }
+  }
+
   function ensureAggregateParticipantMaps() {
     if (aggregateParticipantMapsPromise) {
       return aggregateParticipantMapsPromise;
@@ -1755,7 +1928,7 @@
     for (var idx = 0; idx < n; idx++) {
       (function (ev, i) {
         chain = chain.then(function () {
-          if (filterPanelOpen && filterPanelStatusEl) {
+          if (shouldShowEventsAggregateFilterStatus()) {
             filterPanelStatusEl.textContent =
               "Starting lists: " + (i + 1) + " / " + n + "…";
           }
@@ -1788,7 +1961,7 @@
       })(list[idx], idx);
     }
     aggregateParticipantMapsPromise = chain.then(function () {
-      if (filterPanelOpen && filterPanelStatusEl) {
+      if (shouldShowEventsAggregateFilterStatus()) {
         filterPanelStatusEl.textContent = "";
       }
     });
@@ -1851,6 +2024,7 @@
       refreshHarmonogram();
     }
     updatePollingForTab();
+    refreshCmToolbarLaneBadges();
   }
 
   function setCmTab(tab) {
@@ -2279,18 +2453,6 @@
     }
   }
 
-  function clearAllMemberFilterCheckboxes() {
-    if (!filterListRootEl) return;
-    var boxes = filterListRootEl.querySelectorAll(
-      'input[type="checkbox"][data-mm-filter-member]'
-    );
-    for (var i = 0; i < boxes.length; i++) {
-      boxes[i].checked = false;
-    }
-    refreshAllClubHeaderCheckboxes();
-    applyFilterPanelListVisibility();
-  }
-
   function onFilterListCheckboxChange(ev) {
     var t = ev.target;
     if (!t || t.type !== "checkbox" || !filterListRootEl) return;
@@ -2483,76 +2645,127 @@
     return n;
   }
 
+  /** Unique athletes in merged filter list (all events), 0 if none loaded yet. */
+  function countAggregateFilterPoolSize() {
+    return buildAggregateFilterEntries().length;
+  }
+
+  function filterLabelEventsFightersCount(totalSelected) {
+    if (!totalSelected) return "All Fighters";
+    var base =
+      totalSelected === 1 ? "1 Fighter" : totalSelected + " Fighters";
+    var pool = countAggregateFilterPoolSize();
+    if (pool > 0) {
+      return base + " from " + pool;
+    }
+    return base;
+  }
+
+  /** Athletes on the active event starting list (denominator for filter button). */
+  function countStartingListSizeActiveEvent() {
+    if (!eventNumericId) return 0;
+    var c = eventCache[eventNumericId];
+    if (c && Array.isArray(c.startingListEntries)) {
+      return c.startingListEntries.length;
+    }
+    if (
+      evSlug &&
+      String(evSlug.numericId) === String(eventNumericId) &&
+      Array.isArray(startingListEntries)
+    ) {
+      return startingListEntries.length;
+    }
+    return 0;
+  }
+
+  function filterLabelThisEventFighters(totalUrl, n) {
+    if (!totalUrl) return "This Event Fighters · all";
+    var pool = countStartingListSizeActiveEvent();
+    var denom = pool > 0 ? pool : totalUrl;
+    return "This Event Fighters · " + n + " / " + denom;
+  }
+
   function updateFilterMainButtonLabel() {
     var triggers = [filterMainBtn, filterMainBtnEvents].filter(Boolean);
     if (!triggers.length) return;
 
     var n = countFilterIdsForMainButton();
     var tab = getCmTabFromUrl();
-    var totalUrl =
-      tab === CM_TAB_EVENTS
-        ? countEventsFilterIdsInUrl()
-        : countSlugFilterIdsInUrl();
+    var totalUrlEvents = countEventsFilterIdsInUrl();
+    var totalUrlSlug = countSlugFilterIdsInUrl();
+    var poolActive = countStartingListSizeActiveEvent();
 
     for (var ti = 0; ti < triggers.length; ti++) {
       var btn = triggers[ti];
       var lab = btn.querySelector(".mm-filter-main-btn__label");
       btn.setAttribute("aria-expanded", filterPanelOpen ? "true" : "false");
       if (filterPanelOpen) {
-        if (lab) lab.textContent = "Hide";
+        if (lab) lab.textContent = "Hide Filter";
         btn.setAttribute(
           "aria-label",
-          "Collapse filter panel without applying changes — use Apply Filter to save."
+          "Hide Filter — collapse panel without applying; use Apply Filter to save."
         );
         btn.title =
-          "Collapse without applying: list and schedule stay as last Apply Filter.";
+          "Hide Filter: closes without saving. List and schedule stay as after last Apply Filter.";
         continue;
       }
       if (lab) {
-        if (tab === CM_TAB_EVENTS) {
-          lab.textContent =
-            totalUrl > 0 ? "Filter · " + totalUrl : "Filter · all";
-        } else {
-          lab.textContent =
-            totalUrl > 0 ? "Filter · " + n : "Filter · all";
+        if (btn === filterMainBtnEvents && tab === CM_TAB_EVENTS) {
+          lab.textContent = filterLabelEventsFightersCount(totalUrlEvents);
+        } else if (btn === filterMainBtn && tab !== CM_TAB_EVENTS) {
+          lab.textContent = filterLabelThisEventFighters(totalUrlSlug, n);
         }
       }
       if (tab === CM_TAB_EVENTS) {
+        if (btn !== filterMainBtnEvents) continue;
         btn.setAttribute(
           "aria-label",
           n > 0
-            ? "Open filter — URL has " + n + " athlete(s) selected."
-            : "Open filter — none selected in URL; all athletes shown."
+            ? "Open filter — URL has " + n + " fighter(s) selected (all events)."
+            : "Open filter — none selected in URL; all fighters shown."
         );
         btn.title =
           n > 0
             ? "URL has " +
               n +
-              " athlete(s) (all events). Click to edit."
-            : "No filter in URL — all visible. Click to pick athletes.";
+              " fighter(s) across all events. Click to edit."
+            : "No filter in URL — all visible. Click to pick fighters.";
       } else {
+        if (btn !== filterMainBtn) continue;
         btn.setAttribute(
           "aria-label",
           n > 0
-            ? "Open filter — for this event, " + n + " of " + totalUrl + " from URL are active."
-            : totalUrl > 0
+            ? poolActive > 0
+              ? "Open filter — for this event, " +
+                n +
+                " of " +
+                poolActive +
+                " athletes on the starting list."
+              : "Open filter — for this event, " +
+                n +
+                " fighter(s) from URL match the starting list."
+            : totalUrlSlug > 0
               ? "Open filter — URL has " +
-                totalUrl +
-                " athlete(s), none on this event's list."
-              : "Open filter — none in URL; all athletes shown."
+                totalUrlSlug +
+                " fighter(s), none on this event's list."
+              : "Open filter — none in URL; all fighters shown."
         );
         btn.title =
           n > 0
-            ? "For this event, " +
-              n +
-              " of " +
-              totalUrl +
-              " athlete(s) from URL match the starting list. Click to edit."
-            : totalUrl > 0
+            ? poolActive > 0
+              ? "For this event, " +
+                n +
+                " of " +
+                poolActive +
+                " on the starting list. Click to edit."
+              : "For this event, " +
+                n +
+                " fighter(s) from URL match the starting list. Click to edit."
+            : totalUrlSlug > 0
               ? "URL has " +
-                totalUrl +
-                " athlete(s), but none are on this event's list."
-              : "No filter in URL — all visible. Click to pick athletes.";
+                totalUrlSlug +
+                " fighter(s), but none are on this event's list."
+              : "No filter in URL — all visible. Click to pick fighters.";
       }
     }
   }
@@ -2583,6 +2796,7 @@
 
   function closeFilterPanel() {
     filterPanelOpen = false;
+    setEventsAggregateFilterLoadingUi(false);
     closeClubJumpDropdown();
     setFilterMobileBarVisible(false);
     if (filterRootEl) {
@@ -2613,15 +2827,9 @@
     return order;
   }
 
-  function applyFilterFromPanel() {
-    var ids = collectCheckedPublicIds();
-    if (getCmTabFromUrl() === CM_TAB_EVENTS) {
-      setEventsFilterQueryInUrl(ids);
-    } else {
-      setSlugFilterQueryInUrl(ids);
-    }
+  function closeFilterPanelAndRefreshViews(tab) {
     closeFilterPanel();
-    if (getCmTabFromUrl() === CM_TAB_EVENTS) {
+    if (tab === CM_TAB_EVENTS) {
       refreshEventsListVisibility();
     } else {
       if (lastFightsData) {
@@ -2629,6 +2837,52 @@
       }
       refreshHarmonogram();
     }
+  }
+
+  function applyFilterFromPanel() {
+    var tab = getCmTabFromUrl();
+    var ids = collectCheckedPublicIds();
+    if (tab === CM_TAB_EVENTS) {
+      setEventsFilterQueryInUrl(ids);
+    } else {
+      setSlugFilterQueryInUrl(ids);
+    }
+    closeFilterPanelAndRefreshViews(tab);
+  }
+
+  /**
+   * Clear filter URL for current tab (fights: only removes IDs on this event's list
+   * when applicable), sync checkboxes, close panel — same outcome as Apply with none selected.
+   */
+  function applyFilterClearFromPanel() {
+    var tab = getCmTabFromUrl();
+    if (
+      (tab === CM_TAB_FIGHTS || tab === CM_TAB_HARMONOGRAM) &&
+      evSlug &&
+      startingListEntries &&
+      startingListEntries.length
+    ) {
+      var inEvent = Object.create(null);
+      for (var ci = 0; ci < startingListEntries.length; ci++) {
+        inEvent[startingListEntries[ci].publicId] = true;
+      }
+      var urlSet = getSlugFilterIdSetFromUrl();
+      if (urlSet) {
+        var remaining = [];
+        for (var k in urlSet) {
+          if (!inEvent[k]) remaining.push(k);
+        }
+        setSlugFilterQueryInUrl(remaining);
+      } else {
+        setSlugFilterQueryInUrl([]);
+      }
+    } else if (tab === CM_TAB_EVENTS) {
+      setEventsFilterQueryInUrl([]);
+    } else {
+      setSlugFilterQueryInUrl([]);
+    }
+    syncFilterCheckboxesFromUrl();
+    closeFilterPanelAndRefreshViews(tab);
   }
 
   function fetchHtml(path) {
@@ -2658,12 +2912,20 @@
       return Promise.resolve(startingListEntries);
     }
     if (startingListLoadPromise) {
-      if (filterPanelOpen && filterPanelStatusEl) {
+      if (
+        filterPanelOpen &&
+        filterPanelStatusEl &&
+        getCmTabFromUrl() !== CM_TAB_EVENTS
+      ) {
         filterPanelStatusEl.textContent = "Loading starting lists…";
       }
       return startingListLoadPromise;
     }
-    if (filterPanelOpen && filterPanelStatusEl) {
+    if (
+      filterPanelOpen &&
+      filterPanelStatusEl &&
+      getCmTabFromUrl() !== CM_TAB_EVENTS
+    ) {
       filterPanelStatusEl.textContent = "Loading starting lists…";
     }
     startingListLoadPromise = fetchHtml(startingListsPath(evSlug.slug))
@@ -2695,11 +2957,15 @@
 
   function onFilterPanelOpenRequest() {
     if (getCmTabFromUrl() === CM_TAB_EVENTS) {
+      if (filterListRootEl) filterListRootEl.innerHTML = "";
+      hideClubJumpUI();
+      setEventsAggregateFilterLoadingUi(true);
       if (filterPanelStatusEl) {
         filterPanelStatusEl.textContent = "Loading all lists…";
       }
       ensureAggregateParticipantMaps()
         .then(function () {
+          setEventsAggregateFilterLoadingUi(false);
           if (filterPanelStatusEl) filterPanelStatusEl.textContent = "";
           var merged = buildAggregateFilterEntries();
           if (!merged.length) {
@@ -2709,6 +2975,7 @@
           syncFilterCheckboxesFromUrl();
         })
         .catch(function (err) {
+          setEventsAggregateFilterLoadingUi(false);
           if (filterPanelStatusEl) {
             filterPanelStatusEl.textContent =
               "Failed to load lists: " +
@@ -2794,13 +3061,31 @@
     listEl.innerHTML = "";
 
     var idSet = getSlugFilterIdSetFromUrl();
-    var queue = data.fightQueueStatuses || {};
-    var allRows = (data.result || []).slice();
+    var queue = (data && data.fightQueueStatuses) || {};
+    var allRows = (
+      data && data.result && Array.isArray(data.result) ? data.result : []
+    ).slice();
     allRows.sort(function (a, b) {
       return (
         sortKeyStartTime(a.startTime) - sortKeyStartTime(b.startTime)
       );
     });
+
+    if (!allRows.length) {
+      var emptyF = document.createElement("p");
+      emptyF.className = "mm-muted";
+      emptyF.textContent = MSG_FIGHTS_NOT_READY;
+      listEl.appendChild(emptyF);
+      fightsTabStats.shown = 0;
+      fightsTabStats.total = 0;
+      fightsTabSecondsLeft = getFightsRefreshPeriodSec();
+      updateFightsTabLabel();
+      if (toolbarEl) {
+        toolbarEl.classList.add("is-hidden");
+        toolbarEl.textContent = "";
+      }
+      return;
+    }
 
     var rows = allRows.filter(function (row) {
       return fightMatchesFilter(row, idSet);
@@ -2986,34 +3271,10 @@
   }
 
   if (filterClearAllBtn) {
-    filterClearAllBtn.addEventListener("click", function () {
-      var tab = getCmTabFromUrl();
-      if (
-        (tab === CM_TAB_FIGHTS || tab === CM_TAB_HARMONOGRAM) &&
-        evSlug &&
-        startingListEntries &&
-        startingListEntries.length
-      ) {
-        var inEvent = Object.create(null);
-        for (var ci = 0; ci < startingListEntries.length; ci++) {
-          inEvent[startingListEntries[ci].publicId] = true;
-        }
-        var urlSet = getSlugFilterIdSetFromUrl();
-        if (urlSet) {
-          var remaining = [];
-          for (var k in urlSet) {
-            if (!inEvent[k]) remaining.push(k);
-          }
-          setSlugFilterQueryInUrl(remaining);
-        }
-        syncFilterCheckboxesFromUrl();
-        if (lastFightsData) renderFights(lastFightsData);
-        refreshHarmonogram();
-        applyFilterPanelListVisibility();
-        return;
-      }
-      clearAllMemberFilterCheckboxes();
-    });
+    filterClearAllBtn.addEventListener("click", applyFilterClearFromPanel);
+  }
+  if (filterClearAllBtnMobile) {
+    filterClearAllBtnMobile.addEventListener("click", applyFilterClearFromPanel);
   }
   if (filterOnlySelectedCb) {
     filterOnlySelectedCb.addEventListener("change", function () {

@@ -555,31 +555,6 @@ body {
   min-width: 0;
 }
 
-.mm-cm-tab.mm-cm-lane-badge-host {
-  position: relative;
-}
-
-.mm-cm-lane-badge-wrap {
-  position: absolute;
-  top: 0.125rem;
-  right: 0.2rem;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 13px;
-  height: 13px;
-  pointer-events: none;
-}
-
-.mm-cm-lane-badge-wrap.is-hidden {
-  display: none !important;
-}
-
-.mm-filter-main-btn.mm-cm-lane-badge-host {
-  position: relative;
-}
-
 .mm-cm-tab {
   min-width: 0;
   padding: 0.5rem 0.6rem;

@@ -1068,110 +1068,6 @@
         if (hw) paintEventCardLaneStrip(hw, idStr);
       }
     }
-    refreshCmToolbarLaneBadges();
-  }
-
-  function ensureTabLaneBadgeWrap(btn) {
-    if (!btn) return null;
-    var w = btn.querySelector(".mm-cm-lane-badge-wrap");
-    if (!w) {
-      btn.classList.add("mm-cm-lane-badge-host");
-      w = document.createElement("span");
-      w.className = "mm-cm-lane-badge-wrap is-hidden";
-      w.setAttribute("aria-hidden", "true");
-      var dot = document.createElement("span");
-      dot.className = "mm-event-lane";
-      w.appendChild(dot);
-      btn.appendChild(w);
-    }
-    return w;
-  }
-
-  function paintTabLaneBadgeWrap(wrap, lane, mod, labels) {
-    if (!wrap) return;
-    var dot = wrap.querySelector(".mm-event-lane");
-    if (!dot) return;
-    if (lane == null) {
-      wrap.classList.add("is-hidden");
-      dot.removeAttribute("title");
-      return;
-    }
-    wrap.classList.remove("is-hidden");
-    if (lane.error) {
-      dot.className =
-        "mm-event-lane mm-event-lane--" + mod + " mm-event-lane--error";
-      var st = lane.status;
-      dot.setAttribute(
-        "title",
-        st
-          ? labels.tErr + " (HTTP " + st + ")."
-          : labels.tErr + " (network or unknown error)."
-      );
-    } else {
-      dot.className =
-        "mm-event-lane mm-event-lane--" +
-        mod +
-        (lane.has ? " mm-event-lane--filled" : " mm-event-lane--outline");
-      dot.setAttribute("title", lane.has ? labels.tFill : labels.tOut);
-    }
-  }
-
-  function hideTabLaneBadgeWrap(btn) {
-    var w = btn && btn.querySelector(".mm-cm-lane-badge-wrap");
-    if (w) {
-      w.classList.add("is-hidden");
-      var d = w.querySelector(".mm-event-lane");
-      if (d) d.removeAttribute("title");
-    }
-  }
-
-  /**
-   * On Fights / Harmonogram tabs only: lane dots on Filter (starting),
-   * Schedule tab (schedules), Fights tab (fights) — same semantics as event cards.
-   */
-  function refreshCmToolbarLaneBadges() {
-    var tab = getCmTabFromUrl();
-    var onFH = tab === CM_TAB_FIGHTS || tab === CM_TAB_HARMONOGRAM;
-    var c =
-      onFH && evSlug && eventNumericId
-        ? eventCache[eventNumericId]
-        : null;
-    if (!onFH || !c) {
-      hideTabLaneBadgeWrap(filterMainBtn);
-      hideTabLaneBadgeWrap(tabFightsBtn);
-      hideTabLaneBadgeWrap(tabHarmonogramBtn);
-      return;
-    }
-    paintTabLaneBadgeWrap(
-      ensureTabLaneBadgeWrap(filterMainBtn),
-      c.laneStarting,
-      "starting",
-      {
-        tFill: "Starting list: athletes present.",
-        tOut: "Starting list: no athletes (server response).",
-        tErr: "Starting list: request failed",
-      }
-    );
-    paintTabLaneBadgeWrap(
-      ensureTabLaneBadgeWrap(tabHarmonogramBtn),
-      c.laneSchedules,
-      "schedules",
-      {
-        tFill: "Schedule: API returned schedules.",
-        tOut: "Schedule: API returned no schedules.",
-        tErr: "Schedule: request failed",
-      }
-    );
-    paintTabLaneBadgeWrap(
-      ensureTabLaneBadgeWrap(tabFightsBtn),
-      c.laneFights,
-      "fights",
-      {
-        tFill: "Fights: API returned at least one fight.",
-        tOut: "Fights: API returned no fights.",
-        tErr: "Fights: request failed",
-      }
-    );
   }
 
   function buildEventThumbPlaceholder() {
@@ -1565,7 +1461,6 @@
       if (tabFightsLabelEl) tabFightsLabelEl.textContent = "Fights";
       else tabFightsBtn.textContent = "Fights";
       tabFightsBtn.setAttribute("aria-label", "Fights tab");
-      refreshCmToolbarLaneBadges();
       return;
     }
     var s = fightsTabStats.shown;
@@ -1587,7 +1482,6 @@
       aria += ", next refresh in " + fightsTabSecondsLeft + " seconds";
     }
     tabFightsBtn.setAttribute("aria-label", aria);
-    refreshCmToolbarLaneBadges();
   }
 
   function updateFilterRootVisibility() {
@@ -2024,7 +1918,6 @@
       refreshHarmonogram();
     }
     updatePollingForTab();
-    refreshCmToolbarLaneBadges();
   }
 
   function setCmTab(tab) {
@@ -2651,9 +2544,11 @@
   }
 
   function filterLabelEventsFightersCount(totalSelected) {
-    if (!totalSelected) return "All Fighters";
+    if (!totalSelected) return "All Participants";
     var base =
-      totalSelected === 1 ? "1 Fighter" : totalSelected + " Fighters";
+      totalSelected === 1
+        ? "1 Participant"
+        : totalSelected + " Participants";
     var pool = countAggregateFilterPoolSize();
     if (pool > 0) {
       return base + " from " + pool;
@@ -2679,10 +2574,10 @@
   }
 
   function filterLabelThisEventFighters(totalUrl, n) {
-    if (!totalUrl) return "This Event Fighters · all";
+    if (!totalUrl) return "This Event Participants · all";
     var pool = countStartingListSizeActiveEvent();
     var denom = pool > 0 ? pool : totalUrl;
-    return "This Event Fighters · " + n + " / " + denom;
+    return "This Event Participants · " + n + " / " + denom;
   }
 
   function updateFilterMainButtonLabel() {
@@ -2721,15 +2616,17 @@
         btn.setAttribute(
           "aria-label",
           n > 0
-            ? "Open filter — URL has " + n + " fighter(s) selected (all events)."
-            : "Open filter — none selected in URL; all fighters shown."
+            ? "Open filter — URL has " +
+              n +
+              " participant(s) selected (all events)."
+            : "Open filter — none selected in URL; all participants shown."
         );
         btn.title =
           n > 0
             ? "URL has " +
               n +
-              " fighter(s) across all events. Click to edit."
-            : "No filter in URL — all visible. Click to pick fighters.";
+              " participant(s) across all events. Click to edit."
+            : "No filter in URL — all visible. Click to pick participants.";
       } else {
         if (btn !== filterMainBtn) continue;
         btn.setAttribute(
@@ -2743,12 +2640,12 @@
                 " athletes on the starting list."
               : "Open filter — for this event, " +
                 n +
-                " fighter(s) from URL match the starting list."
+                " participant(s) from URL match the starting list."
             : totalUrlSlug > 0
               ? "Open filter — URL has " +
                 totalUrlSlug +
-                " fighter(s), none on this event's list."
-              : "Open filter — none in URL; all fighters shown."
+                " participant(s), none on this event's list."
+              : "Open filter — none in URL; all participants shown."
         );
         btn.title =
           n > 0
@@ -2760,12 +2657,12 @@
                 " on the starting list. Click to edit."
               : "For this event, " +
                 n +
-                " fighter(s) from URL match the starting list. Click to edit."
+                " participant(s) from URL match the starting list. Click to edit."
             : totalUrlSlug > 0
               ? "URL has " +
                 totalUrlSlug +
-                " fighter(s), but none are on this event's list."
-              : "No filter in URL — all visible. Click to pick fighters.";
+                " participant(s), but none are on this event's list."
+              : "No filter in URL — all visible. Click to pick participants.";
       }
     }
   }

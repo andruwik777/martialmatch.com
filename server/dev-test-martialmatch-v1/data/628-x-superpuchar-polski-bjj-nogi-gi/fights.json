@@ -1,0 +1,300 @@
+{
+    "fightQueueStatuses": {
+        "2529": {
+            "fightId": 698056,
+            "status": 2
+        },
+        "2530": {
+            "fightId": 698077,
+            "status": 2
+        },
+        "2531": {
+            "fightId": 698070,
+            "status": 1
+        }
+    },
+    "result": [
+        {
+            "publicFight": {
+                "bracketLevel": 3,
+                "bracketSize": 8,
+                "bracketType": 1,
+                "category": "Gi; senior; niebieski; -73,50 kg",
+                "fightNumber": 109,
+                "firstCompetitor": {
+                    "academy": "Rio Grappling Club",
+                    "academyId": 298,
+                    "branch": "O\u0142awa",
+                    "firstName": "Mateusz",
+                    "id": 275911,
+                    "lastName": "Paw\u0142owski",
+                    "nationality": "PL",
+                    "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "id": 698056,
+                "matId": 2529,
+                "parameterId": 219551,
+                "roundName": "final",
+                "secondCompetitor": {
+                    "academy": "Animmals",
+                    "academyId": 765,
+                    "branch": "Zawiercie",
+                    "firstName": "Mateusz",
+                    "id": 283328,
+                    "lastName": "Tyrkiel",
+                    "nationality": "PL",
+                    "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "winnerCompetitor": null
+            },
+            "startTime": "2026-03-28 11:23:31"
+        },
+        {
+            "publicFight": {
+                "bracketLevel": 1,
+                "bracketSize": 2,
+                "bracketType": 1,
+                "category": "Gi; senior; purpurowy; -85,50 kg",
+                "fightNumber": 105,
+                "firstCompetitor": {
+                    "academy": "Academia Gorila",
+                    "academyId": 9,
+                    "branch": "Bielsko-Bia\u0142a",
+                    "firstName": "Nikodem",
+                    "id": 273836,
+                    "lastName": "Papla",
+                    "nationality": "PL",
+                    "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "id": 698077,
+                "matId": 2530,
+                "parameterId": 219541,
+                "roundName": "final",
+                "secondCompetitor": {
+                    "academy": "BJJ Ikizama Club",
+                    "academyId": 632,
+                    "branch": "Boruszowice",
+                    "firstName": "Mateusz",
+                    "id": 277996,
+                    "lastName": "Schutz",
+                    "nationality": "PL",
+                    "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "winnerCompetitor": null
+            },
+            "startTime": "2026-03-28 11:23:31"
+        },
+        {
+            "publicFight": {
+                "bracketLevel": 2,
+                "bracketSize": 4,
+                "bracketType": 1,
+                "category": "Gi; senior; bia\u0142y; -79,50 kg",
+                "fightNumber": 111,
+                "firstCompetitor": {
+                    "academy": "Draculino Karvin\u00e1",
+                    "academyId": 2731,
+                    "branch": "Karvina",
+                    "firstName": "Ondrej",
+                    "id": 281210,
+                    "lastName": "Kramny",
+                    "nationality": "CZ",
+                    "publicId": "d8e1df39-ff3e-459e-94d7-b9cf1a1a6bf6",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "id": 698070,
+                "matId": 2531,
+                "parameterId": 219558,
+                "roundName": "final",
+                "secondCompetitor": {
+                    "academy": "Animmals",
+                    "academyId": 765,
+                    "branch": "Zawiercie",
+                    "firstName": "Bartosz",
+                    "id": 272159,
+                    "lastName": "Kundas",
+                    "nationality": "PL",
+                    "publicId": "283a530a-6f13-4b8e-b7af-570533c3159b",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "winnerCompetitor": null
+            },
+            "startTime": "2026-03-28 11:23:31"
+        },
+        {
+            "publicFight": {
+                "bracketLevel": 1,
+                "bracketSize": 2,
+                "bracketType": 1,
+                "category": "Gi; senior; purpurowy; +97,5 kg",
+                "fightNumber": 108,
+                "firstCompetitor": {
+                    "academy": "Next Level BJJ",
+                    "academyId": 10,
+                    "branch": "Wroc\u0142aw",
+                    "firstName": "Piotr",
+                    "id": 266745,
+                    "lastName": "Banaszek",
+                    "nationality": "PL",
+                    "publicId": "042825c2-2ea3-41b8-bd82-abff2d44c976",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "id": 698078,
+                "matId": 2530,
+                "parameterId": 219538,
+                "roundName": "final",
+                "secondCompetitor": {
+                    "academy": "Natal Grind Team",
+                    "academyId": 1673,
+                    "branch": "Katowice",
+                    "firstName": "Szymon",
+                    "id": 267007,
+                    "lastName": "R\u0119bisz",
+                    "nationality": "PL",
+                    "publicId": "f64de110-b2f7-4a16-a3d9-e42dcfcaf95e",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "winnerCompetitor": null
+            },
+            "startTime": "2026-03-28 11:30:31"
+        },
+        {
+            "publicFight": {
+                "bracketLevel": 2,
+                "bracketSize": 3,
+                "bracketType": 4,
+                "category": "Gi; senior; purpurowy; -79,50 kg",
+                "fightNumber": 112,
+                "firstCompetitor": {
+                    "academy": "Favela",
+                    "academyId": 2905,
+                    "branch": "Jastrz\u0119bie Zdr\u00f3j",
+                    "firstName": "Pawe\u0142",
+                    "id": 278178,
+                    "lastName": "Dubnicki",
+                    "nationality": "PL",
+                    "publicId": "41523c9c-055f-4ce3-8679-5938ee82477b",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": true,
+                        "value": 7,
+                        "verified": false
+                    }
+                },
+                "id": 698075,
+                "matId": 2531,
+                "parameterId": 219542,
+                "roundName": "2\/3",
+                "secondCompetitor": {
+                    "academy": "BJJ Ikizama Club",
+                    "academyId": 632,
+                    "branch": "Boruszowice",
+                    "firstName": "Wojciech",
+                    "id": 277990,
+                    "lastName": "Kadela",
+                    "nationality": "PL",
+                    "publicId": "b37b0f47-a4ba-4576-b588-1c28331908cc",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "winnerCompetitor": null
+            },
+            "startTime": "2026-03-28 11:28:31"
+        },
+        {
+            "publicFight": {
+                "bracketLevel": 3,
+                "bracketSize": 3,
+                "bracketType": 4,
+                "category": "Gi; senior; purpurowy; -79,50 kg",
+                "fightNumber": 113,
+                "firstCompetitor": {
+                    "academy": "BJJ Ikizama Club",
+                    "academyId": 632,
+                    "branch": "Boruszowice",
+                    "firstName": "Wojciech",
+                    "id": 277990,
+                    "lastName": "Kadela",
+                    "nationality": "PL",
+                    "publicId": "b37b0f47-a4ba-4576-b588-1c28331908cc",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": false,
+                        "value": 4,
+                        "verified": true
+                    }
+                },
+                "id": 698076,
+                "matId": 2531,
+                "parameterId": 219542,
+                "roundName": "3\/3",
+                "secondCompetitor": {
+                    "academy": "WroxGym",
+                    "academyId": 15,
+                    "branch": "Wroc\u0142aw",
+                    "firstName": "Kacper",
+                    "id": 272429,
+                    "lastName": "Sobota",
+                    "nationality": "PL",
+                    "publicId": "03971872-a48e-4831-bf61-2b8d6da7a168",
+                    "status": {
+                        "deleted": false,
+                        "disqualified": true,
+                        "value": 7,
+                        "verified": false
+                    }
+                },
+                "winnerCompetitor": null
+            },
+            "startTime": "2026-03-28 11:35:31"
+        }
+    ]
+}

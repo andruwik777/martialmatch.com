@@ -1,1 +1,90 @@
-{"activeScheduleId":951,"schedules":[{"id":951,"name":"CONTENDER","mats":[{"id":2640,"name":"MATA 1","categories":[{"id":248320,"name":"U12 32 KG","scheduledCategoryTime":{"start":"2026-04-24 16:00:00","end":"2026-04-24 16:04:30"},"assignmentType":{"value":1,"representation":"full"}},{"id":246961,"name":"REFEREES -80 KG","scheduledCategoryTime":{"start":"2026-04-24 16:04:30","end":"2026-04-24 16:37:30"},"assignmentType":{"value":1,"representation":"full"}},{"id":248031,"name":"ABSOLUTO BLUE BELT -90","scheduledCategoryTime":{"start":"2026-04-24 16:37:30","end":"2026-04-24 16:54:00"},"assignmentType":{"value":1,"representation":"full"}},{"id":248278,"name":"ABSOLUTO BLUE BELT +90","scheduledCategoryTime":{"start":"2026-04-24 16:54:00","end":"2026-04-24 17:10:30"},"assignmentType":{"value":1,"representation":"full"}},{"id":248027,"name":"U18 60 KG","scheduledCategoryTime":{"start":"2026-04-24 17:10:30","end":"2026-04-24 17:27:00"},"assignmentType":{"value":1,"representation":"full"}},{"id":246160,"name":"U16 65 KG","scheduledCategoryTime":{"start":"2026-04-24 17:27:00","end":"2026-04-24 18:00:00"},"assignmentType":{"value":1,"representation":"full"}}]}],"sharing":1}]}
+{
+    "activeScheduleId": 951,
+    "schedules": [
+        {
+            "id": 951,
+            "mats": [
+                {
+                    "categories": [
+                        {
+                            "assignmentType": {
+                                "representation": "full",
+                                "value": 1
+                            },
+                            "id": 248320,
+                            "name": "U12 32 KG",
+                            "scheduledCategoryTime": {
+                                "end": "2026-04-24 16:04:30",
+                                "start": "2026-04-24 16:00:00"
+                            }
+                        },
+                        {
+                            "assignmentType": {
+                                "representation": "full",
+                                "value": 1
+                            },
+                            "id": 246961,
+                            "name": "REFEREES -80 KG",
+                            "scheduledCategoryTime": {
+                                "end": "2026-04-24 16:37:30",
+                                "start": "2026-04-24 16:04:30"
+                            }
+                        },
+                        {
+                            "assignmentType": {
+                                "representation": "full",
+                                "value": 1
+                            },
+                            "id": 248031,
+                            "name": "ABSOLUTO BLUE BELT -90",
+                            "scheduledCategoryTime": {
+                                "end": "2026-04-24 16:54:00",
+                                "start": "2026-04-24 16:37:30"
+                            }
+                        },
+                        {
+                            "assignmentType": {
+                                "representation": "full",
+                                "value": 1
+                            },
+                            "id": 248278,
+                            "name": "ABSOLUTO BLUE BELT +90",
+                            "scheduledCategoryTime": {
+                                "end": "2026-04-24 17:10:30",
+                                "start": "2026-04-24 16:54:00"
+                            }
+                        },
+                        {
+                            "assignmentType": {
+                                "representation": "full",
+                                "value": 1
+                            },
+                            "id": 248027,
+                            "name": "U18 60 KG",
+                            "scheduledCategoryTime": {
+                                "end": "2026-04-24 17:27:00",
+                                "start": "2026-04-24 17:10:30"
+                            }
+                        },
+                        {
+                            "assignmentType": {
+                                "representation": "full",
+                                "value": 1
+                            },
+                            "id": 246160,
+                            "name": "U16 65 KG",
+                            "scheduledCategoryTime": {
+                                "end": "2026-04-24 18:00:00",
+                                "start": "2026-04-24 17:27:00"
+                            }
+                        }
+                    ],
+                    "id": 2640,
+                    "name": "MATA 1"
+                }
+            ],
+            "name": "CONTENDER",
+            "sharing": 1
+        }
+    ]
+}

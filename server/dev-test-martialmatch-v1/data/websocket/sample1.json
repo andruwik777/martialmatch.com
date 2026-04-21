@@ -1,0 +1,52 @@
+// 2 min do konca walki, Maia Salomon win 6:0
+{
+    "blueMajorPoints": 6,
+    "bluePenaltyPoints": 0,
+    "bracketLevel": 3,
+    "category": "Absoluto; Adult women",
+    "channel": "scoreboard:mat:2592",
+    "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Warszawa",
+        "firstName": "Irina",
+        "id": 292583,
+        "lastName": "Pauchun",
+        "nationality": "PL",
+        "parameterId": 227082,
+        "publicId": "73870c14-c901-4acb-a754-15f7718a2e68",
+        "status": {
+            "deleted": false,
+            "disqualified": false,
+            "value": 4,
+            "verified": true
+        }
+    },
+    "competitor2": {
+        "academy": "Berserker`s Team",
+        "academyId": 3,
+        "branch": "Flow Fighters Academy",
+        "firstName": "Maja",
+        "id": 289965,
+        "lastName": "Salamon",
+        "nationality": "PL",
+        "parameterId": 227082,
+        "publicId": "8471a55e-d338-4587-9c2b-042dda8026fb",
+        "status": {
+            "deleted": false,
+            "disqualified": false,
+            "value": 4,
+            "verified": true
+        }
+    },
+    "fightId": 717542,
+    "fightStatus": "ongoing",
+    "internalTime": 120,
+    "redMajorPoints": 0,
+    "redPenaltyPoints": 0,
+    "roundName": "final",
+    "switchedCompetitors": false,
+    "timerClass": "timer-started",
+    "timerMode": "regularTime",
+    "type": "submissionFighting2"
+}

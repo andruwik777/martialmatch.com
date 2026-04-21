@@ -112,7 +112,10 @@
   var lastSchedulesPayload = null;
 
   var filterPanelOpen = false;
-  /** @type {Array<{publicId:string,name:string,category:string,clubText:string,categoryParameterId:number|null}>|null} */
+  /**
+   * Flattened rows for the active event (derived from eventCache.startingListsPublic).
+   * @type {Array<{publicId:string,name:string,category:string,categoryParameterId:number|null,academyName:string,academyBranch:string,academyId:number,clubDisplayLine:string,nationality:string,isDisqualifiedForNoPayment:boolean}>|null}
+   */
   var startingListEntries = null;
   var startingListLoadPromise = null;
 
@@ -205,11 +208,49 @@
     return name || "—";
   }
 
+  /**
+   * Canonical club line: "academyName / academyBranch" (aligned with starting-list JSON).
+   */
+  function formatAcademyClubLine(academyName, academyBranch) {
+    var a = String(academyName != null ? academyName : "")
+      .replace(/\s+/g, " ")
+      .trim();
+    var b = String(academyBranch != null ? academyBranch : "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (a && b) return a + " / " + b;
+    if (a) return a;
+    if (b) return b;
+    return "";
+  }
+
+  /**
+   * Lowercase + Polish letters to ASCII (for stable filter grouping keys).
+   */
+  function polishAsciiLowerCore(s) {
+    var t = String(s != null ? s : "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim();
+    var from = "ąćęłńóśźż";
+    var to = "acelnoszz";
+    var out = "";
+    for (var i = 0; i < t.length; i++) {
+      var ch = t.charAt(i);
+      var idx = from.indexOf(ch);
+      out += idx >= 0 ? to.charAt(idx) : ch;
+    }
+    return out;
+  }
+
+  /** Branch-only normalization for academyId + branch composite group keys. */
+  function normalizeAcademyBranchForGrouping(branch) {
+    return polishAsciiLowerCore(branch);
+  }
+
   function competitorClubLine(c) {
     if (!c) return "";
-    var ac = c.academy || "";
-    var br = c.branch || "";
-    return [ac, br].filter(Boolean).join(" · ");
+    return formatAcademyClubLine(c.academy, c.branch);
   }
 
   function buildAthleteRow(c, corner) {
@@ -257,12 +298,10 @@
     return wrap;
   }
 
+  /** Show schedule/API mat name as-is; fallback only when name is missing. */
   function buildMatDisplayName(matNameRaw, matId) {
-    var s = String(matNameRaw || "").trim() || "Mat " + matId;
-    s = s.replace(/^mata\s+/i, "mat ");
-    s = s.replace(/^mat\s+/i, "mat ");
-    if (!/^mat\s/i.test(s)) s = "mat " + s;
-    return s.toLowerCase();
+    var s = String(matNameRaw || "").trim();
+    return s || "Mat " + String(matId);
   }
 
   function buildMatMapFromSchedules(payload) {
@@ -329,7 +368,7 @@
   }
 
   /**
-   * @param {{ slot: object, members: Array<{name:string,clubText:string}> }} row
+   * @param {{ slot: object, members: Array<{name:string,clubDisplayLine:string}> }} row
    */
   function buildHarmonogramCard(row) {
     var slot = row.slot;
@@ -364,7 +403,7 @@
       strong.className = "mm-hg-card__athlete-name";
       strong.textContent = m.name || "—";
       line.appendChild(strong);
-      var club = (m.clubText || "").trim();
+      var club = String(m.clubDisplayLine || "").trim();
       if (club && club !== "—") {
         var br = document.createElement("span");
         br.className = "mm-hg-card__athlete-club";
@@ -1298,10 +1337,11 @@
 
   /**
    * MartialMatch public API: GET /api/events/{id}/starting-lists/public
+   * Flattens the API JSON into UI rows (cache stores the raw body separately).
    * @param {*} body Parsed JSON
-   * @returns {Array<{publicId:string,name:string,category:string,clubText:string,categoryParameterId:number|null}>}
+   * @returns {Array<{publicId:string,name:string,category:string,categoryParameterId:number|null,academyName:string,academyBranch:string,academyId:number,clubDisplayLine:string,nationality:string,isDisqualifiedForNoPayment:boolean}>}
    */
-  function normalizeStartingListFromApi(body) {
+  function flattenStartingListFromPublicBody(body) {
     var out = [];
     if (!body || typeof body !== "object") return out;
     var cats = body.categories;
@@ -1328,23 +1368,35 @@
         var ln = String(row.lastName != null ? row.lastName : "").trim();
         var name = (fn + " " + ln).replace(/\s+/g, " ").trim();
         if (!name) name = "—";
-        var academy = String(row.academy != null ? row.academy : "")
+        var academyName = String(row.academy != null ? row.academy : "")
           .replace(/\s+/g, " ")
           .trim();
-        var branch = String(row.branch != null ? row.branch : "")
+        var academyBranch = String(row.branch != null ? row.branch : "")
           .replace(/\s+/g, " ")
           .trim();
-        var clubText = academy;
-        if (branch && branch !== academy) {
-          clubText = academy ? academy + " — " + branch : branch;
-        }
-        if (!clubText) clubText = "—";
+        var aidRaw = row.academyId;
+        var academyId =
+          aidRaw != null && isFinite(Number(aidRaw))
+            ? Math.round(Number(aidRaw))
+            : 0;
+        var clubDisplayLine =
+          formatAcademyClubLine(academyName, academyBranch) || "—";
+        var nationality = String(
+          row.nationality != null ? row.nationality : ""
+        ).trim();
         out.push({
           publicId: publicId,
           name: name,
           category: category,
-          clubText: clubText,
           categoryParameterId: categoryParameterId,
+          academyName: academyName || "—",
+          academyBranch: academyBranch,
+          academyId: academyId,
+          clubDisplayLine: clubDisplayLine,
+          nationality: nationality,
+          isDisqualifiedForNoPayment: Boolean(
+            row.isDisqualifiedForNoPayment
+          ),
         });
       }
     }
@@ -1353,26 +1405,26 @@
 
   /**
    * @param {string|number} numericId Event API id
-   * @returns {Promise<Array<{publicId:string,name:string,category:string,clubText:string,categoryParameterId:number|null}>>}
+   * @returns {Promise<object|null>} Parsed starting-lists/public JSON (full body)
    */
-  function fetchStartingListEntries(numericId) {
+  function fetchStartingListPublicBody(numericId) {
     return fetch(cfg.url(startingListsPublicPath(numericId)), {
       credentials: "omit",
       headers: { Accept: "application/json,*/*" },
-    }).then(function (res) {
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      return res.text();
-    }).then(function (text) {
-      var trimmed = (text || "").trim();
-      if (!trimmed) return [];
-      var parsed;
-      try {
-        parsed = JSON.parse(trimmed);
-      } catch (e) {
-        throw new Error("Invalid starting list JSON");
-      }
-      return normalizeStartingListFromApi(parsed);
-    });
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.text();
+      })
+      .then(function (text) {
+        var trimmed = (text || "").trim();
+        if (!trimmed) return null;
+        try {
+          return JSON.parse(trimmed);
+        } catch (e) {
+          throw new Error("Invalid starting list JSON");
+        }
+      });
   }
 
   /**
@@ -1685,9 +1737,10 @@
     lastSchedulesPayload = c.schedulesPayload || null;
     lastFightsData = c.fightsData || null;
     matNamesById = c.matNamesById || Object.create(null);
-    startingListEntries = Array.isArray(c.startingListEntries)
-      ? c.startingListEntries
-      : null;
+    startingListEntries =
+      c.startingListsPublic != null
+        ? flattenStartingListFromPublicBody(c.startingListsPublic)
+        : null;
     startingListLoadPromise = null;
   }
 
@@ -1698,7 +1751,7 @@
     var pack = {
       sched: null,
       fd: null,
-      entries: null,
+      startingBody: null,
       errSched: null,
       errFights: null,
       errStart: null,
@@ -1723,27 +1776,25 @@
       })
       .then(function () {
         var prev = eventCache[nid];
-        var cachedList =
-          prev && Array.isArray(prev.startingListEntries)
-            ? prev.startingListEntries
-            : null;
-        if (cachedList) {
-          pack.entries = cachedList;
+        if (prev && prev.startingListsPublic != null) {
+          pack.startingBody = prev.startingListsPublic;
           return;
         }
-        return fetchStartingListEntries(nid)
-          .then(function (entries) {
-            pack.entries = entries;
+        return fetchStartingListPublicBody(nid)
+          .then(function (body) {
+            pack.startingBody = body;
           })
           .catch(function (err) {
             pack.errStart = httpStatusFromFetchError(err);
-            pack.entries = null;
+            pack.startingBody = null;
           });
       })
       .then(function () {
         var prev = eventCache[nid] || {};
         var entriesList =
-          Array.isArray(pack.entries) ? pack.entries : [];
+          pack.errStart != null
+            ? []
+            : flattenStartingListFromPublicBody(pack.startingBody || null);
         var mats = pack.sched
           ? buildMatMapFromSchedules(pack.sched)
           : prev.matNamesById || Object.create(null);
@@ -1762,8 +1813,8 @@
           tags: ev ? ev.tags || [] : prev.tags || [],
           schedulesPayload: pack.sched,
           fightsData: pack.fd,
-          startingListEntries:
-            pack.errStart != null ? null : entriesList,
+          startingListsPublic:
+            pack.errStart != null ? null : pack.startingBody,
           matNamesById: mats,
           loaded: true,
           laneStarting:
@@ -1882,16 +1933,18 @@
     if (!parsedEventsList.length) {
       return Promise.reject(new Error("No event list"));
     }
-    function applyStartingListAggregate(ev, entries) {
+    function applyStartingListAggregate(ev, body) {
+      if (!eventCache[ev.numericId]) {
+        eventCache[ev.numericId] = {};
+      }
+      eventCache[ev.numericId].startingListsPublic = body;
+      delete eventCache[ev.numericId].startingListEntries;
+      var entries = flattenStartingListFromPublicBody(body || null);
       var map = Object.create(null);
       for (var j = 0; j < entries.length; j++) {
         map[entries[j].publicId] = true;
       }
       eventParticipantIdMap[ev.numericId] = map;
-      if (!eventCache[ev.numericId]) {
-        eventCache[ev.numericId] = {};
-      }
-      eventCache[ev.numericId].startingListEntries = entries;
       eventCache[ev.numericId].laneStarting = laneOk(entries.length > 0);
       refreshLanesForNumericId(ev.numericId);
     }
@@ -1906,13 +1959,13 @@
               "Starting lists: " + (i + 1) + " / " + n + "…";
           }
           var cached = eventCache[ev.numericId];
-          if (cached && Array.isArray(cached.startingListEntries)) {
-            applyStartingListAggregate(ev, cached.startingListEntries);
+          if (cached && cached.startingListsPublic != null) {
+            applyStartingListAggregate(ev, cached.startingListsPublic);
             return Promise.resolve();
           }
-          return fetchStartingListEntries(ev.numericId)
-            .then(function (entries) {
-              applyStartingListAggregate(ev, entries);
+          return fetchStartingListPublicBody(ev.numericId)
+            .then(function (body) {
+              applyStartingListAggregate(ev, body);
             })
             .catch(function (err) {
               eventParticipantIdMap[ev.numericId] = Object.create(null);
@@ -1923,6 +1976,7 @@
               if (!eventCache[ev.numericId]) {
                 eventCache[ev.numericId] = {};
               }
+              delete eventCache[ev.numericId].startingListsPublic;
               delete eventCache[ev.numericId].startingListEntries;
               eventCache[ev.numericId].laneStarting = laneHttpError(
                 httpStatusFromFetchError(err)
@@ -1946,8 +2000,8 @@
     for (var e = 0; e < parsedEventsList.length; e++) {
       var ev = parsedEventsList[e];
       var c = eventCache[ev.numericId];
-      if (!c || !c.startingListEntries) continue;
-      var entList = c.startingListEntries;
+      if (!c || c.startingListsPublic == null) continue;
+      var entList = flattenStartingListFromPublicBody(c.startingListsPublic);
       for (var k = 0; k < entList.length; k++) {
         var ent = entList[k];
         if (!byPid[ent.publicId]) {
@@ -2123,23 +2177,55 @@
     return enCollator.compare(ka.last, kb.last);
   }
 
+  /**
+   * Group key: academyId + normalized branch (ASCII, lowercase) when id > 0;
+   * else normalized full display line so similar strings merge without id.
+   */
+  function clubGroupKeyFromEntry(e) {
+    var id = e && e.academyId;
+    var brNorm = normalizeAcademyBranchForGrouping(e && e.academyBranch);
+    if (id != null && id > 0) {
+      return "i" + String(id) + ":" + brNorm;
+    }
+    var line = (e && e.clubDisplayLine) || "—";
+    return "n:" + polishAsciiLowerCore(line);
+  }
+
+  /** Section title in filter: canonical branch spelling for id>0 groups. */
+  function filterClubSectionLabel(entry) {
+    if (!entry) return "—";
+    if (entry.academyId != null && entry.academyId > 0) {
+      return formatAcademyClubLine(
+        entry.academyName,
+        normalizeAcademyBranchForGrouping(entry.academyBranch)
+      );
+    }
+    return entry.clubDisplayLine || "—";
+  }
+
   function groupEntriesByClub(entries) {
     /** @type {Record<string, typeof entries>} */
     var byClub = Object.create(null);
     for (var i = 0; i < entries.length; i++) {
       var e = entries[i];
-      var key = e.clubText || "—";
+      var key = clubGroupKeyFromEntry(e);
       if (!byClub[key]) byClub[key] = [];
       byClub[key].push(e);
     }
-    var clubNames = Object.keys(byClub);
-    clubNames.sort(function (a, b) {
-      return enCollator.compare(a, b);
+    var clubKeys = Object.keys(byClub);
+    clubKeys.sort(function (a, b) {
+      return enCollator.compare(
+        filterClubSectionLabel(byClub[a][0]),
+        filterClubSectionLabel(byClub[b][0])
+      );
     });
-    for (var j = 0; j < clubNames.length; j++) {
-      byClub[clubNames[j]].sort(compareEntriesByName);
+    for (var j = 0; j < clubKeys.length; j++) {
+      byClub[clubKeys[j]].sort(compareEntriesByName);
     }
-    return { clubNames: clubNames, byClub: byClub };
+    var clubNames = clubKeys.map(function (k) {
+      return filterClubSectionLabel(byClub[k][0]);
+    });
+    return { clubKeys: clubKeys, clubNames: clubNames, byClub: byClub };
   }
 
   function unbindClubJumpOutside() {
@@ -2402,7 +2488,8 @@
     if (!filterListRootEl) return;
     filterListRootEl.innerHTML = "";
     var grouped = groupEntriesByClub(entries);
-    for (var c = 0; c < grouped.clubNames.length; c++) {
+    for (var c = 0; c < grouped.clubKeys.length; c++) {
+      var clubKey = grouped.clubKeys[c];
       var clubName = grouped.clubNames[c];
       var section = document.createElement("section");
       section.className = "mm-filter-club";
@@ -2435,14 +2522,16 @@
       hn.appendChild(lab);
       section.appendChild(hn);
 
-      var list = grouped.byClub[clubName];
+      var list = grouped.byClub[clubKey];
       for (var r = 0; r < list.length; r++) {
         var item = list[r];
         var row = document.createElement("div");
         row.className = "mm-filter-row";
         row.setAttribute(
           "data-mm-filter-search",
-          normalizeForFilterSearch(item.name)
+          normalizeForFilterSearch(
+            item.name + " " + (item.clubDisplayLine || "")
+          )
         );
 
         var textWrap = document.createElement("div");
@@ -2524,8 +2613,8 @@
     var nid = eventNumericId;
     var c = eventCache[nid];
     var entries = null;
-    if (c && Array.isArray(c.startingListEntries)) {
-      entries = c.startingListEntries;
+    if (c && c.startingListsPublic != null) {
+      entries = flattenStartingListFromPublicBody(c.startingListsPublic);
     } else if (
       evSlug &&
       String(evSlug.numericId) === String(nid) &&
@@ -2588,8 +2677,8 @@
   function countStartingListSizeActiveEvent() {
     if (!eventNumericId) return 0;
     var c = eventCache[eventNumericId];
-    if (c && Array.isArray(c.startingListEntries)) {
-      return c.startingListEntries.length;
+    if (c && c.startingListsPublic != null) {
+      return flattenStartingListFromPublicBody(c.startingListsPublic).length;
     }
     if (
       evSlug &&
@@ -2825,8 +2914,10 @@
       return Promise.reject(new Error("Missing slug"));
     }
     var nid = evSlug.numericId;
-    if (eventCache[nid] && Array.isArray(eventCache[nid].startingListEntries)) {
-      startingListEntries = eventCache[nid].startingListEntries;
+    if (eventCache[nid] && eventCache[nid].startingListsPublic != null) {
+      startingListEntries = flattenStartingListFromPublicBody(
+        eventCache[nid].startingListsPublic
+      );
       refreshHarmonogram();
       return Promise.resolve(startingListEntries);
     }
@@ -2853,11 +2944,13 @@
     ) {
       filterPanelStatusEl.textContent = "Loading starting lists…";
     }
-    startingListLoadPromise = fetchStartingListEntries(nid)
-      .then(function (entries) {
+    startingListLoadPromise = fetchStartingListPublicBody(nid)
+      .then(function (body) {
         startingListLoadPromise = null;
         if (!eventCache[nid]) eventCache[nid] = {};
-        eventCache[nid].startingListEntries = entries;
+        eventCache[nid].startingListsPublic = body;
+        delete eventCache[nid].startingListEntries;
+        var entries = flattenStartingListFromPublicBody(body || null);
         eventCache[nid].laneStarting = laneOk(entries.length > 0);
         refreshLanesForNumericId(nid);
         startingListEntries = entries;
@@ -2868,6 +2961,7 @@
         startingListLoadPromise = null;
         startingListEntries = null;
         if (!eventCache[nid]) eventCache[nid] = {};
+        delete eventCache[nid].startingListsPublic;
         delete eventCache[nid].startingListEntries;
         eventCache[nid].laneStarting = laneHttpError(
           httpStatusFromFetchError(err)

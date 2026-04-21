@@ -6,6 +6,8 @@
  *   https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/dev-test-martialmatch-v1/data/...
  *
  * Regenerate fixtures: `python server/dev-test-martialmatch-v1/build_test_data.py`
+ * After HTML starting-list snapshots change, refresh API-shaped JSON:
+ *   `python server/dev-test-martialmatch-v1/convert_starting_lists_html_to_json.py`
  */
 const REPO_RAW_BASE =
   "https://raw.githubusercontent.com/andruwik777/dev.martialmatch.com/master/server/dev-test-martialmatch-v1/data";
@@ -17,6 +19,7 @@ const NUMERIC_TO_SLUG = {
   707: "707-puchar-polski-poludniowej-adcc",
   723: "723-grand-prix-polski-combat-ju-jutsu-",
   703: "703-puchar-polski-seniorow-juniorow-i-juniorow-mlodszych-w-grappling",
+  798: "798-contender-let-splay-4-ggc8",
 };
 
 const ALLOWED_SLUGS = new Set(Object.values(NUMERIC_TO_SLUG));
@@ -87,23 +90,20 @@ export default {
     if (path === "/pl/events") {
       targetUrl = REPO_RAW_BASE + "/pl/events.html";
       contentType = "text/html; charset=utf-8";
-    } else if (path.startsWith("/pl/events/") && path.endsWith("/starting-lists")) {
-      var segs = path.split("/").filter(Boolean);
-      if (segs.length !== 4 || segs[0] !== "pl" || segs[1] !== "events") {
+    } else if (
+      /^\/api\/events\/\d+\/starting-lists\/public$/.test(path)
+    ) {
+      var stParts = path.split("/").filter(Boolean);
+      var stId = stParts[2];
+      var slugSt = NUMERIC_TO_SLUG[stId];
+      if (!slugSt) {
         return new Response("Not found", {
           status: 404,
           headers: corsHeaders(origin, contentType),
         });
       }
-      var slug = decodeURIComponent(segs[2]);
-      if (!ALLOWED_SLUGS.has(slug)) {
-        return new Response("Not found", {
-          status: 404,
-          headers: corsHeaders(origin, contentType),
-        });
-      }
-      targetUrl = fixtureUrl(slug, "starting-lists.html");
-      contentType = "text/html; charset=utf-8";
+      targetUrl = fixtureUrl(slugSt, "starting-lists.json");
+      contentType = "application/json; charset=utf-8";
     } else if (
       /^\/api\/public\/events\/\d+\/fights$/.test(path)
     ) {

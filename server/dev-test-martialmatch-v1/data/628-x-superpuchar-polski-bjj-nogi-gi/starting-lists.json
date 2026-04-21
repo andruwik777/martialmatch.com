@@ -1,0 +1,1764 @@
+{
+  "sharingType": 1,
+  "lastUpdate": "2000-01-01T00:00:00+00:00",
+  "categories": [
+    {
+      "parameterId": 219694,
+      "category": "No-Gi; junior młodszy - chłopcy; -68 kg",
+      "competitors": [
+        {
+          "publicId": "4a6a8921-b068-4362-811e-2b7841e157db",
+          "firstName": "Franciszek",
+          "lastName": "Brączkowski",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a2647d50-7515-4a83-8561-a30bf1fbfc10",
+          "firstName": "Szymon",
+          "lastName": "Gałka",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "AniMMAls Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e58c3831-1644-4671-b0f3-78e372779c8f",
+          "firstName": "Nikodem",
+          "lastName": "Jop",
+          "academy": "Copacabana Tarnów",
+          "academyId": 1654,
+          "branch": "Tarnów",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219707,
+      "category": "No-Gi; junior; -61,5 kg",
+      "competitors": [
+        {
+          "publicId": "cdcc912a-97df-4d8f-ac64-436d52150ad5",
+          "firstName": "Daniel",
+          "lastName": "Pycek",
+          "academy": "Grappling Kraków",
+          "academyId": 26,
+          "branch": "Kraków",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "2e73d44f-1ea1-4b7a-8b49-6b2cc005b7cb",
+          "firstName": "Oleg",
+          "lastName": "Szczerba",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "8b51a5f7-c880-4c26-86ea-1be903041d18",
+          "firstName": "Natan",
+          "lastName": "Płuszka",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219708,
+      "category": "No-Gi; junior; -66,5 kg",
+      "competitors": [
+        {
+          "publicId": "2c163118-2ebb-4acb-938b-88022e65c1cb",
+          "firstName": "Dominik",
+          "lastName": "Krzyszczyk",
+          "academy": "Unia Jiu Jitsu",
+          "academyId": 14,
+          "branch": "Apeiron Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "257e38e1-b4f2-4283-bc87-d970b2cf37b8",
+          "firstName": "Aleksander",
+          "lastName": "Witkiewicz",
+          "academy": "Academia Gorila",
+          "academyId": 9,
+          "branch": "Czerwionka-Leszczyny",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "0dc230b2-1ae2-4124-a742-996c1f826711",
+          "firstName": "Franciszek",
+          "lastName": "Kubisa",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219709,
+      "category": "No-Gi; junior; -71,5 kg",
+      "competitors": [
+        {
+          "publicId": "326c54e4-4f2f-44f4-b51c-875b8b7befd7",
+          "firstName": "Artur",
+          "lastName": "Brączkowski",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "b0a0dc59-5f57-4ad8-bf7e-bfd8c4b9cbb9",
+          "firstName": "Wojciech",
+          "lastName": "Slota",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a5eb83c1-e6de-4acd-9008-8492c527f9ce",
+          "firstName": "Veniamin",
+          "lastName": "Kholomieienkov",
+          "academy": "STOWARZYSZENIE SPORTÓW WALKI WALECZNA LUBELSZCZYZNA",
+          "academyId": 2936,
+          "branch": "Lublin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219710,
+      "category": "No-Gi; junior; -76,5 kg",
+      "competitors": [
+        {
+          "publicId": "1d886e8d-ce2d-4cf6-99d8-2118637e7dd0",
+          "firstName": "Jakub",
+          "lastName": "Moc",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a066492d-dcd6-4353-a782-ef3ed381434a",
+          "firstName": "Jakub",
+          "lastName": "Joński",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219711,
+      "category": "No-Gi; junior; -81,5 kg",
+      "competitors": [
+        {
+          "publicId": "ba6d8f44-fb3a-49a3-b60a-d8a4e0d1a85d",
+          "firstName": "Igor",
+          "lastName": "Gajda",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "07050c05-91e9-4094-8d6c-20724e5adff9",
+          "firstName": "Radosław",
+          "lastName": "Stępniak",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "245a9184-3de4-4df3-b879-8ea7647f81df",
+          "firstName": "Mikołaj",
+          "lastName": "Wójcik",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "38fb9153-5b65-49dd-85bb-8cf0de2e169b",
+          "firstName": "Jan",
+          "lastName": "Horodyski",
+          "academy": "Boi Team",
+          "academyId": 4,
+          "branch": "Strzelin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219617,
+      "category": "No-Gi; senior; biały; -67,50kg",
+      "competitors": [
+        {
+          "publicId": "3b4c9a53-dadd-4341-bc9d-bfca2b8144b2",
+          "firstName": "Simon",
+          "lastName": "Antoniewicz",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "2f28ea20-3429-4b8e-8cc8-857e1c06669e",
+          "firstName": "Seweryn",
+          "lastName": "Walczak",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "50fdba9e-56d7-4801-a4f2-a6291f2574b1",
+          "firstName": "Olivier",
+          "lastName": "Starzyk",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "48066742-f267-4a27-bfc3-2b6339bafc3a",
+          "firstName": "Marcel",
+          "lastName": "Witusik",
+          "academy": "Grappling Kraków",
+          "academyId": 26,
+          "branch": "Kraków",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "81da93f1-52fe-4952-820f-0dd4728fe19f",
+          "firstName": "Igor",
+          "lastName": "Cieśla",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "06ff0f05-d114-4ca1-a472-2196b5cb3841",
+          "firstName": "Grzegorz",
+          "lastName": "Winiarski",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a80cb84d-a479-49bf-a70b-1fedba65d6ea",
+          "firstName": "Jakub",
+          "lastName": "Suskiewicz",
+          "academy": "STOWARZYSZENIE SPORTÓW WALKI WALECZNA LUBELSZCZYZNA",
+          "academyId": 2936,
+          "branch": "Lublin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "c1cfc607-c5b1-4e3a-997f-61725bf9f065",
+          "firstName": "Dawid",
+          "lastName": "Majcher",
+          "academy": "STOWARZYSZENIE SPORTÓW WALKI WALECZNA LUBELSZCZYZNA",
+          "academyId": 2936,
+          "branch": "Lublin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "0bf62f28-c87d-417b-82f0-e05bb5e83574",
+          "firstName": "Mateusz",
+          "lastName": "Dyndał",
+          "academy": "TZN GRAPPLING CZĘSTOCHOWA",
+          "academyId": 3583,
+          "branch": "Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219616,
+      "category": "No-Gi; senior; biały; -73,50 kg",
+      "competitors": [
+        {
+          "publicId": "61a5a90e-ef92-4977-99c7-b7ce82acf1fa",
+          "firstName": "Sebastian",
+          "lastName": "Potasiński",
+          "academy": "Unia Jiu Jitsu",
+          "academyId": 14,
+          "branch": "Apeiron Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "15eca2b9-6df8-4ced-a340-91f4b55bc90e",
+          "firstName": "Artem",
+          "lastName": "Vorona",
+          "academy": "Unia Jiu Jitsu",
+          "academyId": 14,
+          "branch": "Apeiron Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e7eab1a5-e840-4589-bb2f-0a3d67a03e09",
+          "firstName": "Adam",
+          "lastName": "Makuch",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "cf298b18-2b34-4548-9ae5-4e286fa574d1",
+          "firstName": "Adam",
+          "lastName": "Frątczak",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a3ed46cd-796b-4502-ba9f-1b998b439112",
+          "firstName": "Bartosz",
+          "lastName": "Woźnicki",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "4c38dcbf-a7e2-4d50-b4b6-bd0a24f38c34",
+          "firstName": "Tomek",
+          "lastName": "Wójcik",
+          "academy": "Zenith Łódź",
+          "academyId": 1003,
+          "branch": "Łódź",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219615,
+      "category": "No-Gi; senior; biały; -79,50 kg",
+      "competitors": [
+        {
+          "publicId": "bc712cf0-bc47-4529-ab21-79d75d2ee9fb",
+          "firstName": "Kamil",
+          "lastName": "Openchowski",
+          "academy": "BJJ Ikizama Club",
+          "academyId": 632,
+          "branch": "Boruszowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e9f1cb72-dd8d-4eb1-aa71-15c16e055bc9",
+          "firstName": "Andrzej",
+          "lastName": "Książek",
+          "academy": "Next Level BJJ Wrocław",
+          "academyId": 984,
+          "branch": "Wrocław",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "4a5b195e-5d06-48cf-9913-74e861af7a2e",
+          "firstName": "Michał",
+          "lastName": "Warda",
+          "academy": "STOWARZYSZENIE SPORTÓW WALKI WALECZNA LUBELSZCZYZNA",
+          "academyId": 2936,
+          "branch": "Lublin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "1821ccef-1402-40cb-9494-2518558f9c7f",
+          "firstName": "Adrian",
+          "lastName": "Szczech",
+          "academy": "OCTOPUS ŁÓDŹ",
+          "academyId": 135,
+          "branch": "Łódź",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "1c887af1-ca60-4a3b-8893-04624fa3cadf",
+          "firstName": "Paweł",
+          "lastName": "Mazanek",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "5f95ad3c-7fbe-4e56-ae7c-9353b0bf8156",
+          "firstName": "Karol",
+          "lastName": "Nalepa",
+          "academy": "STOWARZYSZENIE SPORTÓW WALKI WALECZNA LUBELSZCZYZNA",
+          "academyId": 2936,
+          "branch": "Lublin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219614,
+      "category": "No-Gi; senior; biały; -85,50 kg",
+      "competitors": [
+        {
+          "publicId": "7d91212d-8842-45f3-b5b4-c57f291ea298",
+          "firstName": "Bartosz",
+          "lastName": "Janicki",
+          "academy": "Valhalla Gym Saints United Kings JiuJitsu",
+          "academyId": 3632,
+          "branch": "Krapkowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "46cff47e-4092-4942-a991-6bae94f6761f",
+          "firstName": "Marek",
+          "lastName": "Dąbrowski",
+          "academy": "Apeiron Częstochowa",
+          "academyId": 3106,
+          "branch": "Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a50b0df1-c174-4480-85b5-3ef7ea95ac83",
+          "firstName": "Norbert",
+          "lastName": "Żaba",
+          "academy": "STOWARZYSZENIE SPORTÓW WALKI WALECZNA LUBELSZCZYZNA",
+          "academyId": 2936,
+          "branch": "Lublin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "84e9c290-4a2a-416c-bfa8-03935dabadcc",
+          "firstName": "Grzegorz",
+          "lastName": "Sierka",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219611,
+      "category": "No-Gi; senior; biały; +97,5 kg",
+      "competitors": [
+        {
+          "publicId": "c57303d3-9eb5-4fb2-b05e-03b1987247ca",
+          "firstName": "Kacper",
+          "lastName": "Maślankiewicz",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e16d5fc8-50f7-4b8a-8162-9bbcd1850f14",
+          "firstName": "Adrian",
+          "lastName": "Misztal",
+          "academy": "Copacabana",
+          "academyId": 5,
+          "branch": "TZN Grappling Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "1b77bb5e-04e0-4aa1-95f4-7995624b12c1",
+          "firstName": "Paweł",
+          "lastName": "Brzemiński",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219632,
+      "category": "No-Gi; senior; niebieski; -73,50 kg",
+      "competitors": [
+        {
+          "publicId": "cc7285f6-4840-4883-8bb0-0ce693613ab3",
+          "firstName": "Mateusz",
+          "lastName": "Tyrkiel",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "da78f6ca-2507-4dcc-8c3b-5258e91a118b",
+          "firstName": "Mateusz",
+          "lastName": "Minkiewicz",
+          "academy": "STOWARZYSZENIE SPORTÓW WALKI WALECZNA LUBELSZCZYZNA",
+          "academyId": 2936,
+          "branch": "Lublin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "aac1d87d-87bc-40bc-bbab-ebbb830bfc72",
+          "firstName": "Mateusz",
+          "lastName": "Pawłowski",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Oława",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "288243d8-21b5-4a6c-ace8-014b9989071e",
+          "firstName": "Dawid",
+          "lastName": "Paluch",
+          "academy": "Spartan Chorzów",
+          "academyId": 493,
+          "branch": "Chorzów",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219630,
+      "category": "No-Gi; senior; niebieski; -85,50 kg",
+      "competitors": [
+        {
+          "publicId": "9ecff972-32ef-476a-b9bb-c55a2ba03ef2",
+          "firstName": "Mariusz",
+          "lastName": "Magdziarczyk",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "ea98856b-3239-480d-a7b2-2c1ac4e008a4",
+          "firstName": "Piotr",
+          "lastName": "Wymysłowski",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a06581b6-0bcd-4619-a96f-4a9a4c2b5991",
+          "firstName": "Jakub",
+          "lastName": "Banach",
+          "academy": "Academia Gorila",
+          "academyId": 9,
+          "branch": "Czerwionka Leszczyny",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219629,
+      "category": "No-Gi; senior; niebieski; -91,50 kg",
+      "competitors": [
+        {
+          "publicId": "6295ab1d-b260-40c0-8585-bdcd88296631",
+          "firstName": "Kasjan",
+          "lastName": "Włodarczyk",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "8057b72e-53ee-4b83-bf58-8420248278e2",
+          "firstName": "Damian",
+          "lastName": "Franaszczuk",
+          "academy": "Boi Team",
+          "academyId": 4,
+          "branch": "Strzelin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "35fc5aeb-0654-4154-a777-57ee3e9cacec",
+          "firstName": "Leon",
+          "lastName": "Kurczynski",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "ca90e22d-e89e-4816-bfec-7e4660ccd0e4",
+          "firstName": "Mateusz",
+          "lastName": "Staś",
+          "academy": "Warszawskie Centrum Atletyki",
+          "academyId": 676,
+          "branch": "Warszawa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219624,
+      "category": "No-Gi; senior; purpurowy; -67,50 kg",
+      "competitors": [
+        {
+          "publicId": "5fcccaed-8c2e-49d2-9f1e-b4619bf7ee5c",
+          "firstName": "Bartosz",
+          "lastName": "Tyrkiel",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "eaddc903-d207-418a-954f-fe55ae5990ee",
+          "firstName": "Fuad",
+          "lastName": "Shikhseyidov",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219622,
+      "category": "No-Gi; senior; purpurowy; -85,50 kg",
+      "competitors": [
+        {
+          "publicId": "803ab627-5aa7-443a-aee0-7b1018907319",
+          "firstName": "Patryk",
+          "lastName": "Buczkowski",
+          "academy": "Next Level",
+          "academyId": 983,
+          "branch": "Wrocław",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "926ad5ee-af63-4854-96e4-e98c9e772d32",
+          "firstName": "Patryk",
+          "lastName": "Szymczyk",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a3b8ff4d-5927-4669-a2c3-e6314d5525c2",
+          "firstName": "Piotr",
+          "lastName": "Szymkowski",
+          "academy": "Boi Team",
+          "academyId": 4,
+          "branch": "Strzelin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219619,
+      "category": "No-Gi; senior; purpurowy; +97,5 kg",
+      "competitors": [
+        {
+          "publicId": "863307f0-e67d-4a2a-bdff-b7845d413510",
+          "firstName": "Maksymilian",
+          "lastName": "Kowalski",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "f07b24b1-77e4-4e56-bd00-e5511c31bc43",
+          "firstName": "Piotr",
+          "lastName": "Banaszek",
+          "academy": "Next Level BJJ",
+          "academyId": 10,
+          "branch": "Wrocław",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219595,
+      "category": "No-Gi; masters; biały; -91,50 kg",
+      "competitors": [
+        {
+          "publicId": "f441ccc7-7db8-4543-aad3-608436dafeaa",
+          "firstName": "Dariusz",
+          "lastName": "Gez",
+          "academy": "Porrada Gdańsk",
+          "academyId": 1497,
+          "branch": "Gdańsk",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219594,
+      "category": "No-Gi; masters; biały; +97,50 kg",
+      "competitors": [
+        {
+          "publicId": "96cc265b-b9c2-4d63-833e-afb394776e31",
+          "firstName": "Paweł",
+          "lastName": "Brzemiński",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219604,
+      "category": "No-Gi; masters; purpurowy; -85,50 kg",
+      "competitors": [
+        {
+          "publicId": "b106821c-0c32-43ba-8ffd-87b8b4a50fc1",
+          "firstName": "Konrad",
+          "lastName": "Skubiś",
+          "academy": "Spartan Chorzów",
+          "academyId": 493,
+          "branch": "Chorzów",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "769fba08-095a-43dd-a6ea-081d6734e326",
+          "firstName": "Piotr",
+          "lastName": "Szymkowski",
+          "academy": "Boi Team",
+          "academyId": 4,
+          "branch": "Strzelin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219722,
+      "category": "No-Gi; OPEN POCZĄTKUJĄCY (biały, niebieski)",
+      "competitors": [
+        {
+          "publicId": "bbaef487-7da4-4285-8b71-6307ef84d715",
+          "firstName": "Bartosz",
+          "lastName": "Janicki",
+          "academy": "Valhalla Gym Saints United Kings JiuJitsu",
+          "academyId": 3632,
+          "branch": "Krapkowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "9e146667-8dfa-4ec5-8268-94e98ac7c9cf",
+          "firstName": "Damian",
+          "lastName": "Franaszczuk",
+          "academy": "Boi Team",
+          "academyId": 4,
+          "branch": "Strzelin",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "90cc203d-f951-49f5-84cc-2834b1132b37",
+          "firstName": "Leon",
+          "lastName": "Kurczynski",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "ffa60cc4-4970-47f1-8739-622b0e4a7ae3",
+          "firstName": "Jakub",
+          "lastName": "Banach",
+          "academy": "Academia Gorila",
+          "academyId": 9,
+          "branch": "Czerwionka Leszczyny",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "03608914-ef36-42a5-ae38-5896c44f1e4c",
+          "firstName": "Mateusz",
+          "lastName": "Staś",
+          "academy": "Warszawskie Centrum Atletyki",
+          "academyId": 676,
+          "branch": "Warszawa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219723,
+      "category": "No-Gi; OPEN PRO (purpura,brąz,czarny)",
+      "competitors": [
+        {
+          "publicId": "785508ab-1081-420f-aab7-34df8689c262",
+          "firstName": "Kamil",
+          "lastName": "Kubasiak",
+          "academy": "Gracie Barra Team Draculino",
+          "academyId": 48,
+          "branch": "Sosnowiec",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "bb02313f-a9f4-44c7-9e21-83bbb5262e45",
+          "firstName": "Łukasz",
+          "lastName": "Gałka",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "d9f97c97-b803-4376-8a30-d092a234b127",
+          "firstName": "Piotr",
+          "lastName": "Banaszek",
+          "academy": "Next Level BJJ",
+          "academyId": 10,
+          "branch": "Wrocław",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e8b65bb8-4f45-4ca1-b311-b948ce6493f0",
+          "firstName": "Grzegorz",
+          "lastName": "Pielarz",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219657,
+      "category": "Gi; junior młodszy - chłopcy; -56 kg",
+      "competitors": [
+        {
+          "publicId": "8cbad3cc-a366-4da3-9076-ef06fae066f0",
+          "firstName": "Marcel",
+          "lastName": "Dubiel",
+          "academy": "Unia Jiu Jitsu",
+          "academyId": 14,
+          "branch": "Sparta Jaworzno",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219667,
+      "category": "Gi; junior młodszy - chłopcy; -68 kg",
+      "competitors": [
+        {
+          "publicId": "d5bc7931-e6dd-444f-bb9e-2960efd8763b",
+          "firstName": "Franciszek",
+          "lastName": "Brączkowski",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "1e8b2207-c070-4d4a-8d43-9d4af5d8a6a6",
+          "firstName": "Szymon",
+          "lastName": "Gałka",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "AniMMAls Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "18cb04e3-e16a-43c8-97fe-82da322bf9a3",
+          "firstName": "Nikodem",
+          "lastName": "Jop",
+          "academy": "Copacabana Tarnów",
+          "academyId": 1654,
+          "branch": "Tarnów",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219676,
+      "category": "Gi; junior młodszy - dziewczęta; -52 kg",
+      "competitors": [
+        {
+          "publicId": "8d5cf1a7-3313-4b03-9389-32dd925b115e",
+          "firstName": "Oliwia",
+          "lastName": "Cieślak",
+          "academy": "Unia Jiu Jitsu",
+          "academyId": 14,
+          "branch": "Sparta Jaworzno",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "615f2209-ac97-4c85-88cb-5c334e57bff7",
+          "firstName": "Amelia",
+          "lastName": "Selwat",
+          "academy": "Roan Fight Club Mysłowice",
+          "academyId": 636,
+          "branch": "MYSŁOWICE",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219674,
+      "category": "Gi; junior młodszy - dziewczęta; +64 kg",
+      "competitors": [
+        {
+          "publicId": "6648e91f-d5d3-4989-8782-5de029daf52d",
+          "firstName": "Jowita",
+          "lastName": "Kohn",
+          "academy": "Roan Fight Club Mysłowice",
+          "academyId": 636,
+          "branch": "MYSŁOWICE",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219645,
+      "category": "Gi; junior; -61,5 kg",
+      "competitors": [
+        {
+          "publicId": "dfa008b2-a69d-4ff4-9863-aabb53643e6d",
+          "firstName": "Oleg",
+          "lastName": "Szczerba",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "9bdc2f26-fa2e-4e84-9424-cf2921281cbd",
+          "firstName": "Natan",
+          "lastName": "Płuszka",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219644,
+      "category": "Gi; junior; -66,5 kg",
+      "competitors": [
+        {
+          "publicId": "51221853-fa58-456c-8fa1-0e9e7d68d318",
+          "firstName": "Eryk",
+          "lastName": "Winkler",
+          "academy": "Unia Jiu Jitsu",
+          "academyId": 14,
+          "branch": "Rybnik",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "b772b115-460a-4c38-9bf8-cd5a33b28de1",
+          "firstName": "Aleksander",
+          "lastName": "Witkiewicz",
+          "academy": "Academia Gorila",
+          "academyId": 9,
+          "branch": "Czerwionka-Leszczyny",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "5d5c6cb9-e55a-4783-bdd4-fabe0dc2d987",
+          "firstName": "Franciszek",
+          "lastName": "Kubisa",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219643,
+      "category": "Gi; junior; -71,5 kg",
+      "competitors": [
+        {
+          "publicId": "c178412b-11db-4da3-bc2a-40371ae74081",
+          "firstName": "Artur",
+          "lastName": "Brączkowski",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "889a76cd-79bc-486e-8bb3-a2d69592efa9",
+          "firstName": "Wojciech",
+          "lastName": "Slota",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219670,
+      "category": "Gi; junior; -76,5 kg",
+      "competitors": [
+        {
+          "publicId": "90521a75-5784-4cde-9d00-80a474565375",
+          "firstName": "Jakub",
+          "lastName": "Moc",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "f195fcbb-c1a3-4ccf-aa6a-59049968148f",
+          "firstName": "Jakub",
+          "lastName": "Joński",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219671,
+      "category": "Gi; junior; -81,5 kg",
+      "competitors": [
+        {
+          "publicId": "343aba34-3845-414d-9335-d7ad00049c2f",
+          "firstName": "Igor",
+          "lastName": "Gajda",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e0d9b39c-1ea9-4c2c-b762-a0381a74a6b5",
+          "firstName": "Radosław",
+          "lastName": "Stępniak",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a34a057e-d6fa-460c-9b41-4b0848f08264",
+          "firstName": "Mikołaj",
+          "lastName": "Wójcik",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219560,
+      "category": "Gi; senior; biały; -67,50kg",
+      "competitors": [
+        {
+          "publicId": "81cf0914-bdfc-48f8-8bdd-d195e2764649",
+          "firstName": "Simon",
+          "lastName": "Antoniewicz",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e102d3d7-6be2-492d-b5df-508a9ba35395",
+          "firstName": "Seweryn",
+          "lastName": "Walczak",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "7d0ba1d0-aa72-45c9-beba-2e6ab0dd21c5",
+          "firstName": "Olivier",
+          "lastName": "Starzyk",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Tarnowskie Góry",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "2afc6913-6af8-499c-b54b-bec543361df4",
+          "firstName": "Igor",
+          "lastName": "Cieśla",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219559,
+      "category": "Gi; senior; biały; -73,50 kg",
+      "competitors": [
+        {
+          "publicId": "5376e146-3c2e-4f81-b8d3-71f6ed017d84",
+          "firstName": "Martin",
+          "lastName": "Velký",
+          "academy": "Draculino Karviná",
+          "academyId": 2731,
+          "branch": "Karviná",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "ab01e04e-a07a-41f5-9520-213ff312c0bd",
+          "firstName": "Piotr",
+          "lastName": "Nieroda",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "4ca995b7-b391-4a4f-a41a-9fc3ad5fc5c0",
+          "firstName": "Dawid",
+          "lastName": "Celary",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "78b55c3b-0633-4dd6-b6bd-651556e0fed3",
+          "firstName": "Adam",
+          "lastName": "Frątczak",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "73394c10-8550-4c27-a67f-87e7cb3599b0",
+          "firstName": "Mateusz",
+          "lastName": "Beleć",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219558,
+      "category": "Gi; senior; biały; -79,50 kg",
+      "competitors": [
+        {
+          "publicId": "c3059104-f592-49f9-9b5c-85927832a7bc",
+          "firstName": "Mariusz",
+          "lastName": "Harasymów",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "00337079-76ea-476d-b92a-930bd0e1ad6a",
+          "firstName": "Paweł",
+          "lastName": "Domaszk",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "d8e1df39-ff3e-459e-94d7-b9cf1a1a6bf6",
+          "firstName": "Ondrej",
+          "lastName": "Kramny",
+          "academy": "Draculino Karviná",
+          "academyId": 2731,
+          "branch": "Karvina",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "283a530a-6f13-4b8e-b7af-570533c3159b",
+          "firstName": "Bartosz",
+          "lastName": "Kundas",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219557,
+      "category": "Gi; senior; biały; -85,50 kg",
+      "competitors": [
+        {
+          "publicId": "03db9e64-7513-495a-a682-7b0d1ec9e7d4",
+          "firstName": "Gracjan",
+          "lastName": "Pałka",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "bd7fadf0-2f82-4aac-8d6b-3405af893858",
+          "firstName": "Tymoteusz",
+          "lastName": "Wolański",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219556,
+      "category": "Gi; senior; biały; -91,50 kg",
+      "competitors": [
+        {
+          "publicId": "8d445494-6c9a-40ef-80a0-396f4d91b656",
+          "firstName": "Kacper",
+          "lastName": "Bielecki",
+          "academy": "Copacabana Częstochowa TZN GRAPPLING",
+          "academyId": 3584,
+          "branch": "Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "873a3fe4-ad1d-4f53-a8db-8ac71da6e31c",
+          "firstName": "David",
+          "lastName": "Herdzina",
+          "academy": "Draculino Karviná",
+          "academyId": 2731,
+          "branch": "Karviná",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219554,
+      "category": "Gi; senior; biały; +97,5 kg",
+      "competitors": [
+        {
+          "publicId": "0e413cd1-84cb-43f2-b888-a9bbcccd2dff",
+          "firstName": "Patrycjusz",
+          "lastName": "Laskowski",
+          "academy": "BJJ Ikizama Club",
+          "academyId": 632,
+          "branch": "Boruszowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "55cc036a-a5fb-4ec3-82c9-aa7e1d6e5fa8",
+          "firstName": "Kacper",
+          "lastName": "Maślankiewicz",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "5c9845a4-7c6a-4492-afe4-eaccc4e277e2",
+          "firstName": "Adrian",
+          "lastName": "Misztal",
+          "academy": "Copacabana",
+          "academyId": 5,
+          "branch": "TZN Grappling Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "737c3ee7-e9e1-459e-a115-40b5e5e243a3",
+          "firstName": "Piotr",
+          "lastName": "Błażejewski",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219551,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "competitors": [
+        {
+          "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+          "firstName": "Mateusz",
+          "lastName": "Tyrkiel",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "fc38510b-7815-447d-980e-0e1cb50b24e2",
+          "firstName": "Oskar",
+          "lastName": "Winkler",
+          "academy": "Unia Jiu Jitsu",
+          "academyId": 14,
+          "branch": "Rybnik",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+          "firstName": "Mateusz",
+          "lastName": "Pawłowski",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Oława",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "16de7dac-1fda-4c2f-8046-8f910dbc9ff6",
+          "firstName": "Sylwester",
+          "lastName": "Kulaszewicz",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "Dąbrowa Górnicza",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e4cf5469-cd40-40cb-956a-b424ebca541b",
+          "firstName": "Arkadiusz",
+          "lastName": "Bożek",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "5502c9d0-f019-4a54-9b09-11c6e87f30b5",
+          "firstName": "Patryk",
+          "lastName": "Boryniak",
+          "academy": "Academia Gorila",
+          "academyId": 9,
+          "branch": "Pawłowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219550,
+      "category": "Gi; senior; niebieski; -79,50 kg",
+      "competitors": [
+        {
+          "publicId": "d885c44d-5452-4114-9e65-9b48ddbe3c2f",
+          "firstName": "Oleksii",
+          "lastName": "Kravchenko",
+          "academy": "KS CIESZYN",
+          "academyId": 2342,
+          "branch": "Cieszyn",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "0365b2aa-fa77-4621-aa83-e30722d9c2d9",
+          "firstName": "Damian",
+          "lastName": "Szyja",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219549,
+      "category": "Gi; senior; niebieski; -85,50 kg",
+      "competitors": [
+        {
+          "publicId": "31d2b617-ba76-47e7-b51a-1c4dd5cdf496",
+          "firstName": "Dawid",
+          "lastName": "Kamień",
+          "academy": "Copacabana",
+          "academyId": 5,
+          "branch": "Tarnów",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "b1ad42ec-6e9e-4531-b864-930969ee7405",
+          "firstName": "Mateusz",
+          "lastName": "Rentflejsz",
+          "academy": "Academia Gorila",
+          "academyId": 9,
+          "branch": "Pawłowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219544,
+      "category": "Gi; senior; purpurowy; -67,50 kg",
+      "competitors": [
+        {
+          "publicId": "d1f7060a-8716-46ff-88b2-92b4d23bf7a4",
+          "firstName": "Bartosz",
+          "lastName": "Tyrkiel",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "4e2b3436-2bdd-4494-9ac6-6dd7d91b8529",
+          "firstName": "Fuad",
+          "lastName": "Shikhseyidov",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219542,
+      "category": "Gi; senior; purpurowy; -79,50 kg",
+      "competitors": [
+        {
+          "publicId": "b37b0f47-a4ba-4576-b588-1c28331908cc",
+          "firstName": "Wojciech",
+          "lastName": "Kadela",
+          "academy": "BJJ Ikizama Club",
+          "academyId": 632,
+          "branch": "Boruszowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "03971872-a48e-4831-bf61-2b8d6da7a168",
+          "firstName": "Kacper",
+          "lastName": "Sobota",
+          "academy": "WroxGym",
+          "academyId": 15,
+          "branch": "Wrocław",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "41523c9c-055f-4ce3-8679-5938ee82477b",
+          "firstName": "Paweł",
+          "lastName": "Dubnicki",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219541,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "competitors": [
+        {
+          "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+          "firstName": "Mateusz",
+          "lastName": "Schutz",
+          "academy": "BJJ Ikizama Club",
+          "academyId": 632,
+          "branch": "Boruszowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+          "firstName": "Nikodem",
+          "lastName": "Papla",
+          "academy": "Academia Gorila",
+          "academyId": 9,
+          "branch": "Bielsko-Biała",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219538,
+      "category": "Gi; senior; purpurowy; +97,5 kg",
+      "competitors": [
+        {
+          "publicId": "042825c2-2ea3-41b8-bd82-abff2d44c976",
+          "firstName": "Piotr",
+          "lastName": "Banaszek",
+          "academy": "Next Level BJJ",
+          "academyId": 10,
+          "branch": "Wrocław",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "f64de110-b2f7-4a16-a3d9-e42dcfcaf95e",
+          "firstName": "Szymon",
+          "lastName": "Rębisz",
+          "academy": "Natal Grind Team",
+          "academyId": 1673,
+          "branch": "Katowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219519,
+      "category": "Gi; masters; biały; -73,50 kg",
+      "competitors": [
+        {
+          "publicId": "3d52d128-9cf3-4b18-ae25-d6f3079806d3",
+          "firstName": "Piotr",
+          "lastName": "Jakóbek",
+          "academy": "Copacabana Częstochowa",
+          "academyId": 1502,
+          "branch": "Częstochowa",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "ec734bfd-392c-43a4-ae28-84bd6b8d4b36",
+          "firstName": "Krzysztof",
+          "lastName": "Rduch",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "348adaa8-1744-4571-a429-5fef64dff1e6",
+          "firstName": "Grzegorz",
+          "lastName": "Winiarski",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219518,
+      "category": "Gi; masters; biały; -79,50 kg",
+      "competitors": [
+        {
+          "publicId": "e80e4f46-b287-47d0-af86-27b8557033ec",
+          "firstName": "Robert",
+          "lastName": "Winiarski",
+          "academy": "Bastion Tychy",
+          "academyId": 1659,
+          "branch": "Tychy",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "b2982f3f-22b9-4809-be8c-84ff5afd4321",
+          "firstName": "Paweł",
+          "lastName": "Mazanek",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "86c08a97-3e24-4ea5-b909-9be762048fc1",
+          "firstName": "Kamil",
+          "lastName": "Szwaja",
+          "academy": "Animmals",
+          "academyId": 765,
+          "branch": "Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219510,
+      "category": "Gi; masters; niebieski; -97,50 kg",
+      "competitors": [
+        {
+          "publicId": "85908447-f701-4d76-830a-82efde603055",
+          "firstName": "Krzysztof",
+          "lastName": "Celary",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "d57391d8-060d-4aa0-aef8-64e37ef3b79b",
+          "firstName": "Dawid",
+          "lastName": "Surma",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "e4f854e0-9d0c-4cd4-87ec-9611fd8d8e70",
+          "firstName": "Adam",
+          "lastName": "Skatuła",
+          "academy": "Favela",
+          "academyId": 2905,
+          "branch": "Jastrzębie Zdrój",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    },
+    {
+      "parameterId": 219528,
+      "category": "Gi; masters; purpurowy; -97,50 kg",
+      "competitors": [
+        {
+          "publicId": "1c2c6517-79f5-4544-a531-e285a10f6c0c",
+          "firstName": "Rafał",
+          "lastName": "Openchowski",
+          "academy": "BJJ Ikizama Club",
+          "academyId": 632,
+          "branch": "Boruszowice",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        },
+        {
+          "publicId": "f34552cb-d721-40c9-8f70-edce2e8566c9",
+          "firstName": "Łukasz",
+          "lastName": "Gałka",
+          "academy": "Rio Grappling Club",
+          "academyId": 298,
+          "branch": "AniMMAls Zawiercie",
+          "nationality": "PL",
+          "isDisqualifiedForNoPayment": false
+        }
+      ]
+    }
+  ]
+}

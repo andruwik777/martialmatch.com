@@ -1527,6 +1527,90 @@ body {
     border-top: 1px solid #2a2e3a;
     box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.45);
   }
+
+  /*
+   * Full-viewport filter (mobile): collapse + search + club fixed at top,
+   * participant list scrolls in the middle, Clear/Apply fixed at bottom.
+   * Tabs and tab panels are hidden while the filter is open (:has).
+   */
+  body:has(#mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden)) {
+    overflow: hidden;
+  }
+
+  #mm-cm-content:has(#mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden))
+    > .mm-cm-tabs,
+  #mm-cm-content:has(#mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden))
+    > .mm-cm-tabpanel {
+    display: none !important;
+  }
+
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) {
+    position: fixed;
+    inset: 0;
+    z-index: 250;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 0.45rem);
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #12141a;
+  }
+
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) .mm-cm-events-toolbar {
+    margin-bottom: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) .mm-filter-main-btn {
+    flex-shrink: 0;
+  }
+
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) #mm-filter-panel:not(.is-hidden) {
+    flex: 1 1 0;
+    min-height: 0;
+    margin-top: 0.35rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden)
+    #mm-filter-panel
+    > .mm-filter-panel-status,
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden)
+    #mm-filter-panel
+    > .mm-filter-panel-hint {
+    flex-shrink: 0;
+  }
+
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) #mm-filter-panel-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) .mm-filter-scroll {
+    flex: 1 1 0;
+    min-height: 0;
+    margin-top: 0.35rem;
+    max-height: none !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) .mm-filter-mobile-bar:not(.is-hidden) {
+    z-index: 260;
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  }
 }
 
 @media (min-width: 40.0625rem) {

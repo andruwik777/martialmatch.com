@@ -1,0 +1,1 @@
+GET https://martialmatch.com/api/events/798/starting-lists/public

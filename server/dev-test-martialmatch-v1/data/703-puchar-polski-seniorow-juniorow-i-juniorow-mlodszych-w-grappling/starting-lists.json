@@ -1,0 +1,246 @@
+{
+  "sharingType": 1,
+  "lastUpdate": "2000-01-01T00:00:00+00:00",
+  "categories": [
+    {
+      "parameterId": 219694,
+      "category": "No-Gi; junior młodszy - chłopcy; -68 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219707,
+      "category": "No-Gi; junior; -61,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219708,
+      "category": "No-Gi; junior; -66,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219709,
+      "category": "No-Gi; junior; -71,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219710,
+      "category": "No-Gi; junior; -76,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219711,
+      "category": "No-Gi; junior; -81,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219617,
+      "category": "No-Gi; senior; biały; -67,50kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219616,
+      "category": "No-Gi; senior; biały; -73,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219615,
+      "category": "No-Gi; senior; biały; -79,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219614,
+      "category": "No-Gi; senior; biały; -85,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219611,
+      "category": "No-Gi; senior; biały; +97,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219632,
+      "category": "No-Gi; senior; niebieski; -73,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219630,
+      "category": "No-Gi; senior; niebieski; -85,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219629,
+      "category": "No-Gi; senior; niebieski; -91,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219624,
+      "category": "No-Gi; senior; purpurowy; -67,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219622,
+      "category": "No-Gi; senior; purpurowy; -85,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219619,
+      "category": "No-Gi; senior; purpurowy; +97,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219595,
+      "category": "No-Gi; masters; biały; -91,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219594,
+      "category": "No-Gi; masters; biały; +97,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219604,
+      "category": "No-Gi; masters; purpurowy; -85,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219722,
+      "category": "No-Gi; OPEN POCZĄTKUJĄCY (biały, niebieski)",
+      "competitors": []
+    },
+    {
+      "parameterId": 219723,
+      "category": "No-Gi; OPEN PRO (purpura,brąz,czarny)",
+      "competitors": []
+    },
+    {
+      "parameterId": 219657,
+      "category": "Gi; junior młodszy - chłopcy; -56 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219667,
+      "category": "Gi; junior młodszy - chłopcy; -68 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219676,
+      "category": "Gi; junior młodszy - dziewczęta; -52 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219674,
+      "category": "Gi; junior młodszy - dziewczęta; +64 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219645,
+      "category": "Gi; junior; -61,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219644,
+      "category": "Gi; junior; -66,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219643,
+      "category": "Gi; junior; -71,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219670,
+      "category": "Gi; junior; -76,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219671,
+      "category": "Gi; junior; -81,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219560,
+      "category": "Gi; senior; biały; -67,50kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219559,
+      "category": "Gi; senior; biały; -73,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219558,
+      "category": "Gi; senior; biały; -79,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219557,
+      "category": "Gi; senior; biały; -85,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219556,
+      "category": "Gi; senior; biały; -91,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219554,
+      "category": "Gi; senior; biały; +97,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219551,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219550,
+      "category": "Gi; senior; niebieski; -79,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219549,
+      "category": "Gi; senior; niebieski; -85,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219544,
+      "category": "Gi; senior; purpurowy; -67,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219542,
+      "category": "Gi; senior; purpurowy; -79,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219541,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219538,
+      "category": "Gi; senior; purpurowy; +97,5 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219519,
+      "category": "Gi; masters; biały; -73,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219518,
+      "category": "Gi; masters; biały; -79,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219510,
+      "category": "Gi; masters; niebieski; -97,50 kg",
+      "competitors": []
+    },
+    {
+      "parameterId": 219528,
+      "category": "Gi; masters; purpurowy; -97,50 kg",
+      "competitors": []
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+    "categories": [
+        {
+            "category": "U16 65 KG",
+            "competitors": [
+                {
+                    "academy": "Academia Gorila",
+                    "academyId": 9,
+                    "branch": "Warszawa",
+                    "firstName": "Marcin",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Borzym",
+                    "nationality": "PL",
+                    "publicId": "423cf2a1-1c2f-4949-8378-8adb80b1a770"
+                },
+                {
+                    "academy": "Berserker`s Team",
+                    "academyId": 3,
+                    "branch": "Szczecin",
+                    "firstName": "Stanis\u0142aw",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Kalinowski",
+                    "nationality": "PL",
+                    "publicId": "c529abf9-5a4a-465b-a53c-9d2fb3217cf7"
+                },
+                {
+                    "academy": "Contender",
+                    "academyId": 726,
+                    "branch": "OrzeuBJJ",
+                    "firstName": "Dawid",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Ogrodowczyk",
+                    "nationality": "PL",
+                    "publicId": "3ad8ff30-21dc-4f64-8761-81a855f344b2"
+                },
+                {
+                    "academy": "MMA ValeTudo Bia\u0142ystok",
+                    "academyId": 718,
+                    "branch": "Bia\u0142ystok ",
+                    "firstName": "Antoni",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "\u017bmojda",
+                    "nationality": "PL",
+                    "publicId": "a195088a-a1e3-4dc9-a752-ea08d3ccdd28"
+                }
+            ],
+            "parameterId": 246160
+        },
+        {
+            "category": "REFEREES -80 KG",
+            "competitors": [
+                {
+                    "academy": "Copacabana",
+                    "academyId": 5,
+                    "branch": "Warszawa",
+                    "firstName": "Marcin",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Turemka",
+                    "nationality": "PL",
+                    "publicId": "320a8a4c-59b1-4c13-a90b-4cb7f6437692"
+                },
+                {
+                    "academy": "Copacabana",
+                    "academyId": 5,
+                    "branch": "Bydgoszcz",
+                    "firstName": "Andrzej",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Szymanski",
+                    "nationality": "PL",
+                    "publicId": "d3a47125-f4db-4fa8-b156-711cb6d49fcc"
+                },
+                {
+                    "academy": "Kaiser Sport",
+                    "academyId": 147,
+                    "branch": "Olsztyn",
+                    "firstName": "Damian",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Stefanski",
+                    "nationality": "PL",
+                    "publicId": "c831b14d-a586-4688-a539-533eac3c8b53"
+                },
+                {
+                    "academy": "Grappling Krak\u00f3w",
+                    "academyId": 26,
+                    "branch": "Ska\u0142a",
+                    "firstName": "Jakub",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Kurzeja",
+                    "nationality": "PL",
+                    "publicId": "30aefe0c-8fb1-4908-a9ab-43094cb04403"
+                }
+            ],
+            "parameterId": 246961
+        },
+        {
+            "category": "U18 60 KG",
+            "competitors": [
+                {
+                    "academy": "LYNX AUGUST\u00d3W",
+                    "academyId": 1733,
+                    "branch": "August\u00f3w ",
+                    "firstName": "Gracjan",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Milanowski",
+                    "nationality": "PL",
+                    "publicId": "94e9c207-fa20-4f42-ae70-a258f0dbb735"
+                },
+                {
+                    "academy": "VIKING FIGHT CLUB",
+                    "academyId": 1302,
+                    "branch": "Bia\u0142ystok",
+                    "firstName": "Maciej",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Baran",
+                    "nationality": "PL",
+                    "publicId": "28614b20-b237-4ab7-bb19-344cf701ba5c"
+                },
+                {
+                    "academy": "Fight Club \u0141om\u017ca",
+                    "academyId": 223,
+                    "branch": "\u0141om\u017ca",
+                    "firstName": "Kacper",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Mieczkowski",
+                    "nationality": "PL",
+                    "publicId": "b2c68bc6-0290-42d8-bcf0-2cb7ba552483"
+                }
+            ],
+            "parameterId": 248027
+        },
+        {
+            "category": "ABSOLUTO BLUE BELT -90",
+            "competitors": [
+                {
+                    "academy": "VIKING FIGHT CLUB",
+                    "academyId": 1302,
+                    "branch": "Bia\u0142ystok",
+                    "firstName": "Mateusz",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Pi\u0119tka",
+                    "nationality": "PL",
+                    "publicId": "b02e561c-8e82-4259-bd6f-17354b640faf"
+                },
+                {
+                    "academy": "Granda77",
+                    "academyId": 2912,
+                    "branch": "Gda\u0144sk",
+                    "firstName": "Aleks",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Mazella",
+                    "nationality": "PL",
+                    "publicId": "996542e1-b9a9-458e-a1be-e196f5bec6f5"
+                },
+                {
+                    "academy": "Copacabana-Kau\u017ca Team",
+                    "academyId": 343,
+                    "branch": "\u0141\u00d3D\u0179",
+                    "firstName": "Kamil",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Pietrzykowski",
+                    "nationality": "PL",
+                    "publicId": "6d83383e-8a11-48b4-8c20-a41641645b08"
+                }
+            ],
+            "parameterId": 248031
+        },
+        {
+            "category": "ABSOLUTO BLUE BELT +90",
+            "competitors": [
+                {
+                    "academy": "Dragon`s Den \/ Ze Radiola Poland",
+                    "academyId": 6,
+                    "branch": "E\u0142k",
+                    "firstName": "Marcin",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Zabielski",
+                    "nationality": "PL",
+                    "publicId": "5a1e5063-edd2-4356-b621-59afbad34a72"
+                },
+                {
+                    "academy": "MMA ValeTudo Bia\u0142ystok",
+                    "academyId": 718,
+                    "branch": "Bia\u0142ystok",
+                    "firstName": "Mateusz",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Rynkiewicz",
+                    "nationality": "PL",
+                    "publicId": "cb6540b7-d4d5-483f-85f1-5ea01df035e3"
+                },
+                {
+                    "academy": "Granda77",
+                    "academyId": 2912,
+                    "branch": "Gda\u0144sk ",
+                    "firstName": "Micha\u0142",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Szweda",
+                    "nationality": "PL",
+                    "publicId": "2200c19f-7ff5-4e9e-8e54-8af848686f5d"
+                }
+            ],
+            "parameterId": 248278
+        },
+        {
+            "category": "U12 32 KG",
+            "competitors": [
+                {
+                    "academy": "Flow House Academy",
+                    "academyId": 288,
+                    "branch": "Warszawa",
+                    "firstName": "Maksymilian",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Czachor",
+                    "nationality": "PL",
+                    "publicId": "d917adaa-f070-41f3-81dd-f7982158313e"
+                },
+                {
+                    "academy": "Gladio Falanga",
+                    "academyId": 1868,
+                    "branch": "Lublin ",
+                    "firstName": "Filip",
+                    "isDisqualifiedForNoPayment": false,
+                    "lastName": "Cichosz",
+                    "nationality": "PL",
+                    "publicId": "e554831a-5738-46f0-9179-d8183025852f"
+                }
+            ],
+            "parameterId": 248320
+        }
+    ],
+    "lastUpdate": "2026-04-20T20:09:07+00:00",
+    "sharingType": 1
+}

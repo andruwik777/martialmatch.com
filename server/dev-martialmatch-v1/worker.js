@@ -190,13 +190,17 @@ export default {
       );
     }
 
-    if (path.startsWith("/pl/events/") && path.endsWith("/starting-lists")) {
-      const id = path.split("/")[3];
+    if (
+      path.startsWith("/api/events/") &&
+      path.endsWith("/starting-lists/public")
+    ) {
+      const parts = path.split("/").filter(Boolean);
+      const id = parts[2];
       return tryCachedRoute(
         request,
-        `https://martialmatch.com/pl/events/${id}/starting-lists`,
+        `https://martialmatch.com/api/events/${id}/starting-lists/public`,
         allowOrigin,
-        html
+        json
       );
     }
 

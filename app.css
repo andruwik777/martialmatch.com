@@ -1760,6 +1760,23 @@ body {
   cursor: pointer;
 }
 
+.mm-filter-row--dq-no-payment .mm-filter-row__name {
+  color: #c4c8d4;
+}
+
+.mm-filter-row__dq-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  min-height: 1.25rem;
+}
+
+.mm-filter-row__dq-svg {
+  display: block;
+  flex-shrink: 0;
+}
+
 /* Tylko zaznaczone — pewne ukrycie mimo display:grid na wierszu (np. WebView) */
 .mm-filter-row.mm-filter-row--filter-hidden {
   display: none !important;

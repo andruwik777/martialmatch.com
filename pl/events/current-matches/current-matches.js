@@ -248,6 +248,24 @@
     return polishAsciiLowerCore(branch);
   }
 
+  /**
+   * Filter / club-jump labels: each word starts with a capital letter (ASCII).
+   * Words split on spaces, underscores, hyphens; output words joined with spaces.
+   */
+  function titleCaseBranchWordsForDisplay(asciiLowerBranch) {
+    var parts = String(asciiLowerBranch || "")
+      .split(/[\s_-]+/)
+      .filter(function (p) {
+        return p.length > 0;
+      });
+    if (!parts.length) return "";
+    return parts
+      .map(function (w) {
+        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+      })
+      .join(" ");
+  }
+
   function competitorClubLine(c) {
     if (!c) return "";
     return formatAcademyClubLine(c.academy, c.branch);
@@ -2195,10 +2213,9 @@
   function filterClubSectionLabel(entry) {
     if (!entry) return "—";
     if (entry.academyId != null && entry.academyId > 0) {
-      return formatAcademyClubLine(
-        entry.academyName,
-        normalizeAcademyBranchForGrouping(entry.academyBranch)
-      );
+      var brKey = normalizeAcademyBranchForGrouping(entry.academyBranch);
+      var brDisp = titleCaseBranchWordsForDisplay(brKey);
+      return formatAcademyClubLine(entry.academyName, brDisp);
     }
     return entry.clubDisplayLine || "—";
   }
@@ -2525,12 +2542,19 @@
       var list = grouped.byClub[clubKey];
       for (var r = 0; r < list.length; r++) {
         var item = list[r];
+        var dqNoPay = Boolean(item.isDisqualifiedForNoPayment);
         var row = document.createElement("div");
         row.className = "mm-filter-row";
+        if (dqNoPay) {
+          row.classList.add("mm-filter-row--dq-no-payment");
+        }
         row.setAttribute(
           "data-mm-filter-search",
           normalizeForFilterSearch(
-            item.name + " " + (item.clubDisplayLine || "")
+            item.name +
+              " " +
+              (item.clubDisplayLine || "") +
+              (dqNoPay ? " disqualified no payment" : "")
           )
         );
 
@@ -2540,6 +2564,12 @@
         var nameEl = document.createElement("div");
         nameEl.className = "mm-filter-row__name";
         nameEl.textContent = item.name;
+        if (dqNoPay) {
+          nameEl.setAttribute(
+            "title",
+            "Disqualified for no payment — not selectable for filters."
+          );
+        }
 
         textWrap.appendChild(nameEl);
         if (item.category) {
@@ -2551,12 +2581,28 @@
 
         var checkWrap = document.createElement("div");
         checkWrap.className = "mm-filter-row__check";
-        var cb = document.createElement("input");
-        cb.type = "checkbox";
-        cb.value = item.publicId;
-        cb.setAttribute("data-mm-filter", "1");
-        cb.setAttribute("data-mm-filter-member", "1");
-        checkWrap.appendChild(cb);
+        if (dqNoPay) {
+          var dqWrap = document.createElement("span");
+          dqWrap.className = "mm-filter-row__dq-icon";
+          dqWrap.setAttribute("role", "img");
+          dqWrap.setAttribute(
+            "aria-label",
+            "Disqualified for no payment — cannot be added to filter"
+          );
+          dqWrap.innerHTML =
+            '<svg class="mm-filter-row__dq-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">' +
+            '<path fill="#ebc53d" d="M12 2.2 21.5 20.5H2.5L12 2.2z"/>' +
+            '<path fill="#1a1d26" d="M11 9.2h2v5h-2v-5zm0 6.3h2v2.3h-2v-2.3z"/>' +
+            "</svg>";
+          checkWrap.appendChild(dqWrap);
+        } else {
+          var cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.value = item.publicId;
+          cb.setAttribute("data-mm-filter", "1");
+          cb.setAttribute("data-mm-filter-member", "1");
+          checkWrap.appendChild(cb);
+        }
 
         row.appendChild(textWrap);
         row.appendChild(checkWrap);

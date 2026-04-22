@@ -13,6 +13,16 @@
     test: "https://prod-martialmatch-v1.andruwik777.workers.dev",
   };
 
+  /**
+   * WebSocket scoreboard proxy (Render). Same prod/test switch as BASE_BY_MODE.
+   * Set wss://… after deploy; leave "" to disable live updates in the browser.
+   * Release branch: same pattern as BASE_BY_MODE (prod + prod-test hostnames).
+   */
+  var WSS_BASE_BY_MODE = {
+    prod: "",
+    test: "wss://dev-test-martialmatch-v1.onrender.com",
+  };
+
   var loc = global.location;
   var pageParams =
     loc && typeof URLSearchParams !== "undefined"
@@ -23,6 +33,9 @@
     modeParam !== null && String(modeParam).toLowerCase() === "test";
   var mode = isTest ? "test" : "prod";
   var baseUrl = BASE_BY_MODE[mode] || BASE_BY_MODE.prod;
+  var wssBaseUrl = String(
+    WSS_BASE_BY_MODE[mode] || WSS_BASE_BY_MODE.prod || ""
+  ).trim();
 
   /** Odświeżanie listy walk na /pl/events/current-matches/ (tylko endpoint fights). */
   var CURRENT_MATCHES_REFRESH_MS = 30000;
@@ -90,6 +103,10 @@
     },
     parseEventSlug: parseEventSlug,
     martialMatchEventUrl: martialMatchEventUrl,
+    /** Base wss:// URL for scoreboard proxy (no path). Empty = disabled. */
+    wssBaseUrl: wssBaseUrl,
+    /** Open WebSocket early on current-matches to warm Render; subscriptions on Fights tab. */
+    wssPreconnect: true,
   };
 
   function shouldAppendModeToHref(href) {

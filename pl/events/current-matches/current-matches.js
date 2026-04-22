@@ -108,6 +108,17 @@
   var fightsTabStats = { shown: 0, total: 0 };
   /** @type {object | null} ostatnia poprawna odpowiedź /api/.../fights */
   var lastFightsData = null;
+
+  /** @type {WebSocket|null} */
+  var cmWss = null;
+  /** @type {Record<string, true>} */
+  var cmWssSubscribed = Object.create(null);
+  /** @type {Record<string, string>} */
+  var cmWssDedupByChannel = Object.create(null);
+  /** @type {number|null} */
+  var cmWssReconnectTimer = null;
+  var cmWssBackoffMs = 2000;
+  var CM_WSS_BACKOFF_MAX = 30000;
   /** @type {object | null} pełna odpowiedź /api/events/.../schedules */
   var lastSchedulesPayload = null;
 
@@ -128,6 +139,269 @@
     if (q.status === 2) return "active";
     if (q.status === 1) return "called";
     return "scheduled";
+  }
+
+  function cmWssUrlOk() {
+    var u = cfg.wssBaseUrl;
+    return typeof u === "string" && u.indexOf("wss://") === 0;
+  }
+
+  function formatWssCountdownSec(sec) {
+    var s = Math.max(0, Math.floor(Number(sec) || 0));
+    var m = Math.floor(s / 60);
+    var r = s % 60;
+    return (
+      (m < 10 ? "0" : "") +
+      m +
+      ":" +
+      (r < 10 ? "0" : "") +
+      r
+    );
+  }
+
+  function mapWssToTopbarVariant(msg) {
+    if (!msg || !msg.fightStatus) return null;
+    if (msg.fightStatus === "ongoing") {
+      return "active";
+    }
+    if (msg.fightStatus === "awaiting") {
+      return "called";
+    }
+    return null;
+  }
+
+  function wssLiveDedupKey(msg) {
+    return [
+      String(msg.fightId || ""),
+      String(msg.internalTime != null ? msg.internalTime : ""),
+      String(msg.timerClass || ""),
+      String(msg.fightStatus || ""),
+      String(msg.redMajorPoints != null ? msg.redMajorPoints : ""),
+      String(msg.blueMajorPoints != null ? msg.blueMajorPoints : ""),
+      String(msg.redPenaltyPoints != null ? msg.redPenaltyPoints : ""),
+      String(msg.bluePenaltyPoints != null ? msg.bluePenaltyPoints : ""),
+    ].join(":");
+  }
+
+  function buildWssChannelListForFightsData(data) {
+    if (!data || !data.result || !Array.isArray(data.result)) return [];
+    var seen = Object.create(null);
+    for (var i = 0; i < data.result.length; i++) {
+      var r = data.result[i];
+      var pf = r && r.publicFight;
+      if (!pf || pf.matId == null) continue;
+      seen["scoreboard:mat:" + String(pf.matId)] = true;
+    }
+    return Object.keys(seen);
+  }
+
+  function cmWssClearReconnectTimer() {
+    if (cmWssReconnectTimer != null) {
+      clearTimeout(cmWssReconnectTimer);
+      cmWssReconnectTimer = null;
+    }
+  }
+
+  function cmWssScheduleReconnect() {
+    if (!cmWssUrlOk()) {
+      return;
+    }
+    cmWssClearReconnectTimer();
+    cmWssReconnectTimer = window.setTimeout(function () {
+      cmWssReconnectTimer = null;
+      cmWssConnect();
+    }, cmWssBackoffMs);
+    cmWssBackoffMs = Math.min(cmWssBackoffMs * 2, CM_WSS_BACKOFF_MAX);
+  }
+
+  function cmWssLeaveAllChannels() {
+    if (!cmWss || cmWss.readyState !== 1) {
+      cmWssSubscribed = Object.create(null);
+      return;
+    }
+    var chs = Object.keys(cmWssSubscribed);
+    for (var c = 0; c < chs.length; c++) {
+      try {
+        cmWss.send(
+          JSON.stringify({ leaveChannel: true, channel: chs[c] })
+        );
+      } catch (e) {
+        /* ignore */
+      }
+    }
+    cmWssSubscribed = Object.create(null);
+  }
+
+  function cmWssResyncSubscriptionFromFights() {
+    if (!cmWss || cmWss.readyState !== 1) {
+      return;
+    }
+    if (!evSlug || getCmTabFromUrl() !== CM_TAB_FIGHTS) {
+      return;
+    }
+    if (!lastFightsData) {
+      return;
+    }
+    var want = buildWssChannelListForFightsData(lastFightsData);
+    var wmap = Object.create(null);
+    for (var a = 0; a < want.length; a++) {
+      wmap[want[a]] = true;
+    }
+    var cur = Object.keys(cmWssSubscribed);
+    for (var i = 0; i < cur.length; i++) {
+      if (!wmap[cur[i]] && cmWssSubscribed[cur[i]]) {
+        try {
+          cmWss.send(
+            JSON.stringify({ leaveChannel: true, channel: cur[i] })
+          );
+        } catch (e) {
+          /* ignore */
+        }
+        delete cmWssSubscribed[cur[i]];
+      }
+    }
+    for (var w = 0; w < want.length; w++) {
+      if (!cmWssSubscribed[want[w]]) {
+        try {
+          cmWss.send(JSON.stringify({ channel: want[w] }));
+          cmWssSubscribed[want[w]] = true;
+        } catch (e) {
+          /* ignore */
+        }
+      }
+    }
+  }
+
+  function cmWssConnect() {
+    if (!cmWssUrlOk()) {
+      return;
+    }
+    if (cmWss && (cmWss.readyState === 0 || cmWss.readyState === 1)) {
+      return;
+    }
+    try {
+      cmWss = new WebSocket(cfg.wssBaseUrl);
+    } catch (e) {
+      cmWss = null;
+      cmWssScheduleReconnect();
+      return;
+    }
+    cmWssBackoffMs = 2000;
+    cmWss.addEventListener("open", function () {
+      cmWssBackoffMs = 2000;
+      cmWssSubscribed = Object.create(null);
+      cmWssResyncSubscriptionFromFights();
+    });
+    cmWss.addEventListener("message", function (ev) {
+      var m;
+      try {
+        m = JSON.parse(
+          String(ev.data != null ? ev.data : "")
+        );
+      } catch (e) {
+        return;
+      }
+      if (!m || !m.channel) {
+        return;
+      }
+      var dkey = wssLiveDedupKey(m);
+      if (cmWssDedupByChannel[m.channel] === dkey) {
+        return;
+      }
+      cmWssDedupByChannel[m.channel] = dkey;
+      applyWssLiveToFightRow(m);
+    });
+    var sock = cmWss;
+    cmWss.addEventListener("close", function () {
+      if (cmWss !== sock) {
+        return;
+      }
+      cmWss = null;
+      cmWssScheduleReconnect();
+    });
+    cmWss.addEventListener("error", function () {
+      /* close follows */
+    });
+  }
+
+  function applyWssLiveToFightRow(msg) {
+    if (!listEl) {
+      return;
+    }
+    if (!msg || msg.fightId == null) {
+      return;
+    }
+    var matMatch = String(msg.channel || "").match(
+      /^scoreboard:mat:(\d+)$/
+    );
+    if (!matMatch) {
+      return;
+    }
+    var matId = matMatch[1];
+    var art = listEl.querySelector(
+      'article.mm-fight[data-mm-mat-id="' + String(matId) + '"]'
+    );
+    if (!art) {
+      return;
+    }
+    if (String(art.getAttribute("data-mm-fight-id") || "") !==
+      String(msg.fightId)
+    ) {
+      return;
+    }
+    var v = mapWssToTopbarVariant(msg);
+    if (v) {
+      var tb = art.querySelector(".mm-fight__topbar");
+      if (tb) {
+        tb.className = "mm-fight__topbar mm-fight__topbar--" + v;
+      }
+    }
+    var tmr = art.querySelector(".mm-fight__wss-timer");
+    var wssRace = art.querySelector(".mm-fight__wss-race");
+    if (tmr) {
+      tmr.textContent = formatWssCountdownSec(msg.internalTime);
+    }
+    if (wssRace) {
+      wssRace.removeAttribute("hidden");
+    }
+    var bm = msg.blueMajorPoints != null ? msg.blueMajorPoints : 0;
+    var rm = msg.redMajorPoints != null ? msg.redMajorPoints : 0;
+    var bp = msg.bluePenaltyPoints != null ? msg.bluePenaltyPoints : 0;
+    var rp = msg.redPenaltyPoints != null ? msg.redPenaltyPoints : 0;
+    [ "blue", "red" ].forEach(function (side) {
+      var row = art.querySelector(
+        ".mm-fight__athlete--" + side + " .mm-fight__wss-pair"
+      );
+      if (!row) {
+        return;
+      }
+      var earned = row.querySelector(
+        ".mm-fight__wss-tile--earned"
+      );
+      var pen = row.querySelector(".mm-fight__wss-tile--pen");
+      if (earned) {
+        earned.textContent = String(
+          side === "blue" ? bm : rm
+        );
+      }
+      if (pen) {
+        pen.textContent = String(
+          side === "blue" ? bp : rp
+        );
+      }
+      row.removeAttribute("hidden");
+    });
+  }
+
+  function syncFightsWssForTab() {
+    if (!cmWssUrlOk()) {
+      return;
+    }
+    if (evSlug && getCmTabFromUrl() === CM_TAB_FIGHTS) {
+      cmWssResyncSubscriptionFromFights();
+    } else {
+      cmWssLeaveAllChannels();
+    }
   }
 
   function parseStartTimeUtc(isoLike) {
@@ -201,6 +475,23 @@
 
   var MAT_PIN_SVG =
     '<svg class="mm-fight__mat-pin" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>';
+
+  var WSS_CHEQUERED_FLAG_SVG =
+    '<svg class="mm-fight__wss-flag" viewBox="0 0 12 9" width="16" height="12" ' +
+    'aria-hidden="true" focusable="false">' +
+    '<rect x="0" y="0" width="3" height="3" fill="#0d0d0d"/>' +
+    '<rect x="3" y="0" width="3" height="3" fill="#edf2f7"/>' +
+    '<rect x="6" y="0" width="3" height="3" fill="#0d0d0d"/>' +
+    '<rect x="9" y="0" width="3" height="3" fill="#edf2f7"/>' +
+    '<rect x="0" y="3" width="3" height="3" fill="#edf2f7"/>' +
+    '<rect x="3" y="3" width="3" height="3" fill="#0d0d0d"/>' +
+    '<rect x="6" y="3" width="3" height="3" fill="#edf2f7"/>' +
+    '<rect x="9" y="3" width="3" height="3" fill="#0d0d0d"/>' +
+    '<rect x="0" y="6" width="3" height="3" fill="#0d0d0d"/>' +
+    '<rect x="3" y="6" width="3" height="3" fill="#edf2f7"/>' +
+    '<rect x="6" y="6" width="3" height="3" fill="#0d0d0d"/>' +
+    '<rect x="9" y="6" width="3" height="3" fill="#edf2f7"/>' +
+    "</svg>";
 
   function competitorDisplayName(c) {
     if (!c) return "—";
@@ -305,14 +596,29 @@
 
     var club = competitorClubLine(c);
     if (club) {
-      var row2 = document.createElement("div");
-      row2.className = "mm-fight__club";
-      row2.textContent = club;
-      main.appendChild(row2);
+      var clubLine = document.createElement("div");
+      clubLine.className = "mm-fight__club";
+      clubLine.textContent = club;
+      main.appendChild(clubLine);
     }
+
+    var wss = document.createElement("div");
+    wss.className = "mm-fight__wss-pair";
+    wss.setAttribute("hidden", "hidden");
+    var tEarned = document.createElement("div");
+    tEarned.className = "mm-fight__wss-tile mm-fight__wss-tile--earned";
+    tEarned.setAttribute("aria-label", "Earned points");
+    tEarned.textContent = "0";
+    var tPen = document.createElement("div");
+    tPen.className = "mm-fight__wss-tile mm-fight__wss-tile--pen";
+    tPen.setAttribute("aria-label", "Penalty points");
+    tPen.textContent = "0";
+    wss.appendChild(tEarned);
+    wss.appendChild(tPen);
 
     wrap.appendChild(cornerEl);
     wrap.appendChild(main);
+    wrap.appendChild(wss);
     return wrap;
   }
 
@@ -2040,6 +2346,16 @@
     } else {
       stopPoll();
     }
+    if (evSlug && cmWssUrlOk()) {
+      if (cfg && cfg.wssPreconnect === false) {
+        if (getCmTabFromUrl() === CM_TAB_FIGHTS) {
+          cmWssConnect();
+        }
+      } else {
+        cmWssConnect();
+      }
+    }
+    syncFightsWssForTab();
   }
 
   function applyCmTabDom(tab) {
@@ -3190,6 +3506,7 @@
     if (!listEl) return;
 
     lastFightsData = data;
+    cmWssDedupByChannel = Object.create(null);
     listEl.innerHTML = "";
 
     var idSet = getSlugFilterIdSetFromUrl();
@@ -3212,6 +3529,9 @@
       fightsTabStats.total = 0;
       fightsTabSecondsLeft = getFightsRefreshPeriodSec();
       updateFightsTabLabel();
+      if (evSlug && getCmTabFromUrl() === CM_TAB_FIGHTS && cmWssUrlOk()) {
+        cmWssResyncSubscriptionFromFights();
+      }
       if (toolbarEl) {
         toolbarEl.classList.add("is-hidden");
         toolbarEl.textContent = "";
@@ -3234,42 +3554,48 @@
 
       var article = document.createElement("article");
       article.className = "mm-fight";
+      article.setAttribute("data-mm-mat-id", String(matId));
+      article.setAttribute("data-mm-fight-id", String(fightId));
 
       var topbar = document.createElement("div");
       topbar.className =
         "mm-fight__topbar mm-fight__topbar--" + variant;
 
-      var left = document.createElement("div");
-      left.className = "mm-fight__topbar-left";
+      var row1 = document.createElement("div");
+      row1.className = "mm-fight__topbar-row1";
+
+      var mid = document.createElement("div");
+      mid.className = "mm-fight__topbar-mid";
 
       var num = pf.fightNumber != null ? pf.fightNumber : idx + 1;
       var hash = document.createElement("span");
       hash.className = "mm-fight__fight-num";
       hash.textContent = "#" + num;
-      left.appendChild(hash);
+      mid.appendChild(hash);
 
       var t = parseStartTimeUtc(row.startTime);
       var timeSpan = document.createElement("span");
       timeSpan.className = "mm-fight__top-time";
       timeSpan.textContent =
         t && !isNaN(t.getTime()) ? timeFmt.format(t) : "—";
-      left.appendChild(timeSpan);
-
-      var cat = formatCategoryDisplay(pf.category);
-      if (cat) {
-        var catEl = document.createElement("span");
-        catEl.className = "mm-fight__top-category";
-        catEl.textContent = cat;
-        left.appendChild(catEl);
-      }
+      mid.appendChild(timeSpan);
 
       roundBadgeList(pf).forEach(function (b) {
         var badge = document.createElement("span");
         badge.className =
           "mm-fight__rb mm-fight__rb--" + b.variant;
         badge.textContent = b.text;
-        left.appendChild(badge);
+        mid.appendChild(badge);
       });
+
+      var wssCell = document.createElement("div");
+      wssCell.className = "mm-fight__topbar-wss";
+      var wssRace = document.createElement("div");
+      wssRace.className = "mm-fight__wss-race";
+      wssRace.setAttribute("hidden", "hidden");
+      wssRace.setAttribute("aria-label", "Round time remaining");
+      wssRace.innerHTML = WSS_CHEQUERED_FLAG_SVG + '<span class="mm-fight__wss-timer"></span>';
+      wssCell.appendChild(wssRace);
 
       var right = document.createElement("div");
       right.className = "mm-fight__topbar-right";
@@ -3279,8 +3605,21 @@
       matSpan.textContent = matNameDisplay;
       right.appendChild(matSpan);
 
-      topbar.appendChild(left);
-      topbar.appendChild(right);
+      row1.appendChild(mid);
+      row1.appendChild(wssCell);
+      row1.appendChild(right);
+      topbar.appendChild(row1);
+
+      var cat = formatCategoryDisplay(pf.category);
+      if (cat) {
+        var row2 = document.createElement("div");
+        row2.className = "mm-fight__topbar-row2";
+        var catEl = document.createElement("div");
+        catEl.className = "mm-fight__top-category";
+        catEl.textContent = cat;
+        row2.appendChild(catEl);
+        topbar.appendChild(row2);
+      }
 
       var body = document.createElement("div");
       body.className = "mm-fight__body";
@@ -3296,6 +3635,10 @@
     fightsTabStats.total = allRows.length;
     fightsTabSecondsLeft = getFightsRefreshPeriodSec();
     updateFightsTabLabel();
+    if (evSlug && getCmTabFromUrl() === CM_TAB_FIGHTS && cmWssUrlOk()) {
+      cmWssConnect();
+      cmWssResyncSubscriptionFromFights();
+    }
     if (toolbarEl) {
       toolbarEl.classList.add("is-hidden");
       toolbarEl.textContent = "";
@@ -3509,5 +3852,17 @@
       });
   });
 
-  window.addEventListener("pagehide", stopPoll);
+  window.addEventListener("pagehide", function () {
+    stopPoll();
+    cmWssClearReconnectTimer();
+    cmWssLeaveAllChannels();
+    if (cmWss) {
+      try {
+        cmWss.close();
+      } catch (e) {
+        /* ignore */
+      }
+      cmWss = null;
+    }
+  });
 })();

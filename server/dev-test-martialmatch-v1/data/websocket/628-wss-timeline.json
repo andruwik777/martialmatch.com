@@ -1,0 +1,1331 @@
+{
+  "scoreboard:mat:2529": [
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 118,
+      "blueMajorPoints": 2,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 112,
+      "blueMajorPoints": 2,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 105,
+      "blueMajorPoints": 2,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 100,
+      "blueMajorPoints": 3,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 95,
+      "blueMajorPoints": 3,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 1,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 90,
+      "blueMajorPoints": 3,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 1,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-paused"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 90,
+      "blueMajorPoints": 3,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 1,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-paused"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 90,
+      "blueMajorPoints": 3,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 1,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-paused"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 85,
+      "blueMajorPoints": 3,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 1,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 80,
+      "blueMajorPoints": 4,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 1,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 75,
+      "blueMajorPoints": 4,
+      "redMajorPoints": 1,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 1,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2529",
+      "fightId": 698056,
+      "category": "Gi; senior; niebieski; -73,50 kg",
+      "roundName": "final",
+      "bracketLevel": 3,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Rio Grappling Club",
+        "academyId": 298,
+        "branch": "Oława",
+        "firstName": "Mateusz",
+        "id": 275911,
+        "lastName": "Pawłowski",
+        "nationality": "PL",
+        "publicId": "a5fad126-f7be-49c7-8d35-c47125535cdc",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "Animmals",
+        "academyId": 765,
+        "branch": "Zawiercie",
+        "firstName": "Mateusz",
+        "id": 283328,
+        "lastName": "Tyrkiel",
+        "nationality": "PL",
+        "publicId": "bde2cd9a-e299-4b11-95ae-3fe08eab1f4f",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 118,
+      "blueMajorPoints": 2,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    }
+  ],
+  "scoreboard:mat:2530": [
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 360,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "awaiting",
+      "timerClass": "timer-before-start"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 358,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "awaiting",
+      "timerClass": "timer-before-start"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 355,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "awaiting",
+      "timerClass": "timer-before-start"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 500,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 495,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 490,
+      "blueMajorPoints": 1,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-paused"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 490,
+      "blueMajorPoints": 1,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-paused"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 485,
+      "blueMajorPoints": 1,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2530",
+      "fightId": 698077,
+      "category": "Gi; senior; purpurowy; -85,50 kg",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 360,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "awaiting",
+      "timerClass": "timer-before-start"
+    }
+  ],
+  "scoreboard:mat:2531": [
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2531",
+      "fightId": 698070,
+      "category": "Nogi; open; srebrny; 120,30 kg - unlimited",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 480,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "awaiting",
+      "timerClass": "timer-before-start"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2531",
+      "fightId": 698070,
+      "category": "Nogi; open; srebrny; 120,30 kg - unlimited",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 475,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "awaiting",
+      "timerClass": "timer-before-start"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2531",
+      "fightId": 698070,
+      "category": "Nogi; open; srebrny; 120,30 kg - unlimited",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 420,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "awaiting",
+      "timerClass": "timer-before-start"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2531",
+      "fightId": 698070,
+      "category": "Nogi; open; srebrny; 120,30 kg - unlimited",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 300,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2531",
+      "fightId": 698070,
+      "category": "Nogi; open; srebrny; 120,30 kg - unlimited",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 295,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "ongoing",
+      "timerClass": "timer-started"
+    },
+    {
+      "type": "submissionFighting2",
+      "channel": "scoreboard:mat:2531",
+      "fightId": 698070,
+      "category": "Nogi; open; srebrny; 120,30 kg - unlimited",
+      "roundName": "final",
+      "bracketLevel": 1,
+      "switchedCompetitors": false,
+      "timerMode": "regularTime",
+      "competitor1": {
+        "academy": "Academia Gorila",
+        "academyId": 9,
+        "branch": "Bielsko-Biała",
+        "firstName": "Nikodem",
+        "id": 273836,
+        "lastName": "Papla",
+        "nationality": "PL",
+        "publicId": "83d200ee-ffa6-4ce7-abec-5e6720955f7b",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "competitor2": {
+        "academy": "BJJ Ikizama Club",
+        "academyId": 632,
+        "branch": "Boruszowice",
+        "firstName": "Mateusz",
+        "id": 277996,
+        "lastName": "Schutz",
+        "nationality": "PL",
+        "publicId": "7832d2e7-f6f3-4a21-9252-3319db643974",
+        "status": {
+          "deleted": false,
+          "disqualified": false,
+          "value": 4,
+          "verified": true
+        }
+      },
+      "internalTime": 480,
+      "blueMajorPoints": 0,
+      "redMajorPoints": 0,
+      "bluePenaltyPoints": 0,
+      "redPenaltyPoints": 0,
+      "fightStatus": "awaiting",
+      "timerClass": "timer-before-start"
+    }
+  ]
+}

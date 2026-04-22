@@ -1,0 +1,16 @@
+{
+  "name": "martialmatch-wss-prod",
+  "private": true,
+  "version": "1.0.0",
+  "description": "WebSocket scoreboard proxy (production — real MM upstream)",
+  "main": "wss-proxy.js",
+  "scripts": {
+    "start": "node wss-proxy.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

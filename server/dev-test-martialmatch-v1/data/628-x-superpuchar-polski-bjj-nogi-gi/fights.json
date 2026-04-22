@@ -2,15 +2,15 @@
     "fightQueueStatuses": {
         "2529": {
             "fightId": 698056,
-            "status": 2
+            "status": 0
         },
         "2530": {
             "fightId": 698077,
-            "status": 2
+            "status": 1
         },
         "2531": {
             "fightId": 698070,
-            "status": 1
+            "status": 2
         }
     },
     "result": [

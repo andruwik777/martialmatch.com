@@ -880,21 +880,81 @@ body {
 
 .mm-fight__topbar {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.5rem 0.75rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.2rem 0;
   padding: 0.45rem 0.65rem 0.5rem;
   font-size: 0.8125rem;
   line-height: 1.35;
 }
 
-.mm-fight__topbar-left {
+.mm-fight__topbar-row1 {
   display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-width: 0;
+  gap: 0.4rem 0.5rem;
+}
+
+.mm-fight__topbar-mid {
+  display: flex;
+  max-width: 100%;
+  flex: 0 1 auto;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem 0.5rem;
   min-width: 0;
   color: #fff;
+}
+
+.mm-fight__topbar-wss {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.2rem;
+}
+
+.mm-fight__wss-race {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mm-fight__wss-race[hidden] {
+  display: none !important;
+}
+
+.mm-fight__wss-flag {
+  display: block;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.mm-fight__wss-timer {
+  box-sizing: border-box;
+  min-width: 3rem;
+  padding: 0.18rem 0.4rem 0.2rem;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+  background: #000;
+  line-height: 1.1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: #f1f5f9;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.mm-fight__topbar-row2 {
+  min-width: 0;
 }
 
 .mm-fight__topbar-right {
@@ -929,6 +989,9 @@ body {
 .mm-fight__top-category {
   color: #e2e8f0;
   font-weight: 500;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  word-wrap: break-word;
 }
 
 .mm-fight__rb {
@@ -1021,19 +1084,23 @@ body {
 }
 
 .mm-fight__body {
+  margin: 0;
   padding: 0;
   background: #2d3748;
+  border-top: 1px solid #4a5568;
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.15);
 }
 
 .mm-fight__athlete {
   display: flex;
   min-height: 3rem;
   align-items: stretch;
-  border-top: 1px solid #1a202c;
+  border-top: none;
 }
 
-.mm-fight__athlete:first-of-type {
-  border-top: none;
+.mm-fight__athlete + .mm-fight__athlete {
+  border-top: 1px solid #4a5568;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .mm-fight__corner {
@@ -1049,10 +1116,53 @@ body {
   background: #e53e3e;
 }
 
+/* WSS: earned (green) + penalty (red) tiles; pair hidden until first message */
+.mm-fight__wss-pair {
+  display: flex;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  align-items: center;
+  align-self: stretch;
+  gap: 0.3rem;
+  margin: 0.35rem 0.4rem 0.35rem 0;
+}
+
+.mm-fight__wss-pair[hidden] {
+  display: none !important;
+}
+
+.mm-fight__wss-tile {
+  display: flex;
+  box-sizing: border-box;
+  min-width: 2.15rem;
+  max-width: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.4rem;
+  border-radius: 6px;
+  line-height: 1.1;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.mm-fight__wss-tile--earned {
+  color: #f0fff4;
+  background: #276749;
+}
+
+.mm-fight__wss-tile--pen {
+  color: #fff5f5;
+  background: #9b2c2c;
+}
+
 .mm-fight__athlete-main {
   flex: 1;
   min-width: 0;
-  padding: 0.5rem 0.65rem 0.55rem 0.5rem;
+  padding: 0.5rem 0.2rem 0.55rem 0.5rem;
 }
 
 .mm-fight__athlete-line1 {

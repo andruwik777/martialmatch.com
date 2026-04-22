@@ -1,0 +1,17 @@
+{
+  "name": "martialmatch-wss-workspace",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Shared deps for wss-proxy under dev- / prod- / dev-test- (Render: root directory = server)",
+  "scripts": {
+    "wss:dev": "node dev-martialmatch-v1/wss-proxy.js",
+    "wss:prod": "node prod-martialmatch-v1/wss-proxy.js",
+    "wss:devtest": "node dev-test-martialmatch-v1/wss-proxy.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

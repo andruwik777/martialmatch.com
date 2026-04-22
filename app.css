@@ -1678,6 +1678,15 @@ body {
   padding: 0.4rem 0.55rem;
 }
 
+.mm-filter-club-name__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin: 0;
+  cursor: default;
+}
+
 .mm-filter-club-name__label {
   display: flex;
   align-items: center;
@@ -1702,6 +1711,14 @@ body {
   margin: 0;
   accent-color: #7aa8ff;
   cursor: pointer;
+}
+
+.mm-filter-club-name--all-dq-no-payment .mm-filter-club-name__dq-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.3rem;
+  min-height: 1.3rem;
 }
 
 .mm-filter-club-name__title {
@@ -1751,6 +1768,13 @@ body {
 
 .mm-filter-row__check {
   padding-top: 0.15rem;
+}
+
+.mm-filter-row__check-with-dq {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
 }
 
 .mm-filter-row__check input {

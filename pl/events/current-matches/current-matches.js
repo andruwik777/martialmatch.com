@@ -2501,6 +2501,20 @@
     }
   }
 
+  function makeFilterDqNoPaymentIcon(ariaLabel, extraClass) {
+    var el = document.createElement("span");
+    el.className =
+      "mm-filter-row__dq-icon" + (extraClass ? " " + extraClass : "");
+    el.setAttribute("role", "img");
+    el.setAttribute("aria-label", ariaLabel);
+    el.innerHTML =
+      '<svg class="mm-filter-row__dq-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">' +
+      '<path fill="#ebc53d" d="M12 2.2 21.5 20.5H2.5L12 2.2z"/>' +
+      '<path fill="#1a1d26" d="M11 9.2h2v5h-2v-5zm0 6.3h2v2.3h-2v-2.3z"/>' +
+      "</svg>";
+    return el;
+  }
+
   function renderFilterListDom(entries) {
     if (!filterListRootEl) return;
     filterListRootEl.innerHTML = "";
@@ -2508,38 +2522,72 @@
     for (var c = 0; c < grouped.clubKeys.length; c++) {
       var clubKey = grouped.clubKeys[c];
       var clubName = grouped.clubNames[c];
+      var list = grouped.byClub[clubKey];
+      var tabForFilter = getCmTabFromUrl();
+      var allClubMembersDqBlock = false;
+      if (tabForFilter !== CM_TAB_EVENTS && list.length > 0) {
+        allClubMembersDqBlock = true;
+        for (var al = 0; al < list.length; al++) {
+          if (!list[al].isDisqualifiedForNoPayment) {
+            allClubMembersDqBlock = false;
+            break;
+          }
+        }
+      }
+
       var section = document.createElement("section");
       section.className = "mm-filter-club";
       section.id = "mm-filter-club-sect-" + c;
 
       var hn = document.createElement("h3");
       hn.className = "mm-filter-club-name mm-filter-club-name--with-select";
+      if (allClubMembersDqBlock) {
+        hn.classList.add("mm-filter-club-name--all-dq-no-payment");
+        hn.setAttribute(
+          "title",
+          "All members are disqualified for no payment for this event — no club select-all (nothing selectable)."
+        );
+        var headRow = document.createElement("div");
+        headRow.className = "mm-filter-club-name__row";
+        var checkWrapDq = document.createElement("span");
+        checkWrapDq.className = "mm-filter-club-name__check-wrap";
+        checkWrapDq.appendChild(
+          makeFilterDqNoPaymentIcon(
+            "All athletes in this club are disqualified for no payment. Club select-all is not available.",
+            "mm-filter-club-name__dq-icon"
+          )
+        );
+        var titleSpanDq = document.createElement("span");
+        titleSpanDq.className = "mm-filter-club-name__title";
+        titleSpanDq.textContent = clubName;
+        headRow.appendChild(checkWrapDq);
+        headRow.appendChild(titleSpanDq);
+        hn.appendChild(headRow);
+      } else {
+        var lab = document.createElement("label");
+        lab.className = "mm-filter-club-name__label";
 
-      var lab = document.createElement("label");
-      lab.className = "mm-filter-club-name__label";
+        var checkWrap = document.createElement("span");
+        checkWrap.className = "mm-filter-club-name__check-wrap";
+        var clubCb = document.createElement("input");
+        clubCb.type = "checkbox";
+        clubCb.setAttribute("data-mm-filter-club", "1");
+        clubCb.setAttribute(
+          "aria-label",
+          "Select or clear all in: " + clubName
+        );
+        clubCb.setAttribute("aria-checked", "false");
+        checkWrap.appendChild(clubCb);
 
-      var checkWrap = document.createElement("span");
-      checkWrap.className = "mm-filter-club-name__check-wrap";
-      var clubCb = document.createElement("input");
-      clubCb.type = "checkbox";
-      clubCb.setAttribute("data-mm-filter-club", "1");
-      clubCb.setAttribute(
-        "aria-label",
-        "Select or clear all in: " + clubName
-      );
-      clubCb.setAttribute("aria-checked", "false");
-      checkWrap.appendChild(clubCb);
+        var titleSpan = document.createElement("span");
+        titleSpan.className = "mm-filter-club-name__title";
+        titleSpan.textContent = clubName;
 
-      var titleSpan = document.createElement("span");
-      titleSpan.className = "mm-filter-club-name__title";
-      titleSpan.textContent = clubName;
-
-      lab.appendChild(checkWrap);
-      lab.appendChild(titleSpan);
-      hn.appendChild(lab);
+        lab.appendChild(checkWrap);
+        lab.appendChild(titleSpan);
+        hn.appendChild(lab);
+      }
       section.appendChild(hn);
-
-      var list = grouped.byClub[clubKey];
       for (var r = 0; r < list.length; r++) {
         var item = list[r];
         var dqNoPay = Boolean(item.isDisqualifiedForNoPayment);
@@ -2592,26 +2640,36 @@
         var checkWrap = document.createElement("div");
         checkWrap.className = "mm-filter-row__check";
         if (blockDqNoPayUi) {
-          var dqWrap = document.createElement("span");
-          dqWrap.className = "mm-filter-row__dq-icon";
-          dqWrap.setAttribute("role", "img");
-          dqWrap.setAttribute(
-            "aria-label",
-            "Disqualified for no payment — cannot be added to filter"
+          checkWrap.appendChild(
+            makeFilterDqNoPaymentIcon(
+              "Disqualified for no payment — cannot be added to filter",
+              null
+            )
           );
-          dqWrap.innerHTML =
-            '<svg class="mm-filter-row__dq-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">' +
-            '<path fill="#ebc53d" d="M12 2.2 21.5 20.5H2.5L12 2.2z"/>' +
-            '<path fill="#1a1d26" d="M11 9.2h2v5h-2v-5zm0 6.3h2v2.3h-2v-2.3z"/>' +
-            "</svg>";
-          checkWrap.appendChild(dqWrap);
         } else {
+          var showDqIconWithCheckbox =
+            dqNoPay && !blockDqNoPayUi;
+          if (showDqIconWithCheckbox) {
+            var checkWithDq = document.createElement("div");
+            checkWithDq.className = "mm-filter-row__check-with-dq";
+            checkWithDq.appendChild(
+              makeFilterDqNoPaymentIcon(
+                "Disqualified for no payment on at least one event (still selectable in all-events filter)",
+                "mm-filter-row__dq-icon--selectable"
+              )
+            );
+          }
           var cb = document.createElement("input");
           cb.type = "checkbox";
           cb.value = item.publicId;
           cb.setAttribute("data-mm-filter", "1");
           cb.setAttribute("data-mm-filter-member", "1");
-          checkWrap.appendChild(cb);
+          if (showDqIconWithCheckbox) {
+            checkWithDq.appendChild(cb);
+            checkWrap.appendChild(checkWithDq);
+          } else {
+            checkWrap.appendChild(cb);
+          }
         }
 
         row.appendChild(textWrap);

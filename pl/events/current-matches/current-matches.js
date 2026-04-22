@@ -359,7 +359,19 @@
       if (cmWssDedupByChannel[m.channel] === dkey) {
         return;
       }
+      var pr = cmWssLastByChannel[m.channel];
+      if (
+        wssShouldRefetchFightsOnMessage(m, pr) &&
+        evSlug &&
+        getCmTabFromUrl() === CM_TAB_FIGHTS
+      ) {
+        scheduleFightsRefetchFromWss();
+      }
       cmWssDedupByChannel[m.channel] = dkey;
+      cmWssLastByChannel[m.channel] = {
+        fightId: m.fightId,
+        fightStatus: m.fightStatus,
+      };
       applyWssLiveToFightRow(m);
     });
     var sock = cmWss;

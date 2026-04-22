@@ -2543,9 +2543,12 @@
       for (var r = 0; r < list.length; r++) {
         var item = list[r];
         var dqNoPay = Boolean(item.isDisqualifiedForNoPayment);
+        var filterTab = getCmTabFromUrl();
+        var blockDqNoPayUi =
+          dqNoPay && filterTab !== CM_TAB_EVENTS;
         var row = document.createElement("div");
         row.className = "mm-filter-row";
-        if (dqNoPay) {
+        if (blockDqNoPayUi) {
           row.classList.add("mm-filter-row--dq-no-payment");
         }
         row.setAttribute(
@@ -2565,10 +2568,17 @@
         nameEl.className = "mm-filter-row__name";
         nameEl.textContent = item.name;
         if (dqNoPay) {
-          nameEl.setAttribute(
-            "title",
-            "Disqualified for no payment — not selectable for filters."
-          );
+          if (blockDqNoPayUi) {
+            nameEl.setAttribute(
+              "title",
+              "Disqualified for no payment — not selectable for the single-event filter."
+            );
+          } else {
+            nameEl.setAttribute(
+              "title",
+              "May be disqualified on one or more events — still selectable for the all-events filter."
+            );
+          }
         }
 
         textWrap.appendChild(nameEl);
@@ -2581,7 +2591,7 @@
 
         var checkWrap = document.createElement("div");
         checkWrap.className = "mm-filter-row__check";
-        if (dqNoPay) {
+        if (blockDqNoPayUi) {
           var dqWrap = document.createElement("span");
           dqWrap.className = "mm-filter-row__dq-icon";
           dqWrap.setAttribute("role", "img");

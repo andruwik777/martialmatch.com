@@ -19,7 +19,7 @@
    * Release branch: same pattern as BASE_BY_MODE (prod + prod-test hostnames).
    */
   var WSS_BASE_BY_MODE = {
-    prod: "",
+    prod: "wss://dev-martialmatch-v1.onrender.com",
     test: "wss://dev-test-martialmatch-v1.onrender.com",
   };
 

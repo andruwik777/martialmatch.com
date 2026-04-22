@@ -1,5 +1,5 @@
 /**
- * Regenerates 628-wss-timeline.json. Run: node build-628-timeline.cjs
+ * Regenerates 628-wss-timeline.json under data/628-x-superpuchar-polski-bjj-nogi-gi/. Run: node build-628-timeline.cjs
  */
 "use strict";
 
@@ -172,6 +172,11 @@ var out = {
   "scoreboard:mat:2531": a2531,
 };
 
-var outPath = path.join(__dirname, "628-wss-timeline.json");
+var outPath = path.join(
+  __dirname,
+  "..",
+  "628-x-superpuchar-polski-bjj-nogi-gi",
+  "628-wss-timeline.json"
+);
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2), "utf8");
 console.log("Wrote " + outPath);

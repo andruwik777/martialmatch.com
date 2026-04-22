@@ -13,7 +13,7 @@
 |--------|------|-----|------------------|
 | **prod** | «Боевой» WSS+Worker; **при релизе** состояние/URL **как у test** (тот же паттерн, что для `BASE_BY_MODE` на ветке release) | [server/prod-martialmatch-v1/](../server/prod-martialmatch-v1/) + `wss-proxy.js` | Render prod, URL в [config.js](../config.js) ветка **release** (ключ `prod`) |
 | **test** | **Основная разработка** клиента, WSS **ходят на оригинальный** MartialMatch (`wss://martialmatch.com/_wss` через прокси) | [server/dev-martialmatch-v1/](../server/dev-martialmatch-v1/) + `wss-proxy.js` | Render «test/real-upstream» или локально; **если** в [config.js](../config.js) на **master** ключ `test` смотрит **сюда** — это «живой» тестовый WSS |
-| **devtest** | **Только** фикстуры и **фейковый** ответ: предзаписанные JSON-строки из [server/dev-test-martialmatch-v1/data](../server/dev-test-martialmatch-v1/data) (в т.ч. [data/websocket/](../server/dev-test-martialmatch-v1/data/websocket)) | [server/dev-test-martialmatch-v1/](../server/dev-test-martialmatch-v1/) + `wss-proxy.js` (режим `PROXY_MODE=devtest` или аналог) | Render **отдельный** сервис; на **master** `WSS_BASE_BY_MODE.test` **часто** указывает **сюда** для `?mode=test` и сценариев 628 **без** боя в MM |
+| **devtest** | **Только** фикстуры и **фейковый** ответ: предзаписанные JSON-строки (в т.ч. [628-wss-timeline.json](../server/dev-test-martialmatch-v1/data/628-x-superpuchar-polski-bjj-nogi-gi/628-wss-timeline.json) рядом с `fights.json` ивента) и [data/websocket/](../server/dev-test-martialmatch-v1/data/websocket) (артефакты) | [server/dev-test-martialmatch-v1/](../server/dev-test-martialmatch-v1/) + `wss-proxy.js` (режим `PROXY_MODE=devtest` или аналог) | Render **отдельный** сервис; на **master** `WSS_BASE_BY_MODE.test` **часто** указывает **сюда** для `?mode=test` и сценариев 628 **без** боя в MM |
 
 **Важно:** в [config.js](../config.js) по-прежнему **два** ключа, **аналогично** HTTP:
 
@@ -49,7 +49,7 @@ WSS_BASE_BY_MODE = { prod: prod…, test: prod-test… }
 
 ## devtest: фикстура для ивента 628 (цикл для `?mode=test`)
 
-**Файл(ы):** под [server/dev-test-martialmatch-v1/data/websocket/](../server/dev-test-martialmatch-v1/data/websocket) (или `…/data/wss-fixtures/628/…`), формат: **массив/набор** JSON-строк в **хронологическом** порядке, по кругу.
+**Файл(ы):** таймлайн для 628: [data/628-x-superpuchar-polski-bjj-nogi-gi/628-wss-timeline.json](../server/dev-test-martialmatch-v1/data/628-x-superpuchar-polski-bjj-nogi-gi/628-wss-timeline.json) (генератор: [data/websocket/build-628-timeline.cjs](../server/dev-test-martialmatch-v1/data/websocket/build-628-timeline.cjs)); формат: **массив/набор** кадров по `channel` в **хронологическом** порядке, по кругу.
 
 **Содержательно (сценарий, под три ковра из 628, см. [fights.json](../server/dev-test-martialmatch-v1/data/628-x-superpuchar-polski-bjj-nogi-gi/fights.json) `fightQueueStatuses`):**
 

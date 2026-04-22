@@ -18,7 +18,7 @@ Shared implementation: [\_shared/wss-proxy-core.js](_shared/wss-proxy-core.js).
 | `PORT` | Set by Render (or default `8788` locally). |
 | `PROXY_MODE` | `production` (default in dev + prod) or `devtest` (default in dev-test). |
 | `MM_WSS_URL` | Optional; default `wss://martialmatch.com/_wss` with `Origin: https://martialmatch.com`. |
-| `DEVTEST_FIXTURE` | Optional; devtest only. Default: [dev-test-martialmatch-v1/data/websocket/628-wss-timeline.json](dev-test-martialmatch-v1/data/websocket/628-wss-timeline.json). |
+| `DEVTEST_FIXTURE` | Optional; devtest only. Default: [dev-test-martialmatch-v1/data/628-x-superpuchar-polski-bjj-nogi-gi/628-wss-timeline.json](dev-test-martialmatch-v1/data/628-x-superpuchar-polski-bjj-nogi-gi/628-wss-timeline.json). |
 
 ## Client ([config.js](../config.js))
 

@@ -115,6 +115,10 @@
   var cmWssSubscribed = Object.create(null);
   /** @type {Record<string, string>} */
   var cmWssDedupByChannel = Object.create(null);
+  /** @type {Record<string, { fightId: * , fightStatus: * }>} */
+  var cmWssLastByChannel = Object.create(null);
+  /** @type {number|null} */
+  var cmWssFightsRefetchDebounce = null;
   /** @type {number|null} */
   var cmWssReconnectTimer = null;
   var cmWssBackoffMs = 2000;
@@ -168,6 +172,53 @@
       return "called";
     }
     return null;
+  }
+
+  /**
+   * Refetch /fights when WSS says a fight is now "called" (awaiting) in situations that
+   * usually mean the list / queue is stale: scheduled in API, or a finished ongoing fight.
+   * @param {object} m
+   * @param {{ fightId: *, fightStatus: * }|null|undefined} prev
+   */
+  function wssShouldRefetchFightsOnMessage(m, prev) {
+    if (!m || m.fightStatus !== "awaiting") {
+      return false;
+    }
+    if (prev && String(prev.fightStatus) === "awaiting") {
+      return false;
+    }
+    if (prev && String(prev.fightStatus) === "ongoing") {
+      return true;
+    }
+    if (!prev) {
+      if (!listEl) {
+        return false;
+      }
+      var chMat = String(m.channel || "").match(/^scoreboard:mat:(\d+)$/);
+      if (!chMat) {
+        return false;
+      }
+      var a = listEl.querySelector(
+        "article.mm-fight[data-mm-mat-id=\"" +
+        chMat[1] + "\"][data-mm-fight-id=\"" + String(m.fightId) + "\"]"
+      );
+      if (!a) {
+        return false;
+      }
+      var tb = a.querySelector(".mm-fight__topbar");
+      if (
+        tb &&
+        tb.classList &&
+        tb.classList.contains("mm-fight__topbar--scheduled")
+      ) {
+        return true;
+      }
+      return false;
+    }
+    if (String(prev.fightStatus) === "scheduled" && m.fightStatus === "awaiting") {
+      return true;
+    }
+    return false;
   }
 
   function wssLiveDedupKey(msg) {
@@ -393,6 +444,10 @@
     });
   }
 
+  /**
+   * Fights tab: (re)subscribe to scoreboard channels. Other tabs: leave all mat channels
+   * so the proxy is not fan-out–ing to the browser; the WebSocket connection is kept.
+   */
   function syncFightsWssForTab() {
     if (!cmWssUrlOk()) {
       return;
@@ -1902,6 +1957,35 @@
 
   function getFightsRefreshPeriodSec() {
     return Math.max(1, Math.round((cfg.currentMatchesRefreshMs || 30000) / 1000));
+  }
+
+  function clearWssFightsRefetchDebounce() {
+    if (cmWssFightsRefetchDebounce != null) {
+      clearTimeout(cmWssFightsRefetchDebounce);
+      cmWssFightsRefetchDebounce = null;
+    }
+  }
+
+  function resetFightsPollCountdown() {
+    if (!fightsPollingActive) {
+      return;
+    }
+    fightsTabSecondsLeft = getFightsRefreshPeriodSec();
+    updateFightsTabLabel();
+  }
+
+  function scheduleFightsRefetchFromWss() {
+    clearWssFightsRefetchDebounce();
+    resetFightsPollCountdown();
+    cmWssFightsRefetchDebounce = window.setTimeout(function () {
+      cmWssFightsRefetchDebounce = null;
+      if (!evSlug || getCmTabFromUrl() !== CM_TAB_FIGHTS) {
+        return;
+      }
+      loadFights().catch(function () {
+        /* keep previous list */
+      });
+    }, 250);
   }
 
   function updateFightsTabLabel() {
@@ -3491,6 +3575,7 @@
   function stopPoll() {
     fightsPollingActive = false;
     fightsTabSecondsLeft = null;
+    clearWssFightsRefetchDebounce();
     if (pollTimerId !== null) {
       clearInterval(pollTimerId);
       pollTimerId = null;
@@ -3507,6 +3592,7 @@
 
     lastFightsData = data;
     cmWssDedupByChannel = Object.create(null);
+    cmWssLastByChannel = Object.create(null);
     listEl.innerHTML = "";
 
     var idSet = getSlugFilterIdSetFromUrl();

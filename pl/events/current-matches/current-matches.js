@@ -647,9 +647,10 @@
     var rnl = rn.toLowerCase();
     var list = [];
     if (rnl === "final") list.push({ text: "Final", variant: "final" });
-    else if (rnl === "semi_final") list.push({ text: "SF", variant: "round" });
+    else if (rnl === "semi_final")
+      list.push({ text: "Semifinal", variant: "semi" });
     else if (rnl === "quarter_final")
-      list.push({ text: "1/4", variant: "round" });
+      list.push({ text: "Quarterfinal", variant: "quarter" });
     else if (
       rnl === "third_place_playoff" ||
       rnl === "repechage_3rd_place"
@@ -3808,6 +3809,14 @@
       timeSpan.textContent =
         t && !isNaN(t.getTime()) ? timeFmt.format(t) : "—";
       mid.appendChild(timeSpan);
+
+      if (Number(pf.bracketType) === 4) {
+        var rrBadge = document.createElement("span");
+        rrBadge.className = "mm-fight__rb mm-fight__rb--rr";
+        rrBadge.textContent = "RR";
+        rrBadge.setAttribute("title", "Round robin");
+        mid.appendChild(rrBadge);
+      }
 
       roundBadgeList(pf).forEach(function (b) {
         var badge = document.createElement("span");

@@ -1020,9 +1020,32 @@ body {
   color: #f0fff4;
 }
 
+/* API roundName: quarter_final / semi_final / final */
+.mm-fight__rb--quarter {
+  background: #2f855a;
+  color: #f0fff4;
+  text-transform: none;
+  font-weight: 700;
+}
+
+.mm-fight__rb--semi {
+  background: #2b6cb0;
+  color: #ebf8ff;
+  text-transform: none;
+  font-weight: 700;
+}
+
+/* Round robin (bracketType 4 in API) */
+.mm-fight__rb--rr {
+  background: #2f855a;
+  color: #f0fff4;
+}
+
 .mm-fight__rb--final {
   background: #9b2c2c;
   color: #fff5f5;
+  text-transform: none;
+  font-weight: 700;
 }
 
 .mm-fight__rb--third {
@@ -1070,6 +1093,26 @@ body {
 
 .mm-fight__topbar--active .mm-fight__rb--round {
   background: #22543d;
+  color: #f0fff4;
+}
+
+.mm-fight__topbar--active .mm-fight__rb--quarter {
+  background: #1c4532;
+  color: #f0fff4;
+}
+
+.mm-fight__topbar--active .mm-fight__rb--semi {
+  background: #2c5282;
+  color: #ebf8ff;
+}
+
+.mm-fight__topbar--active .mm-fight__rb--final {
+  background: #822727;
+  color: #fff5f5;
+}
+
+.mm-fight__topbar--active .mm-fight__rb--rr {
+  background: #1c4532;
   color: #f0fff4;
 }
 

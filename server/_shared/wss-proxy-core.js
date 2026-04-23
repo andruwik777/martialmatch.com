@@ -33,7 +33,7 @@ var DEFAULT_CLIENT_ORIGINS = [
 var WSS_LOG_CLIENTS_EVERY = (function () {
   var raw = process.env.WSS_LOG_CLIENTS_EVERY;
   if (raw == null || String(raw).trim() === "") {
-    return 3;
+    return 10;
   }
   var n = parseInt(String(raw), 10);
   if (n === 0) {

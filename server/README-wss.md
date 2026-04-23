@@ -18,6 +18,7 @@ Shared implementation: [\_shared/wss-proxy-core.js](_shared/wss-proxy-core.js).
 | `PORT` | Set by Render (or default `8788` locally). |
 | `PROXY_MODE` | `production` (default in dev + prod) or `devtest` (default in dev-test). |
 | `MM_WSS_URL` | Optional; default `wss://martialmatch.com/_wss` with `Origin: https://martialmatch.com`. |
+| `WSS_LOG_CLIENTS_EVERY` | Optional. When the number of open browser WebSocket connections is divisible by this value (default **10**), the process logs one line: `connectedClients` and `upstreamMatChannels` (distinct mat channels the proxy has subscribed to on the upstream). Set to **0** to disable. If unset, the default is defined at the top of [\_shared/wss-proxy-core.js](_shared/wss-proxy-core.js). |
 | `DEVTEST_FIXTURE` | Optional; devtest only. Default: [dev-test-martialmatch-v1/data/628-x-superpuchar-polski-bjj-nogi-gi/628-wss-timeline.json](dev-test-martialmatch-v1/data/628-x-superpuchar-polski-bjj-nogi-gi/628-wss-timeline.json). |
 
 ## Client ([config.js](../config.js))

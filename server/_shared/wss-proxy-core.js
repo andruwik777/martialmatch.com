@@ -25,6 +25,27 @@ var DEFAULT_CLIENT_ORIGINS = [
 ];
 
 /**
+ * Log a one-line scale snapshot when the number of open browser connections is divisible
+ * by this value (including 0). Set environment variable WSS_LOG_CLIENTS_EVERY on Render to
+ * change without editing code; use 0 to disable.
+ * @type {number}
+ */
+var WSS_LOG_CLIENTS_EVERY = (function () {
+  var raw = process.env.WSS_LOG_CLIENTS_EVERY;
+  if (raw == null || String(raw).trim() === "") {
+    return 3;
+  }
+  var n = parseInt(String(raw), 10);
+  if (n === 0) {
+    return 0;
+  }
+  if (isNaN(n) || n < 0) {
+    return 10;
+  }
+  return n;
+})();
+
+/**
  * @param {import("net").Socket} socket
  */
 function rejectUpgradeWith403(socket) {
@@ -166,6 +187,42 @@ function startWssProxy(opts) {
 
   /** @type {Map<string, { upstream: import("ws").WebSocket|null, clients: Set<import("ws").WebSocket>, retryTimer: NodeJS.Timeout|null, pendingSub: string[] }>} */
   var prodChannels = new Map();
+
+  /** All browser WebSockets with an active server-side connection (OPEN). */
+  /** @type {Set<import("ws").WebSocket>} */
+  var connectedClients = new Set();
+
+  function countActiveMatChannelSubscriptions() {
+    if (mode === "devtest") {
+      return devtestChannels.size;
+    }
+    return prodChannels.size;
+  }
+
+  function maybeLogWssScaleStats() {
+    var step = WSS_LOG_CLIENTS_EVERY;
+    if (step <= 0) {
+      return;
+    }
+    var n = connectedClients.size;
+    if (n % step !== 0) {
+      return;
+    }
+    var ch = countActiveMatChannelSubscriptions();
+    var where =
+      mode === "devtest"
+        ? "devtest fixture"
+        : "martialmatch.com upstream";
+    console.log(
+      "[wss-proxy] scale: connectedClients=" +
+        n +
+        " upstreamMatChannels=" +
+        ch +
+        " (" +
+        where +
+        ")"
+    );
+  }
 
   function getOrCreateProdEntry(ch) {
     if (!prodChannels.has(ch)) {
@@ -463,6 +520,18 @@ function startWssProxy(opts) {
   });
 
   wss.on("connection", function (cws) {
+    var ended = false;
+    function endClient() {
+      if (ended) {
+        return;
+      }
+      ended = true;
+      clientRemoveAllSubscriptions(cws);
+      connectedClients.delete(cws);
+      maybeLogWssScaleStats();
+    }
+    connectedClients.add(cws);
+    maybeLogWssScaleStats();
     cws.on("message", function (data) {
       var line = Buffer.isBuffer(data) ? data.toString("utf8") : String(data);
       var msg;
@@ -479,12 +548,8 @@ function startWssProxy(opts) {
         clientSubscribeToChannel(cws, String(msg.channel));
       }
     });
-    cws.on("close", function () {
-      clientRemoveAllSubscriptions(cws);
-    });
-    cws.on("error", function () {
-      clientRemoveAllSubscriptions(cws);
-    });
+    cws.on("close", endClient);
+    cws.on("error", endClient);
   });
 
   server.listen(port, function () {
@@ -495,8 +560,11 @@ function startWssProxy(opts) {
         mode +
         (mode === "devtest" ? " fixture=" + (opts.fixturePath || "") : "") +
         " clientOrigins=" +
-        allowedClientOrigins.length
+        allowedClientOrigins.length +
+        " logClientsEvery=" +
+        WSS_LOG_CLIENTS_EVERY
     );
+    maybeLogWssScaleStats();
   });
 }
 

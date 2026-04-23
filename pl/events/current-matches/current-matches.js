@@ -117,6 +117,9 @@
   var cmWssDedupByChannel = Object.create(null);
   /** @type {Record<string, { fightId: * , fightStatus: * }>} */
   var cmWssLastByChannel = Object.create(null);
+  /** Last full WSS payload per channel — reapplied after renderFights while socket is open */
+  /** @type {Record<string, object>} */
+  var cmWssLiveMsgByChannel = Object.create(null);
   /** @type {number|null} */
   var cmWssFightsRefetchDebounce = null;
   /** @type {number|null} */
@@ -234,6 +237,126 @@
     ].join(":");
   }
 
+  function cmWssCloneMessageForCache(obj) {
+    try {
+      return JSON.parse(JSON.stringify(obj));
+    } catch (e) {
+      return obj;
+    }
+  }
+
+  function pruneCmWssLiveCacheForRenderedFights(rows) {
+    var want = Object.create(null);
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      var pf = r && r.publicFight;
+      if (!pf || pf.id == null || pf.matId == null) {
+        continue;
+      }
+      want["scoreboard:mat:" + String(pf.matId)] = {
+        fightId: pf.id,
+        matId: pf.matId,
+      };
+    }
+    var chs = Object.keys(cmWssLiveMsgByChannel);
+    for (var c = 0; c < chs.length; c++) {
+      var ch = chs[c];
+      var w = want[ch];
+      var msg = cmWssLiveMsgByChannel[ch];
+      if (
+        !w ||
+        !msg ||
+        String(msg.fightId) !== String(w.fightId)
+      ) {
+        delete cmWssLiveMsgByChannel[ch];
+      }
+    }
+  }
+
+  function reapplyCachedWssLiveToFightRows() {
+    if (!listEl) {
+      return;
+    }
+    if (getCmTabFromUrl() !== CM_TAB_FIGHTS) {
+      return;
+    }
+    if (!cmWss || cmWss.readyState !== 1) {
+      return;
+    }
+    var chs = Object.keys(cmWssLiveMsgByChannel);
+    for (var i = 0; i < chs.length; i++) {
+      var ch = chs[i];
+      var m = cmWssLiveMsgByChannel[ch];
+      if (!m) {
+        continue;
+      }
+      var dkey = wssLiveDedupKey(m);
+      cmWssDedupByChannel[ch] = dkey;
+      cmWssLastByChannel[ch] = {
+        fightId: m.fightId,
+        fightStatus: m.fightStatus,
+      };
+      applyWssLiveToFightRow(m);
+    }
+  }
+
+  function clearWssLiveOverlaysFromApiQueue() {
+    if (!listEl) {
+      return;
+    }
+    var queue =
+      (lastFightsData && lastFightsData.fightQueueStatuses) || {};
+    var arts = listEl.querySelectorAll(
+      "article.mm-fight[data-mm-mat-id][data-mm-fight-id]"
+    );
+    for (var a = 0; a < arts.length; a++) {
+      var art = arts[a];
+      var matId = art.getAttribute("data-mm-mat-id");
+      var fidStr = art.getAttribute("data-mm-fight-id");
+      var fightId = fidStr != null ? Number(fidStr) : NaN;
+      if (matId == null || isNaN(fightId)) {
+        continue;
+      }
+      var tb = art.querySelector(".mm-fight__topbar");
+      if (tb) {
+        var v = rowHeadVariant(fightId, matId, queue);
+        tb.className = "mm-fight__topbar mm-fight__topbar--" + v;
+      }
+      var wssRace = art.querySelector(".mm-fight__wss-race");
+      if (wssRace) {
+        wssRace.setAttribute("hidden", "hidden");
+      }
+      var tmr = art.querySelector(".mm-fight__wss-timer");
+      if (tmr) {
+        tmr.textContent = formatWssCountdownSec(0);
+      }
+      [ "blue", "red" ].forEach(function (side) {
+        var pr = art.querySelector(
+          ".mm-fight__athlete--" + side + " .mm-fight__wss-pair"
+        );
+        if (!pr) {
+          return;
+        }
+        pr.setAttribute("hidden", "hidden");
+        var earned = pr.querySelector(".mm-fight__wss-tile--earned");
+        var pen = pr.querySelector(".mm-fight__wss-tile--pen");
+        if (earned) {
+          earned.textContent = "0";
+        }
+        if (pen) {
+          pen.textContent = "0";
+        }
+      });
+    }
+  }
+
+  function cmWssInvalidateLiveCacheAndOverlays() {
+    cmWssLiveMsgByChannel = Object.create(null);
+    cmWssDedupByChannel = Object.create(null);
+    cmWssLastByChannel = Object.create(null);
+    clearWssLiveOverlaysFromApiQueue();
+  }
+
   function buildWssChannelListForFightsData(data) {
     if (!data || !data.result || !Array.isArray(data.result)) return [];
     var seen = Object.create(null);
@@ -342,6 +465,7 @@
       cmWssBackoffMs = 2000;
       cmWssSubscribed = Object.create(null);
       cmWssResyncSubscriptionFromFights();
+      reapplyCachedWssLiveToFightRows();
     });
     cmWss.addEventListener("message", function (ev) {
       var m;
@@ -372,6 +496,7 @@
         fightId: m.fightId,
         fightStatus: m.fightStatus,
       };
+      cmWssLiveMsgByChannel[m.channel] = cmWssCloneMessageForCache(m);
       applyWssLiveToFightRow(m);
     });
     var sock = cmWss;
@@ -380,6 +505,7 @@
         return;
       }
       cmWss = null;
+      cmWssInvalidateLiveCacheAndOverlays();
       cmWssScheduleReconnect();
     });
     cmWss.addEventListener("error", function () {
@@ -3603,8 +3729,6 @@
     if (!listEl) return;
 
     lastFightsData = data;
-    cmWssDedupByChannel = Object.create(null);
-    cmWssLastByChannel = Object.create(null);
     listEl.innerHTML = "";
 
     var idSet = getSlugFilterIdSetFromUrl();
@@ -3619,6 +3743,9 @@
     });
 
     if (!allRows.length) {
+      cmWssLiveMsgByChannel = Object.create(null);
+      cmWssDedupByChannel = Object.create(null);
+      cmWssLastByChannel = Object.create(null);
       var emptyF = document.createElement("p");
       emptyF.className = "mm-muted";
       emptyF.textContent = MSG_FIGHTS_NOT_READY;
@@ -3640,6 +3767,10 @@
     var rows = allRows.filter(function (row) {
       return fightMatchesFilter(row, idSet);
     });
+
+    pruneCmWssLiveCacheForRenderedFights(rows);
+    cmWssDedupByChannel = Object.create(null);
+    cmWssLastByChannel = Object.create(null);
 
     rows.forEach(function (row, idx) {
       var pf = row.publicFight;
@@ -3737,6 +3868,7 @@
       cmWssConnect();
       cmWssResyncSubscriptionFromFights();
     }
+    reapplyCachedWssLiveToFightRows();
     if (toolbarEl) {
       toolbarEl.classList.add("is-hidden");
       toolbarEl.textContent = "";
@@ -3962,5 +4094,6 @@
       }
       cmWss = null;
     }
+    cmWssInvalidateLiveCacheAndOverlays();
   });
 })();

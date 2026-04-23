@@ -893,13 +893,14 @@ body {
   flex-wrap: nowrap;
   align-items: center;
   min-width: 0;
-  gap: 0.4rem 0.5rem;
+  /* column-gap: space between #/time/badges | race | pin+mat */
+  gap: 0.4rem 0.45rem;
 }
 
 .mm-fight__topbar-mid {
   display: flex;
   max-width: 100%;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem 0.5rem;
@@ -910,35 +911,47 @@ body {
 .mm-fight__topbar-wss {
   display: flex;
   min-width: 0;
-  flex: 1 1 0;
+  flex: 0 0 auto;
   align-items: center;
-  justify-content: center;
-  padding: 0 0.2rem;
+  justify-content: flex-end;
+  padding: 0;
 }
 
 .mm-fight__wss-race {
   display: inline-flex;
   max-width: 100%;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.1rem;
 }
 
+/* Keep layout size when WSS not yet active (no jump on first message) */
 .mm-fight__wss-race[hidden] {
-  display: none !important;
+  display: inline-flex !important;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
 }
 
 .mm-fight__wss-flag {
   display: block;
-  flex-shrink: 0;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.4rem;
+  object-fit: fill;
   border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 2px;
+  border-radius: 3px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .mm-fight__wss-timer {
+  display: flex;
   box-sizing: border-box;
   min-width: 3rem;
-  padding: 0.18rem 0.4rem 0.2rem;
+  min-height: 1.4rem;
+  padding: 0.2rem 0.4rem;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #1a1a1a;
   border-radius: 4px;
   background: #000;
@@ -957,6 +970,7 @@ body {
   min-width: 0;
 }
 
+/* Flag+timer sit just left of pin; spacing from row1 column-gap */
 .mm-fight__topbar-right {
   display: flex;
   align-items: center;
@@ -1128,7 +1142,10 @@ body {
 }
 
 .mm-fight__wss-pair[hidden] {
-  display: none !important;
+  display: flex !important;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
 }
 
 .mm-fight__wss-tile {

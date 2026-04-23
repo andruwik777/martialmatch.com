@@ -934,13 +934,9 @@ body {
 
 .mm-fight__wss-flag {
   display: block;
-  box-sizing: border-box;
-  flex: 0 0 auto;
-  width: 1.15rem;
-  height: 1.4rem;
-  object-fit: fill;
+  flex-shrink: 0;
   border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 3px;
+  border-radius: 2px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 

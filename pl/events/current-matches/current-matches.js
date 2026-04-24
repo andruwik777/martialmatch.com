@@ -38,6 +38,9 @@
   var tabFightsBtn = document.getElementById("mm-cm-tab-fights");
   var tabHarmonogramBtn = document.getElementById("mm-cm-tab-harmonogram");
   var tabFightsLabelEl = document.getElementById("mm-cm-tab-fights-label");
+  var tabFightsRefreshEl = document.getElementById("mm-cm-tab-fights-refresh");
+  var tabFightsWssEl = document.getElementById("mm-cm-tab-fights-wss");
+  var tabFightsWssDotEl = document.getElementById("mm-cm-tab-fights-wss-dot");
   var panelEventsEl = document.getElementById("mm-cm-panel-events");
   var panelFightsEl = document.getElementById("mm-cm-panel-fights");
   var panelHarmonogramEl = document.getElementById("mm-cm-panel-harmonogram");
@@ -100,12 +103,10 @@
 
   var matNamesById = Object.create(null);
   var pollTimerId = null;
-  /** @type {number|null} */
-  var fightsTabCountdownId = null;
   var fightsPollingActive = false;
-  /** @type {number|null} seconds until next poll (only while fightsPollingActive) */
-  var fightsTabSecondsLeft = null;
   var fightsTabStats = { shown: 0, total: 0 };
+  /** In-flight fetchJson(fights) count; show tab refresh icon when non-zero */
+  var fightsLoadInflight = 0;
   /** @type {object | null} ostatnia poprawna odpowiedź /api/.../fights */
   var lastFightsData = null;
 
@@ -126,6 +127,17 @@
   var cmWssReconnectTimer = null;
   var cmWssBackoffMs = 2000;
   var CM_WSS_BACKOFF_MAX = 30000;
+  var wssLastTrafficPulseAt = 0;
+  /** @type {number|null} */
+  var wssPingRemoveTimer = null;
+  var WSS_TRAFFIC_PULSE_THROTTLE_MS = 400;
+  var WSS_PING_CLASS_REMOVE_MS = 200;
+  var WSS_DOT_STATE_CLASSES = [
+    "mm-cm-tab__wss-dot--na",
+    "mm-cm-tab__wss-dot--offline",
+    "mm-cm-tab__wss-dot--connecting",
+    "mm-cm-tab__wss-dot--open",
+  ];
   /** @type {object | null} pełna odpowiedź /api/events/.../schedules */
   var lastSchedulesPayload = null;
 
@@ -369,6 +381,74 @@
     return Object.keys(seen);
   }
 
+  function clearWssPingClassTimer() {
+    if (wssPingRemoveTimer != null) {
+      clearTimeout(wssPingRemoveTimer);
+      wssPingRemoveTimer = null;
+    }
+  }
+
+  function bumpWssTrafficPulse() {
+    if (!tabFightsWssDotEl) {
+      return;
+    }
+    var now = Date.now();
+    if (now - wssLastTrafficPulseAt < WSS_TRAFFIC_PULSE_THROTTLE_MS) {
+      return;
+    }
+    wssLastTrafficPulseAt = now;
+    tabFightsWssDotEl.classList.add("mm-cm-tab__wss-dot--ping");
+    if (wssPingRemoveTimer != null) {
+      clearTimeout(wssPingRemoveTimer);
+    }
+    wssPingRemoveTimer = window.setTimeout(function () {
+      wssPingRemoveTimer = null;
+      if (tabFightsWssDotEl) {
+        tabFightsWssDotEl.classList.remove("mm-cm-tab__wss-dot--ping");
+      }
+    }, WSS_PING_CLASS_REMOVE_MS);
+  }
+
+  function syncFightsWssStatusUi() {
+    if (!tabFightsWssEl || !tabFightsWssDotEl) {
+      return;
+    }
+    var show = Boolean(
+      evSlug && tabFightsBtn && !tabFightsBtn.disabled
+    );
+    if (!show) {
+      clearWssPingClassTimer();
+      if (tabFightsWssDotEl) {
+        for (var r = 0; r < WSS_DOT_STATE_CLASSES.length; r++) {
+          tabFightsWssDotEl.classList.remove(WSS_DOT_STATE_CLASSES[r]);
+        }
+        tabFightsWssDotEl.classList.remove("mm-cm-tab__wss-dot--ping");
+      }
+      tabFightsWssEl.hidden = true;
+      return;
+    }
+    tabFightsWssEl.hidden = false;
+    for (var j = 0; j < WSS_DOT_STATE_CLASSES.length; j++) {
+      tabFightsWssDotEl.classList.remove(WSS_DOT_STATE_CLASSES[j]);
+    }
+    if (!cmWssUrlOk()) {
+      tabFightsWssDotEl.classList.add("mm-cm-tab__wss-dot--na");
+      return;
+    }
+    if (!cmWss) {
+      tabFightsWssDotEl.classList.add("mm-cm-tab__wss-dot--offline");
+      return;
+    }
+    var st = cmWss.readyState;
+    if (st === 0) {
+      tabFightsWssDotEl.classList.add("mm-cm-tab__wss-dot--connecting");
+    } else if (st === 1) {
+      tabFightsWssDotEl.classList.add("mm-cm-tab__wss-dot--open");
+    } else {
+      tabFightsWssDotEl.classList.add("mm-cm-tab__wss-dot--connecting");
+    }
+  }
+
   function cmWssClearReconnectTimer() {
     if (cmWssReconnectTimer != null) {
       clearTimeout(cmWssReconnectTimer);
@@ -399,6 +479,7 @@
         cmWss.send(
           JSON.stringify({ leaveChannel: true, channel: chs[c] })
         );
+        bumpWssTrafficPulse();
       } catch (e) {
         /* ignore */
       }
@@ -428,6 +509,7 @@
           cmWss.send(
             JSON.stringify({ leaveChannel: true, channel: cur[i] })
           );
+          bumpWssTrafficPulse();
         } catch (e) {
           /* ignore */
         }
@@ -438,6 +520,7 @@
       if (!cmWssSubscribed[want[w]]) {
         try {
           cmWss.send(JSON.stringify({ channel: want[w] }));
+          bumpWssTrafficPulse();
           cmWssSubscribed[want[w]] = true;
         } catch (e) {
           /* ignore */
@@ -448,26 +531,32 @@
 
   function cmWssConnect() {
     if (!cmWssUrlOk()) {
+      syncFightsWssStatusUi();
       return;
     }
     if (cmWss && (cmWss.readyState === 0 || cmWss.readyState === 1)) {
+      syncFightsWssStatusUi();
       return;
     }
     try {
       cmWss = new WebSocket(cfg.wssBaseUrl);
     } catch (e) {
       cmWss = null;
+      syncFightsWssStatusUi();
       cmWssScheduleReconnect();
       return;
     }
+    syncFightsWssStatusUi();
     cmWssBackoffMs = 2000;
     cmWss.addEventListener("open", function () {
       cmWssBackoffMs = 2000;
       cmWssSubscribed = Object.create(null);
       cmWssResyncSubscriptionFromFights();
       reapplyCachedWssLiveToFightRows();
+      syncFightsWssStatusUi();
     });
     cmWss.addEventListener("message", function (ev) {
+      bumpWssTrafficPulse();
       var m;
       try {
         m = JSON.parse(
@@ -506,6 +595,7 @@
       }
       cmWss = null;
       cmWssInvalidateLiveCacheAndOverlays();
+      syncFightsWssStatusUi();
       cmWssScheduleReconnect();
     });
     cmWss.addEventListener("error", function () {
@@ -2092,10 +2182,7 @@
       tabHarmonogramBtn.setAttribute("aria-disabled", has ? "false" : "true");
     }
     updateFightsTabLabel();
-  }
-
-  function getFightsRefreshPeriodSec() {
-    return Math.max(1, Math.round((cfg.currentMatchesRefreshMs || 30000) / 1000));
+    syncFightsWssStatusUi();
   }
 
   function clearWssFightsRefetchDebounce() {
@@ -2105,17 +2192,8 @@
     }
   }
 
-  function resetFightsPollCountdown() {
-    if (!fightsPollingActive) {
-      return;
-    }
-    fightsTabSecondsLeft = getFightsRefreshPeriodSec();
-    updateFightsTabLabel();
-  }
-
   function scheduleFightsRefetchFromWss() {
     clearWssFightsRefetchDebounce();
-    resetFightsPollCountdown();
     cmWssFightsRefetchDebounce = window.setTimeout(function () {
       cmWssFightsRefetchDebounce = null;
       if (!evSlug || getCmTabFromUrl() !== CM_TAB_FIGHTS) {
@@ -2125,6 +2203,21 @@
         /* keep previous list */
       });
     }, 250);
+  }
+
+  function syncFightsTabRefreshUi() {
+    if (!tabFightsBtn) {
+      return;
+    }
+    var on = fightsLoadInflight > 0;
+    if (tabFightsRefreshEl) {
+      tabFightsRefreshEl.hidden = !on;
+    }
+    if (on) {
+      tabFightsBtn.setAttribute("aria-busy", "true");
+    } else {
+      tabFightsBtn.removeAttribute("aria-busy");
+    }
   }
 
   function updateFightsTabLabel() {
@@ -2140,18 +2233,14 @@
     var slugFilter = getSlugFilterIdSetFromUrl();
     var filtered =
       Boolean(slugFilter && Object.keys(slugFilter).length);
-    var parens =
-      fightsPollingActive && fightsTabSecondsLeft != null
-        ? " (" + fightsTabSecondsLeft + "s)"
-        : "";
     var body = filtered ? "Fights " + s + "/" + t : "Fights " + t;
-    if (tabFightsLabelEl) tabFightsLabelEl.textContent = body + parens;
-    else tabFightsBtn.textContent = body + parens;
+    if (tabFightsLabelEl) tabFightsLabelEl.textContent = body;
+    else tabFightsBtn.textContent = body;
     var aria = filtered
       ? "Fights tab, " + s + " of " + t + " fights match filter"
       : "Fights tab, " + t + " fights";
-    if (fightsPollingActive && fightsTabSecondsLeft != null) {
-      aria += ", next refresh in " + fightsTabSecondsLeft + " seconds";
+    if (fightsLoadInflight > 0) {
+      aria += ", loading list";
     }
     tabFightsBtn.setAttribute("aria-label", aria);
   }
@@ -2579,6 +2668,7 @@
       }
     }
     syncFightsWssForTab();
+    syncFightsWssStatusUi();
   }
 
   function applyCmTabDom(tab) {
@@ -3713,15 +3803,10 @@
 
   function stopPoll() {
     fightsPollingActive = false;
-    fightsTabSecondsLeft = null;
     clearWssFightsRefetchDebounce();
     if (pollTimerId !== null) {
       clearInterval(pollTimerId);
       pollTimerId = null;
-    }
-    if (fightsTabCountdownId !== null) {
-      clearInterval(fightsTabCountdownId);
-      fightsTabCountdownId = null;
     }
     updateFightsTabLabel();
   }
@@ -3753,7 +3838,6 @@
       listEl.appendChild(emptyF);
       fightsTabStats.shown = 0;
       fightsTabStats.total = 0;
-      fightsTabSecondsLeft = getFightsRefreshPeriodSec();
       updateFightsTabLabel();
       if (evSlug && getCmTabFromUrl() === CM_TAB_FIGHTS && cmWssUrlOk()) {
         cmWssResyncSubscriptionFromFights();
@@ -3871,7 +3955,6 @@
 
     fightsTabStats.shown = rows.length;
     fightsTabStats.total = allRows.length;
-    fightsTabSecondsLeft = getFightsRefreshPeriodSec();
     updateFightsTabLabel();
     if (evSlug && getCmTabFromUrl() === CM_TAB_FIGHTS && cmWssUrlOk()) {
       cmWssConnect();
@@ -3895,6 +3978,9 @@
   }
 
   function loadFights() {
+    fightsLoadInflight++;
+    syncFightsTabRefreshUi();
+    updateFightsTabLabel();
     return fetchJson(fightsUrl(eventNumericId))
       .then(function (data) {
         clearError();
@@ -3917,6 +4003,11 @@
           }
         }
         throw err;
+      })
+      .finally(function () {
+        fightsLoadInflight = Math.max(0, fightsLoadInflight - 1);
+        syncFightsTabRefreshUi();
+        updateFightsTabLabel();
       });
   }
 
@@ -3924,16 +4015,6 @@
     stopPoll();
     fightsPollingActive = true;
     var ms = cfg.currentMatchesRefreshMs || 30000;
-    var periodSec = getFightsRefreshPeriodSec();
-    if (fightsTabSecondsLeft == null) {
-      fightsTabSecondsLeft = periodSec;
-    }
-    fightsTabCountdownId = window.setInterval(function () {
-      if (fightsTabSecondsLeft != null && fightsTabSecondsLeft > 0) {
-        fightsTabSecondsLeft--;
-      }
-      updateFightsTabLabel();
-    }, 1000);
     pollTimerId = window.setInterval(function () {
       loadFights().catch(function () {
         /* zostaw poprzednią listę */

@@ -550,6 +550,122 @@ body {
   flex: 2 1 0;
 }
 
+.mm-cm-tab--fights .mm-cm-tab__label {
+  text-align: center;
+}
+
+/* HTTP /fights fetch in progress — top-right, out of text flow */
+.mm-cm-tab__refresh {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.9rem;
+  height: 0.9rem;
+  line-height: 0;
+  color: inherit;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.mm-cm-tab__refresh[hidden] {
+  display: none;
+}
+
+.mm-cm-tab-refresh-ic {
+  display: block;
+  animation: mm-cm-refresh-spin 0.7s linear infinite;
+}
+
+@keyframes mm-cm-refresh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* WSS proxy — small status dot, bottom-right (diameter ≈ 4px vs ~9px event lane dots) */
+.mm-cm-tab__wss {
+  position: absolute;
+  right: 0.18rem;
+  bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.4rem;
+  height: 0.4rem;
+  pointer-events: none;
+}
+
+.mm-cm-tab__wss[hidden] {
+  display: none;
+}
+
+.mm-cm-tab__wss-dot {
+  display: block;
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 50%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+/* WSS URL not configured */
+.mm-cm-tab__wss-dot--na {
+  background: #64748b;
+  border: 1px solid #64748b;
+  opacity: 0.7;
+}
+
+.mm-cm-tab__wss-dot--offline {
+  background: #dc2626;
+  border: 1px solid #dc2626;
+}
+
+.mm-cm-tab__wss-dot--connecting {
+  background: #f97316;
+  border: 1px solid #f97316;
+  animation: mm-cm-wss-pulse-conn 0.9s ease-in-out infinite;
+}
+
+@keyframes mm-cm-wss-pulse-conn {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.mm-cm-tab__wss-dot--open {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid #22c55e;
+}
+
+/* neutral flash for any WSS traffic (throttled in JS) */
+.mm-cm-tab__wss-dot--ping {
+  animation: mm-cm-wss-ping 0.18s ease-out;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
+  filter: brightness(1.35);
+}
+
+@keyframes mm-cm-wss-ping {
+  0% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
 .mm-cm-tab__label {
   display: block;
   min-width: 0;
@@ -575,6 +691,12 @@ body {
     transform 0.1s ease,
     filter 0.1s ease,
     box-shadow 0.1s ease;
+}
+
+/* Fights: room for TR refresh + BR WSS; must follow base .mm-cm-tab so padding is not reset */
+.mm-cm-tab.mm-cm-tab--fights {
+  position: relative;
+  padding: 0.5rem 1.15rem 0.5rem 0.75rem;
 }
 
 .mm-cm-tab:hover {

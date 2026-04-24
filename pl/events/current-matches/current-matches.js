@@ -369,11 +369,21 @@
     clearWssLiveOverlaysFromApiQueue();
   }
 
-  function buildWssChannelListForFightsData(data) {
+  /**
+   * Mat channels for WSS subscription. When idSet is null/empty (no slug_filter),
+   * includes all mats from the fights payload; otherwise only mats for rows that
+   * pass the same filter as renderFights (fightMatchesFilter).
+   * @param {object|null|undefined} data
+   * @param {Record<string, true>|null|undefined} idSet from getSlugFilterIdSetFromUrl
+   */
+  function buildWssChannelListForFightsData(data, idSet) {
     if (!data || !data.result || !Array.isArray(data.result)) return [];
     var seen = Object.create(null);
     for (var i = 0; i < data.result.length; i++) {
       var r = data.result[i];
+      if (!fightMatchesFilter(r, idSet)) {
+        continue;
+      }
       var pf = r && r.publicFight;
       if (!pf || pf.matId == null) continue;
       seen["scoreboard:mat:" + String(pf.matId)] = true;
@@ -497,7 +507,10 @@
     if (!lastFightsData) {
       return;
     }
-    var want = buildWssChannelListForFightsData(lastFightsData);
+    var want = buildWssChannelListForFightsData(
+      lastFightsData,
+      getSlugFilterIdSetFromUrl()
+    );
     var wmap = Object.create(null);
     for (var a = 0; a < want.length; a++) {
       wmap[want[a]] = true;

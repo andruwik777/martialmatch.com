@@ -630,15 +630,16 @@
       return;
     }
     var matId = matMatch[1];
+    // Multiple rows can share a mat: match the specific fight, not the first
+    // article for that mat (querySelector is document-order only).
     var art = listEl.querySelector(
-      'article.mm-fight[data-mm-mat-id="' + String(matId) + '"]'
+      "article.mm-fight[data-mm-mat-id=\"" +
+        String(matId) +
+        "\"][data-mm-fight-id=\"" +
+        String(msg.fightId) +
+        "\"]"
     );
     if (!art) {
-      return;
-    }
-    if (String(art.getAttribute("data-mm-fight-id") || "") !==
-      String(msg.fightId)
-    ) {
       return;
     }
     var v = mapWssToTopbarVariant(msg);

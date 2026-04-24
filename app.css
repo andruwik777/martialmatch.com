@@ -1157,7 +1157,13 @@ body {
   font-weight: 700;
 }
 
-/* Round robin (bracketType 4 in API) */
+/* publicFight.bracketType 2 — three-competitor repechage (3CR on martialmatch.com) */
+.mm-fight__rb--3cr {
+  background: #5b3ea8;
+  color: #f3edff;
+}
+
+/* Round robin (bracketType 4) */
 .mm-fight__rb--rr {
   background: #2f855a;
   color: #f0fff4;
@@ -1236,6 +1242,11 @@ body {
 .mm-fight__topbar--active .mm-fight__rb--rr {
   background: #1c4532;
   color: #f0fff4;
+}
+
+.mm-fight__topbar--active .mm-fight__rb--3cr {
+  background: #44337a;
+  color: #faf5ff;
 }
 
 .mm-fight__topbar--active .mm-fight__rb--neutral {

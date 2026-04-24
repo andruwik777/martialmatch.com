@@ -1,0 +1,2892 @@
+{
+    "activeScheduleId": 950,
+    "schedules": [
+        {
+            "id": 950,
+            "name": "GGC8",
+            "mats": [
+                {
+                    "id": 2632,
+                    "name": "MATA 1",
+                    "categories": [
+                        {
+                            "id": 218778,
+                            "name": "GI; master 2; br\u0105zowe\/czarne; -82.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:00:00",
+                                "end": "2026-04-25 06:16:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219482,
+                            "name": "OPEN; MEN GI WHITE\/BLUE",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:16:30",
+                                "end": "2026-04-25 07:28:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219490,
+                            "name": "OPEN; MEN GI ELITE PRO VETERANS  35+",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:28:00",
+                                "end": "2026-04-25 08:06:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218614,
+                            "name": "GI; adult; purpurowy; -76 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:06:30",
+                                "end": "2026-04-25 08:29:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218618,
+                            "name": "GI; adult; purpurowy; -100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:29:00",
+                                "end": "2026-04-25 08:36:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 222360,
+                            "name": "GI; master 3; purpurowy; -88.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:36:30",
+                                "end": "2026-04-25 09:04:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218619,
+                            "name": "GI; adult; purpurowy; +100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:04:00",
+                                "end": "2026-04-25 09:11:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218771,
+                            "name": "GI; master 2; purpurowy; -88.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:11:30",
+                                "end": "2026-04-25 09:17:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218726,
+                            "name": "GI; master 1; niebieski; -88.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:17:00",
+                                "end": "2026-04-25 09:22:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218650,
+                            "name": "GI; kobiety; adult; niebieski; -58.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:22:30",
+                                "end": "2026-04-25 09:42:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218653,
+                            "name": "GI; kobiety; adult; niebieski; -74 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:42:00",
+                                "end": "2026-04-25 10:01:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218610,
+                            "name": "GI; adult; niebieski; +100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:01:30",
+                                "end": "2026-04-25 10:21:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218607,
+                            "name": "GI; adult; niebieski; -88.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:21:00",
+                                "end": "2026-04-25 10:27:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218608,
+                            "name": "GI; adult; niebieski; -94.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:27:30",
+                                "end": "2026-04-25 10:34:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218603,
+                            "name": "GI; adult; niebieski; -64 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:34:00",
+                                "end": "2026-04-25 10:53:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219492,
+                            "name": "OPEN; MEN NO GI ELITE PRO VETERANS  35+",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:53:30",
+                                "end": "2026-04-25 11:32:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219485,
+                            "name": "OPEN; MEN NO GI ELITE PRO",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:32:00",
+                                "end": "2026-04-25 12:17:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219069,
+                            "name": "NO- GI; adult; purpurowy; -79.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:17:30",
+                                "end": "2026-04-25 12:40:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219070,
+                            "name": "NO- GI; adult; purpurowy; -85.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:40:00",
+                                "end": "2026-04-25 13:02:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219107,
+                            "name": "NO- GI; master 1; niebieski; -85.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:02:30",
+                                "end": "2026-04-25 13:08:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219058,
+                            "name": "NO- GI; adult; niebieski; -67.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:08:00",
+                                "end": "2026-04-25 13:27:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219116,
+                            "name": "NO- GI; master 1; purpurowy; -85.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:27:30",
+                                "end": "2026-04-25 13:40:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219106,
+                            "name": "NO- GI; master 1; niebieski; -79.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:40:30",
+                                "end": "2026-04-25 13:46:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219059,
+                            "name": "NO- GI; adult; niebieski; -73.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:46:00",
+                                "end": "2026-04-25 14:18:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219060,
+                            "name": "NO- GI; adult; niebieski; -79.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:18:30",
+                                "end": "2026-04-25 15:04:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219061,
+                            "name": "NO- GI; adult; niebieski; -85.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:04:00",
+                                "end": "2026-04-25 15:23:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219062,
+                            "name": "NO- GI; adult; niebieski; -91.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:23:30",
+                                "end": "2026-04-25 15:49:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2633,
+                    "name": "MATA 2",
+                    "categories": [
+                        {
+                            "id": 218624,
+                            "name": "GI; adult; br\u0105zowy; -88.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:00:00",
+                                "end": "2026-04-25 06:25:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219484,
+                            "name": "OPEN; WOMEN GI ALL BELTS",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:25:30",
+                                "end": "2026-04-25 07:15:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219483,
+                            "name": "OPEN; MEN GI ELITE PRO",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:15:00",
+                                "end": "2026-04-25 08:26:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218606,
+                            "name": "GI; adult; niebieski; -82.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:26:30",
+                                "end": "2026-04-25 09:38:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219488,
+                            "name": "OPEN; MEN GI WHITE\/BLUE VETERANS  35+",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:38:00",
+                                "end": "2026-04-25 10:38:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218605,
+                            "name": "GI; adult; niebieski; -76 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:38:30",
+                                "end": "2026-04-25 10:58:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218760,
+                            "name": "GI; master 2; niebieski; -76 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:58:00",
+                                "end": "2026-04-25 11:03:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218765,
+                            "name": "GI; master 2; niebieski; +100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:03:30",
+                                "end": "2026-04-25 11:09:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218728,
+                            "name": "GI; master 1; niebieski; -100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:09:00",
+                                "end": "2026-04-25 11:25:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219486,
+                            "name": "OPEN; MEN NO GI WHITE\/BLUE",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:25:30",
+                                "end": "2026-04-25 12:37:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219491,
+                            "name": "OPEN; MEN NO GI WHITE\/BLUE VETERANS  35+",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:37:00",
+                                "end": "2026-04-25 13:37:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219487,
+                            "name": "OPEN; WOMEN NO GI ALL BELTS",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:37:30",
+                                "end": "2026-04-25 14:21:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219435,
+                            "name": "NO- GI; kobiety; adult; niebieski; -66.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:21:30",
+                                "end": "2026-04-25 14:28:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219433,
+                            "name": "NO- GI; kobiety; adult; niebieski; -56.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:28:00",
+                                "end": "2026-04-25 14:41:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219434,
+                            "name": "NO- GI; kobiety; adult; niebieski; -61.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:41:00",
+                                "end": "2026-04-25 14:47:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219054,
+                            "name": "NO- GI; adult; bia\u0142y; -97.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:47:30",
+                                "end": "2026-04-25 14:53:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219055,
+                            "name": "NO- GI; adult; bia\u0142y; +97.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:53:00",
+                                "end": "2026-04-25 15:48:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219409,
+                            "name": "NO- GI; U-18; zaawansowany; ch\u0142opcy; -74 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:48:00",
+                                "end": "2026-04-25 16:04:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2634,
+                    "name": "MATA 3",
+                    "categories": [
+                        {
+                            "id": 218819,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:00:00",
+                                "end": "2026-04-25 06:35:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218816,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -24 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:35:00",
+                                "end": "2026-04-25 07:10:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218817,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:10:00",
+                                "end": "2026-04-25 07:41:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218820,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:41:30",
+                                "end": "2026-04-25 08:06:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218897,
+                            "name": "GI; U-12; zaawansowany; ch\u0142opcy; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:06:00",
+                                "end": "2026-04-25 08:27:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218898,
+                            "name": "GI; U-12; zaawansowany; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:27:00",
+                                "end": "2026-04-25 08:48:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218899,
+                            "name": "GI; U-12; zaawansowany; ch\u0142opcy; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:48:00",
+                                "end": "2026-04-25 09:12:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218901,
+                            "name": "GI; U-12; zaawansowany; ch\u0142opcy; -46 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:12:30",
+                                "end": "2026-04-25 09:23:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218911,
+                            "name": "GI; U-12; zaawansowany; dziewcz\u0119ta; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:23:00",
+                                "end": "2026-04-25 09:33:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218912,
+                            "name": "GI; U-12; zaawansowany; dziewcz\u0119ta; -42 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:33:30",
+                                "end": "2026-04-25 09:44:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218954,
+                            "name": "GI; U-14; zaawansowany; dziewcz\u0119ta; -41 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:44:00",
+                                "end": "2026-04-25 09:48:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218956,
+                            "name": "GI; U-14; zaawansowany; dziewcz\u0119ta; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:48:30",
+                                "end": "2026-04-25 10:15:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219267,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -42 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:15:30",
+                                "end": "2026-04-25 10:36:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219170,
+                            "name": "NO- GI; U-6; U6; -22 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:36:30",
+                                "end": "2026-04-25 10:39:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219179,
+                            "name": "NO- GI; U-8; ch\u0142opcy; -20 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:39:00",
+                                "end": "2026-04-25 10:41:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219180,
+                            "name": "NO- GI; U-8; ch\u0142opcy; -23 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:41:30",
+                                "end": "2026-04-25 10:59:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219181,
+                            "name": "NO- GI; U-8; ch\u0142opcy; -26 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:59:00",
+                                "end": "2026-04-25 11:14:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219287,
+                            "name": "NO- GI; U-12; zaawansowany; dziewcz\u0119ta; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:14:00",
+                                "end": "2026-04-25 11:17:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219197,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -24 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:17:30",
+                                "end": "2026-04-25 11:45:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219198,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:45:30",
+                                "end": "2026-04-25 12:17:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219258,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:17:00",
+                                "end": "2026-04-25 12:27:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219266,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:27:30",
+                                "end": "2026-04-25 12:48:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219276,
+                            "name": "NO- GI; U-12; zaawansowany; ch\u0142opcy; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:48:30",
+                                "end": "2026-04-25 12:59:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219277,
+                            "name": "NO- GI; U-12; zaawansowany; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:59:00",
+                                "end": "2026-04-25 13:23:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219278,
+                            "name": "NO- GI; U-12; zaawansowany; ch\u0142opcy; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:23:30",
+                                "end": "2026-04-25 13:41:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219280,
+                            "name": "NO- GI; U-12; zaawansowany; ch\u0142opcy; -46 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:41:00",
+                                "end": "2026-04-25 13:51:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 222379,
+                            "name": "NO- GI; master 3; bia\u0142y; -91.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:51:30",
+                                "end": "2026-04-25 13:57:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219348,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -66 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:57:00",
+                                "end": "2026-04-25 14:42:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219349,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -73 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:42:00",
+                                "end": "2026-04-25 15:09:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219350,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -81 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:09:00",
+                                "end": "2026-04-25 15:22:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219392,
+                            "name": "NO- GI; U-18; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -84.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:22:30",
+                                "end": "2026-04-25 15:39:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219357,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -60 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:39:00",
+                                "end": "2026-04-25 16:06:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2635,
+                    "name": "MATA 4",
+                    "categories": [
+                        {
+                            "id": 218829,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -24 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:00:00",
+                                "end": "2026-04-25 06:03:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218830,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:03:30",
+                                "end": "2026-04-25 06:24:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218831,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:24:30",
+                                "end": "2026-04-25 06:35:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218832,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:35:00",
+                                "end": "2026-04-25 06:45:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218836,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:45:30",
+                                "end": "2026-04-25 06:49:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218818,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:49:00",
+                                "end": "2026-04-25 07:24:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218821,
+                            "name": "GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -42 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:24:00",
+                                "end": "2026-04-25 07:45:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218787,
+                            "name": "GI; U-6; U6 men; -22 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:45:00",
+                                "end": "2026-04-25 07:47:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218799,
+                            "name": "GI; U-8; ch\u0142opcy; -23 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:47:30",
+                                "end": "2026-04-25 08:17:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218800,
+                            "name": "GI; U-8; ch\u0142opcy; -26 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:17:30",
+                                "end": "2026-04-25 08:42:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218801,
+                            "name": "GI; U-8; ch\u0142opcy; -29 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:42:30",
+                                "end": "2026-04-25 08:57:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218804,
+                            "name": "GI; U-8; ch\u0142opcy; +36 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:57:30",
+                                "end": "2026-04-25 09:05:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218807,
+                            "name": "GI; U-8; dziewcz\u0119ta; -23 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:05:00",
+                                "end": "2026-04-25 09:20:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218808,
+                            "name": "GI; U-8; dziewcz\u0119ta; -26 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:20:00",
+                                "end": "2026-04-25 09:35:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 238411,
+                            "name": "GI; U-14; zaawansowany; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:35:00",
+                                "end": "2026-04-25 10:02:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218944,
+                            "name": "GI; U-14; zaawansowany; ch\u0142opcy; -41 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:02:00",
+                                "end": "2026-04-25 10:29:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219188,
+                            "name": "NO- GI; U-8; dziewcz\u0119ta; -23 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:29:00",
+                                "end": "2026-04-25 10:31:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219289,
+                            "name": "NO- GI; U-12; zaawansowany; dziewcz\u0119ta; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:31:30",
+                                "end": "2026-04-25 10:42:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219182,
+                            "name": "NO- GI; U-8; ch\u0142opcy; -29 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:42:00",
+                                "end": "2026-04-25 10:44:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219189,
+                            "name": "NO- GI; U-8; dziewcz\u0119ta; -26 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:44:30",
+                                "end": "2026-04-25 10:52:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219187,
+                            "name": "NO- GI; U-8; dziewcz\u0119ta; -20 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:52:00",
+                                "end": "2026-04-25 10:59:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219199,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:59:30",
+                                "end": "2026-04-25 11:38:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219200,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:38:00",
+                                "end": "2026-04-25 12:13:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219290,
+                            "name": "NO- GI; U-12; zaawansowany; dziewcz\u0119ta; -42 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:13:00",
+                                "end": "2026-04-25 12:16:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219300,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -37 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:16:30",
+                                "end": "2026-04-25 12:52:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219301,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -41 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:52:30",
+                                "end": "2026-04-25 13:37:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219343,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -41 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:37:30",
+                                "end": "2026-04-25 13:51:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219345,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:51:00",
+                                "end": "2026-04-25 14:18:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219346,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:18:00",
+                                "end": "2026-04-25 14:45:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219347,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -60 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:45:00",
+                                "end": "2026-04-25 15:12:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219331,
+                            "name": "NO- GI; U-14; zaawansowany; dziewcz\u0119ta; -37 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:12:00",
+                                "end": "2026-04-25 15:25:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219365,
+                            "name": "NO- GI; U-16; zaawansowany; ch\u0142opcy; -46 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:25:30",
+                                "end": "2026-04-25 15:39:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219388,
+                            "name": "NO- GI; U-18; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -64 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:39:00",
+                                "end": "2026-04-25 16:01:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219387,
+                            "name": "NO- GI; U-18; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -58.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 16:01:00",
+                                "end": "2026-04-25 16:34:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2636,
+                    "name": "MATA 5",
+                    "categories": [
+                        {
+                            "id": 218843,
+                            "name": "GI; U-10; zaawansowany; ch\u0142opcy; -24 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:00:00",
+                                "end": "2026-04-25 06:03:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218844,
+                            "name": "GI; U-10; zaawansowany; ch\u0142opcy; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:03:30",
+                                "end": "2026-04-25 06:14:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218846,
+                            "name": "GI; U-10; zaawansowany; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:14:00",
+                                "end": "2026-04-25 06:28:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218857,
+                            "name": "GI; U-10; zaawansowany; dziewcz\u0119ta; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:28:00",
+                                "end": "2026-04-25 06:49:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218877,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:49:00",
+                                "end": "2026-04-25 07:24:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218878,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:24:00",
+                                "end": "2026-04-25 07:45:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218883,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:45:00",
+                                "end": "2026-04-25 07:48:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219420,
+                            "name": "NO- GI; U-18; zaawansowany; dziewcz\u0119ta; -65 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:48:30",
+                                "end": "2026-04-25 08:05:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218885,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:05:00",
+                                "end": "2026-04-25 08:15:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218886,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:15:30",
+                                "end": "2026-04-25 08:26:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218887,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -42 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:26:00",
+                                "end": "2026-04-25 09:01:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218926,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -60 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:01:00",
+                                "end": "2026-04-25 09:28:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218928,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -73 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:28:00",
+                                "end": "2026-04-25 09:55:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218933,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -45 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:55:00",
+                                "end": "2026-04-25 09:59:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218935,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:59:30",
+                                "end": "2026-04-25 10:13:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218934,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:13:00",
+                                "end": "2026-04-25 10:26:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218991,
+                            "name": "GI; U-16; zaawansowany; ch\u0142opcy; -60 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:26:30",
+                                "end": "2026-04-25 10:40:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219201,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:40:00",
+                                "end": "2026-04-25 11:04:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219202,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -42 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:04:30",
+                                "end": "2026-04-25 11:25:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219390,
+                            "name": "NO- GI; U-18; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -74 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:25:30",
+                                "end": "2026-04-25 12:04:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219211,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:04:00",
+                                "end": "2026-04-25 12:25:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219212,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:25:00",
+                                "end": "2026-04-25 12:35:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219214,
+                            "name": "NO- GI; U-10; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:35:30",
+                                "end": "2026-04-25 12:56:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219302,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -45 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:56:30",
+                                "end": "2026-04-25 13:23:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219303,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:23:30",
+                                "end": "2026-04-25 13:55:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219304,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:55:00",
+                                "end": "2026-04-25 14:40:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219351,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; +81 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:40:00",
+                                "end": "2026-04-25 14:53:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219353,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -41 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:53:30",
+                                "end": "2026-04-25 14:58:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219355,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:58:00",
+                                "end": "2026-04-25 15:25:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219356,
+                            "name": "NO- GI; U-16; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:25:00",
+                                "end": "2026-04-25 15:52:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219399,
+                            "name": "NO- GI; U-18; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -56.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:52:00",
+                                "end": "2026-04-25 16:08:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2637,
+                    "name": "MATA 6",
+                    "categories": [
+                        {
+                            "id": 218871,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:00:00",
+                                "end": "2026-04-25 06:03:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218872,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:03:30",
+                                "end": "2026-04-25 06:28:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218873,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:28:00",
+                                "end": "2026-04-25 06:49:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218874,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:49:00",
+                                "end": "2026-04-25 07:17:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218875,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -42 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:17:00",
+                                "end": "2026-04-25 07:38:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218876,
+                            "name": "GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -46 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:38:00",
+                                "end": "2026-04-25 07:59:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218930,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -37 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:59:00",
+                                "end": "2026-04-25 08:26:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218922,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -41 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:26:00",
+                                "end": "2026-04-25 09:02:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218923,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -45 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:02:00",
+                                "end": "2026-04-25 09:15:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218924,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:15:30",
+                                "end": "2026-04-25 09:47:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218990,
+                            "name": "GI; U-16; zaawansowany; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:47:00",
+                                "end": "2026-04-25 10:32:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218971,
+                            "name": "GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -66 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:32:00",
+                                "end": "2026-04-25 10:36:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219224,
+                            "name": "NO- GI; U-10; zaawansowany; ch\u0142opcy; -24 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:36:30",
+                                "end": "2026-04-25 10:40:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219226,
+                            "name": "NO- GI; U-10; zaawansowany; ch\u0142opcy; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:40:00",
+                                "end": "2026-04-25 10:50:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219227,
+                            "name": "NO- GI; U-10; zaawansowany; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:50:30",
+                                "end": "2026-04-25 10:54:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219238,
+                            "name": "NO- GI; U-10; zaawansowany; dziewcz\u0119ta; -27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:54:00",
+                                "end": "2026-04-25 11:15:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219252,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; - 27 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:15:00",
+                                "end": "2026-04-25 11:18:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219253,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -30 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:18:30",
+                                "end": "2026-04-25 11:39:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219254,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:39:30",
+                                "end": "2026-04-25 12:00:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219255,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -38 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:00:30",
+                                "end": "2026-04-25 12:28:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219256,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -42 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:28:30",
+                                "end": "2026-04-25 12:53:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219257,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -46 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:53:00",
+                                "end": "2026-04-25 13:17:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219259,
+                            "name": "NO- GI; U-12; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:17:30",
+                                "end": "2026-04-25 13:52:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219367,
+                            "name": "NO- GI; U-16; zaawansowany; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:52:30",
+                                "end": "2026-04-25 14:19:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219370,
+                            "name": "NO- GI; U-16; zaawansowany; ch\u0142opcy; -73 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:19:30",
+                                "end": "2026-04-25 14:46:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219368,
+                            "name": "NO- GI; U-16; zaawansowany; ch\u0142opcy; -60 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:46:30",
+                                "end": "2026-04-25 15:13:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219389,
+                            "name": "NO- GI; U-18; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -69 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:13:30",
+                                "end": "2026-04-25 15:41:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219369,
+                            "name": "NO- GI; U-16; zaawansowany; ch\u0142opcy; -66 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:41:00",
+                                "end": "2026-04-25 16:17:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2638,
+                    "name": "MATA 7",
+                    "categories": [
+                        {
+                            "id": 219000,
+                            "name": "GI; U-16; zaawansowany; dziewcz\u0119ta; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:00:00",
+                                "end": "2026-04-25 06:09:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219013,
+                            "name": "GI; U-18; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -74 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:09:00",
+                                "end": "2026-04-25 06:25:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219014,
+                            "name": "GI; U-18; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -79.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:25:30",
+                                "end": "2026-04-25 06:31:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219022,
+                            "name": "GI; U-18; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -56.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:31:00",
+                                "end": "2026-04-25 06:47:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218595,
+                            "name": "GI; adult; bia\u0142y; -70 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:47:30",
+                                "end": "2026-04-25 07:04:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218596,
+                            "name": "GI; adult; bia\u0142y; -76 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:04:00",
+                                "end": "2026-04-25 07:37:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218598,
+                            "name": "GI; adult; bia\u0142y; -88.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:37:00",
+                                "end": "2026-04-25 07:59:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218599,
+                            "name": "GI; adult; bia\u0142y; -94.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:59:00",
+                                "end": "2026-04-25 08:15:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218600,
+                            "name": "GI; adult; bia\u0142y; -100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:15:30",
+                                "end": "2026-04-25 08:37:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218601,
+                            "name": "GI; adult; bia\u0142y; +100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:37:30",
+                                "end": "2026-04-25 08:43:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218597,
+                            "name": "GI; adult; bia\u0142y; -82.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:43:00",
+                                "end": "2026-04-25 09:05:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218688,
+                            "name": "GI; kobiety; master; niebieski; -64 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:05:00",
+                                "end": "2026-04-25 09:16:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218641,
+                            "name": "GI; kobiety; adult; bia\u0142y; -58.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:16:00",
+                                "end": "2026-04-25 09:43:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218925,
+                            "name": "GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:43:30",
+                                "end": "2026-04-25 10:10:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218974,
+                            "name": "GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; +81 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:10:30",
+                                "end": "2026-04-25 10:15:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218994,
+                            "name": "GI; U-16; zaawansowany; ch\u0142opcy; -81 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:15:00",
+                                "end": "2026-04-25 10:28:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218988,
+                            "name": "GI; U-16; zaawansowany; ch\u0142opcy; -46 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:28:30",
+                                "end": "2026-04-25 10:42:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218604,
+                            "name": "GI; adult; niebieski; -70 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:42:00",
+                                "end": "2026-04-25 11:01:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219377,
+                            "name": "NO- GI; U-16; zaawansowany; dziewcz\u0119ta; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:01:30",
+                                "end": "2026-04-25 11:06:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219305,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -60 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:06:00",
+                                "end": "2026-04-25 11:37:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219308,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; ch\u0142opcy; +73 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:37:30",
+                                "end": "2026-04-25 12:04:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 238415,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:04:30",
+                                "end": "2026-04-25 12:18:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219312,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -45 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:18:00",
+                                "end": "2026-04-25 12:22:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219313,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:22:30",
+                                "end": "2026-04-25 12:49:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219315,
+                            "name": "NO- GI; U-14; pocz\u0105tkuj\u0105cy; dziewcz\u0119ta; -60 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:49:30",
+                                "end": "2026-04-25 12:54:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 238426,
+                            "name": "NO- GI; U-14; zaawansowany; ch\u0142opcy; -34 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:54:00",
+                                "end": "2026-04-25 13:21:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219322,
+                            "name": "NO- GI; U-14; zaawansowany; ch\u0142opcy; -41 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:21:00",
+                                "end": "2026-04-25 14:06:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219323,
+                            "name": "NO- GI; U-14; zaawansowany; ch\u0142opcy; -45 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:06:00",
+                                "end": "2026-04-25 14:37:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219324,
+                            "name": "NO- GI; U-14; zaawansowany; ch\u0142opcy; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 14:37:30",
+                                "end": "2026-04-25 15:04:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219325,
+                            "name": "NO- GI; U-14; zaawansowany; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:04:30",
+                                "end": "2026-04-25 15:09:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219099,
+                            "name": "NO- GI; master 1; bia\u0142y; -91.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:09:00",
+                                "end": "2026-04-25 15:25:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219371,
+                            "name": "NO- GI; U-16; zaawansowany; ch\u0142opcy; -81 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:25:30",
+                                "end": "2026-04-25 15:39:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219375,
+                            "name": "NO- GI; U-16; zaawansowany; dziewcz\u0119ta; -46 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:39:00",
+                                "end": "2026-04-25 15:43:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219052,
+                            "name": "NO- GI; adult; bia\u0142y; -85.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:43:30",
+                                "end": "2026-04-25 16:05:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219386,
+                            "name": "NO- GI; U-18; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -53,5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 16:05:30",
+                                "end": "2026-04-25 16:22:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2639,
+                    "name": "MATA 8",
+                    "categories": [
+                        {
+                            "id": 218642,
+                            "name": "GI; kobiety; adult; bia\u0142y; -64 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:00:00",
+                                "end": "2026-04-25 06:16:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218715,
+                            "name": "GI; master 1; bia\u0142y; -76 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:16:30",
+                                "end": "2026-04-25 06:22:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218716,
+                            "name": "GI; master 1; bia\u0142y; -82.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:22:00",
+                                "end": "2026-04-25 06:27:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218717,
+                            "name": "GI; master 1; bia\u0142y; -88.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:27:30",
+                                "end": "2026-04-25 06:33:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218720,
+                            "name": "GI; master 1; bia\u0142y; +100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:33:00",
+                                "end": "2026-04-25 06:38:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218751,
+                            "name": "GI; master 2; bia\u0142y; -76 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:38:30",
+                                "end": "2026-04-25 06:55:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218752,
+                            "name": "GI; master 2; bia\u0142y; -82.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 06:55:00",
+                                "end": "2026-04-25 07:11:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218753,
+                            "name": "GI; master 2; bia\u0142y; -88.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:11:30",
+                                "end": "2026-04-25 07:17:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 222340,
+                            "name": "GI; master 3; bia\u0142y; -76 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:17:00",
+                                "end": "2026-04-25 07:22:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 222345,
+                            "name": "GI; master 3; bia\u0142y; +100.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:22:30",
+                                "end": "2026-04-25 07:28:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 222350,
+                            "name": "GI; master 3; niebieski; -82.3 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:28:00",
+                                "end": "2026-04-25 07:33:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218992,
+                            "name": "GI; U-16; zaawansowany; ch\u0142opcy; -66 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 07:33:30",
+                                "end": "2026-04-25 08:05:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218967,
+                            "name": "GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -46 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:05:00",
+                                "end": "2026-04-25 08:18:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218969,
+                            "name": "GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:18:30",
+                                "end": "2026-04-25 08:32:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218970,
+                            "name": "GI; U-16; pocz\u0105tkuj\u0105cy; ch\u0142opcy; -60 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:32:00",
+                                "end": "2026-04-25 08:36:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218947,
+                            "name": "GI; U-14; zaawansowany; ch\u0142opcy; -55 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:36:30",
+                                "end": "2026-04-25 08:50:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218993,
+                            "name": "GI; U-16; zaawansowany; ch\u0142opcy; -73 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 08:50:00",
+                                "end": "2026-04-25 09:17:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218946,
+                            "name": "GI; U-14; zaawansowany; ch\u0142opcy; -50 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:17:00",
+                                "end": "2026-04-25 09:48:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218945,
+                            "name": "GI; U-14; zaawansowany; ch\u0142opcy; -45 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 09:48:30",
+                                "end": "2026-04-25 10:20:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218651,
+                            "name": "GI; kobiety; adult; niebieski; -64 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:20:00",
+                                "end": "2026-04-25 10:59:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 218652,
+                            "name": "GI; kobiety; adult; niebieski; -69 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 10:59:00",
+                                "end": "2026-04-25 11:05:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219048,
+                            "name": "NO- GI; adult; bia\u0142y; -61.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:05:30",
+                                "end": "2026-04-25 11:27:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219049,
+                            "name": "NO- GI; adult; bia\u0142y; -67.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 11:27:30",
+                                "end": "2026-04-25 12:17:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219050,
+                            "name": "NO- GI; adult; bia\u0142y; -73.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 12:17:00",
+                                "end": "2026-04-25 13:39:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219051,
+                            "name": "NO- GI; adult; bia\u0142y; -79.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 13:39:30",
+                                "end": "2026-04-25 15:18:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219425,
+                            "name": "NO- GI; kobiety; adult; bia\u0142y; -51.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:18:30",
+                                "end": "2026-04-25 15:24:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219426,
+                            "name": "NO- GI; kobiety; adult; bia\u0142y; -56.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:24:00",
+                                "end": "2026-04-25 15:40:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219428,
+                            "name": "NO- GI; kobiety; adult; bia\u0142y; -66.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:40:30",
+                                "end": "2026-04-25 15:46:00"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219097,
+                            "name": "NO- GI; master 1; bia\u0142y; -79.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:46:00",
+                                "end": "2026-04-25 15:51:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219134,
+                            "name": "NO- GI; master 2; bia\u0142y; -79.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 15:51:30",
+                                "end": "2026-04-25 16:02:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        },
+                        {
+                            "id": 219053,
+                            "name": "NO- GI; adult; bia\u0142y; -91.5 kg",
+                            "scheduledCategoryTime": {
+                                "start": "2026-04-25 16:02:30",
+                                "end": "2026-04-25 16:24:30"
+                            },
+                            "assignmentType": {
+                                "value": 1,
+                                "representation": "full"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "sharing": 1
+        }
+    ]
+}

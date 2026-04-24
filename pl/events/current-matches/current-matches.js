@@ -746,6 +746,26 @@
     return String(cat).replace(/;/g, " ").replace(/\s+/g, " ").trim();
   }
 
+  /**
+   * publicFight.bracketType — integer from MartialMatch fights JSON (not documented
+   * in public API). Inferred from real UI + `fights.html` (CSS class names) for event
+   * 665, see: server/dev-test-martialmatch-v1/data/665-ground-game-cup-…/fights.json
+   * and fights.html. Official “Przebieg walk” only adds extra format chips for **2** and
+   * **4** (`3CR` / `RR`); 1 and 3 rely on roundName labels only.
+   * - 1: Single-elimination (default ladder); no extra format badge on official site.
+   * - 2: Three-competitor repechage; official badge text “3CR”
+   *   (`bracket-type-badge-three-competitor-repechage`); often bracketSize 3.
+   * - 3: No public badge on official site; appears as normal knockout rounds
+   *   (e.g. quarter_final) with a larger tree than simple SE — *likely* double-elim
+   *   or a richer structure (hypothesis, confirm with more events if needed).
+   * - 4: Round robin; official “RR” (`bracket-type-badge-round-robin`). roundName
+   *   like “1/3”, “2/3” = round index within the RR group, not KO fraction “1/8”.
+   */
+  var MM_BRACKET_TYPE_SINGLE_ELIM = 1;
+  var MM_BRACKET_TYPE_THREE_COMPETITOR_REPECHAGE = 2;
+  var MM_BRACKET_TYPE_DOUBLE_OR_COMPLEX_ELIM = 3;
+  var MM_BRACKET_TYPE_ROUND_ROBIN = 4;
+
   function roundBadgeList(pf) {
     var rn = (pf.roundName || "").trim();
     var rnl = rn.toLowerCase();
@@ -762,7 +782,7 @@
       list.push({ text: "3rd", variant: "third" });
     else if (rnl === "repechage") list.push({ text: "REP", variant: "round" });
     else if (rn === "1/8" || rnl.indexOf("1/8") === 0)
-      list.push({ text: "1/8", variant: "round" });
+      list.push({ text: "1/8", variant: "neutral" });
     else if (rn === "1/4" || rnl.indexOf("1/4") === 0)
       list.push({ text: "1/4", variant: "round" });
     else if (rnl.indexOf("1/2") === 0)
@@ -3908,7 +3928,15 @@
         t && !isNaN(t.getTime()) ? timeFmt.format(t) : "—";
       mid.appendChild(timeSpan);
 
-      if (Number(pf.bracketType) === 4) {
+      var bt = Number(pf.bracketType);
+      if (bt === MM_BRACKET_TYPE_THREE_COMPETITOR_REPECHAGE) {
+        var tcrBadge = document.createElement("span");
+        tcrBadge.className = "mm-fight__rb mm-fight__rb--3cr";
+        tcrBadge.textContent = "3CR";
+        tcrBadge.setAttribute("title", "Three-competitor repechage");
+        mid.appendChild(tcrBadge);
+      }
+      if (bt === MM_BRACKET_TYPE_ROUND_ROBIN) {
         var rrBadge = document.createElement("span");
         rrBadge.className = "mm-fight__rb mm-fight__rb--rr";
         rrBadge.textContent = "RR";

@@ -261,6 +261,58 @@
   }
 
   /**
+   * Scoreboard types where the first competitor is rendered as BLUE on MM.
+   * For all other/unknown/missing types we use RED-first as safe fallback.
+   * Keep this list tiny and extend only after validating against real MM pages.
+   */
+  var BLUE_RED_SCOREBOARD_TYPES = {
+    bjj: true,
+    bjjbluered: true,
+  };
+
+  function normalizeScoreboardType(raw) {
+    return String(raw != null ? raw : "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
+  }
+
+  function isBlueFirstScoreboardType(scoreboardType) {
+    var key = normalizeScoreboardType(scoreboardType);
+    return Boolean(key && BLUE_RED_SCOREBOARD_TYPES[key]);
+  }
+
+  /**
+   * Corner mapping for first/second competitors and competitor1/2 score fields.
+   * - Base orientation comes from scoreboardType (blue-first whitelist).
+   * - switchedCompetitors=true swaps participants between existing blue/red corners.
+   *
+   * @param {string|null|undefined} scoreboardType fights.publicFight.scoreboardType
+   *   or websocket message `type`
+   * @param {boolean} switchedCompetitors
+   * @returns {{
+   *   blueFromFirst: boolean,
+   *   blueParticipantKey: "first"|"second",
+   *   redParticipantKey: "first"|"second",
+   *   blueScoreKey: "competitor1"|"competitor2",
+   *   redScoreKey: "competitor1"|"competitor2"
+   * }}
+   */
+  function resolveCornerMapping(scoreboardType, switchedCompetitors) {
+    var blueFromFirst = isBlueFirstScoreboardType(scoreboardType);
+    if (switchedCompetitors) {
+      blueFromFirst = !blueFromFirst;
+    }
+    return {
+      blueFromFirst: blueFromFirst,
+      blueParticipantKey: blueFromFirst ? "first" : "second",
+      redParticipantKey: blueFromFirst ? "second" : "first",
+      blueScoreKey: blueFromFirst ? "competitor1" : "competitor2",
+      redScoreKey: blueFromFirst ? "competitor2" : "competitor1",
+    };
+  }
+
+  /**
    * Scoreboard payload aliases across event types.
    *
    * We render up to three tiles per corner:
@@ -327,11 +379,11 @@
   }
 
   function wssCompetitorKeyForCorner(msg, side) {
-    var switched = Boolean(msg && msg.switchedCompetitors);
-    if (side === "blue") {
-      return switched ? "competitor2" : "competitor1";
-    }
-    return switched ? "competitor1" : "competitor2";
+    var map = resolveCornerMapping(
+      msg && msg.type,
+      Boolean(msg && msg.switchedCompetitors)
+    );
+    return side === "blue" ? map.blueScoreKey : map.redScoreKey;
   }
 
   function wssReadScorePartForCorner(msg, side, kind) {
@@ -4102,8 +4154,20 @@
 
       var body = document.createElement("div");
       body.className = "mm-fight__body";
-      body.appendChild(buildAthleteRow(pf.firstCompetitor, "blue"));
-      body.appendChild(buildAthleteRow(pf.secondCompetitor, "red"));
+      var cornerMap = resolveCornerMapping(
+        pf.scoreboardType,
+        Boolean(pf.switchedCompetitors)
+      );
+      var blueCompetitor =
+        cornerMap.blueParticipantKey === "first"
+          ? pf.firstCompetitor
+          : pf.secondCompetitor;
+      var redCompetitor =
+        cornerMap.redParticipantKey === "first"
+          ? pf.firstCompetitor
+          : pf.secondCompetitor;
+      body.appendChild(buildAthleteRow(blueCompetitor, "blue"));
+      body.appendChild(buildAthleteRow(redCompetitor, "red"));
 
       article.appendChild(topbar);
       article.appendChild(body);

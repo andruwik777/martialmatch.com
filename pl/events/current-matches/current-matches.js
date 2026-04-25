@@ -4166,8 +4166,14 @@
         cornerMap.redParticipantKey === "first"
           ? pf.firstCompetitor
           : pf.secondCompetitor;
-      body.appendChild(buildAthleteRow(blueCompetitor, "blue"));
-      body.appendChild(buildAthleteRow(redCompetitor, "red"));
+      var blueTopLayout = isBlueFirstScoreboardType(pf.scoreboardType);
+      if (blueTopLayout) {
+        body.appendChild(buildAthleteRow(blueCompetitor, "blue"));
+        body.appendChild(buildAthleteRow(redCompetitor, "red"));
+      } else {
+        body.appendChild(buildAthleteRow(redCompetitor, "red"));
+        body.appendChild(buildAthleteRow(blueCompetitor, "blue"));
+      }
 
       article.appendChild(topbar);
       article.appendChild(body);

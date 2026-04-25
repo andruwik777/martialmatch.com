@@ -1302,7 +1302,7 @@ body {
   background: #e53e3e;
 }
 
-/* WSS: earned (green) + penalty (red) tiles; pair hidden until first message */
+/* WSS score tiles: earned (green), attempt/advantage (yellow), penalty (red). */
 .mm-fight__wss-pair {
   display: flex;
   box-sizing: border-box;
@@ -1341,6 +1341,11 @@ body {
 .mm-fight__wss-tile--earned {
   color: #f0fff4;
   background: #276749;
+}
+
+.mm-fight__wss-tile--attempt {
+  color: #fffbea;
+  background: #b7791f;
 }
 
 .mm-fight__wss-tile--pen {

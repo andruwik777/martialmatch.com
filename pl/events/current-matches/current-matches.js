@@ -237,16 +237,122 @@
   }
 
   function wssLiveDedupKey(msg) {
+    var blueScore = wssExtractScoreBySide(msg, "blue");
+    var redScore = wssExtractScoreBySide(msg, "red");
     return [
       String(msg.fightId || ""),
       String(msg.internalTime != null ? msg.internalTime : ""),
       String(msg.timerClass || ""),
       String(msg.fightStatus || ""),
-      String(msg.redMajorPoints != null ? msg.redMajorPoints : ""),
-      String(msg.blueMajorPoints != null ? msg.blueMajorPoints : ""),
-      String(msg.redPenaltyPoints != null ? msg.redPenaltyPoints : ""),
-      String(msg.bluePenaltyPoints != null ? msg.bluePenaltyPoints : ""),
+      wssScoreDedupPart(blueScore.earned),
+      wssScoreDedupPart(blueScore.attempt),
+      wssScoreDedupPart(blueScore.penalty),
+      wssScoreDedupPart(redScore.earned),
+      wssScoreDedupPart(redScore.attempt),
+      wssScoreDedupPart(redScore.penalty),
     ].join(":");
+  }
+
+  function wssScoreDedupPart(part) {
+    if (!part || !part.present) {
+      return "na";
+    }
+    return String(part.value);
+  }
+
+  /**
+   * Scoreboard payload field aliases across different event types.
+   *
+   * We render three optional score tiles per side:
+   * - earned (green)
+   * - attempt/advantage (yellow)
+   * - penalty (red)
+   *
+   * Different combat types emit different key names (examples from websocket fixtures):
+   * - submissionFighting2: blueMajorPoints / bluePenaltyPoints
+   * - bjj: competitor1MajorPoints / competitor1Advantages / competitor1Penalties
+   * - roundBased (boxing/kickboxing/etc): no score keys in payload
+   *
+   * Rule: tile is shown only when at least one mapped key exists in payload.
+   * Value 0 is still shown (present and currently zero).
+   */
+  var WSS_SCORE_FIELD_ALIASES_BY_SIDE = {
+    blue: {
+      earned: [ "blueMajorPoints", "competitor1MajorPoints" ],
+      attempt: [ "blueAdvantages", "competitor1Advantages" ],
+      penalty: [ "bluePenaltyPoints", "competitor1Penalties" ],
+    },
+    red: {
+      earned: [ "redMajorPoints", "competitor2MajorPoints" ],
+      attempt: [ "redAdvantages", "competitor2Advantages" ],
+      penalty: [ "redPenaltyPoints", "competitor2Penalties" ],
+    },
+  };
+
+  function wssReadScorePartByAliases(msg, aliases) {
+    if (!msg || !aliases || !aliases.length) {
+      return { present: false, value: 0 };
+    }
+    for (var i = 0; i < aliases.length; i++) {
+      var key = aliases[i];
+      if (Object.prototype.hasOwnProperty.call(msg, key)) {
+        var raw = msg[key];
+        var num = Number(raw);
+        return {
+          present: true,
+          value: isFinite(num) ? num : 0,
+        };
+      }
+    }
+    return { present: false, value: 0 };
+  }
+
+  function wssExtractScoreBySide(msg, side) {
+    var cfgBySide = WSS_SCORE_FIELD_ALIASES_BY_SIDE[side] || {};
+    return {
+      earned: wssReadScorePartByAliases(msg, cfgBySide.earned || []),
+      attempt: wssReadScorePartByAliases(msg, cfgBySide.attempt || []),
+      penalty: wssReadScorePartByAliases(msg, cfgBySide.penalty || []),
+    };
+  }
+
+  function buildWssScoreTile(kind, value) {
+    var tile = document.createElement("div");
+    tile.className = "mm-fight__wss-tile mm-fight__wss-tile--" + kind;
+    if (kind === "earned") {
+      tile.setAttribute("aria-label", "Earned points");
+    } else if (kind === "attempt") {
+      tile.setAttribute("aria-label", "Attempt points");
+    } else {
+      tile.setAttribute("aria-label", "Penalty points");
+    }
+    tile.textContent = String(value);
+    return tile;
+  }
+
+  function renderWssScoreTilesForSide(pairEl, score) {
+    if (!pairEl || !score) {
+      return;
+    }
+    pairEl.innerHTML = "";
+    var shown = 0;
+    if (score.earned && score.earned.present) {
+      pairEl.appendChild(buildWssScoreTile("earned", score.earned.value));
+      shown++;
+    }
+    if (score.attempt && score.attempt.present) {
+      pairEl.appendChild(buildWssScoreTile("attempt", score.attempt.value));
+      shown++;
+    }
+    if (score.penalty && score.penalty.present) {
+      pairEl.appendChild(buildWssScoreTile("pen", score.penalty.value));
+      shown++;
+    }
+    if (shown > 0) {
+      pairEl.removeAttribute("hidden");
+    } else {
+      pairEl.setAttribute("hidden", "hidden");
+    }
   }
 
   function cmWssCloneMessageForCache(obj) {
@@ -350,14 +456,7 @@
           return;
         }
         pr.setAttribute("hidden", "hidden");
-        var earned = pr.querySelector(".mm-fight__wss-tile--earned");
-        var pen = pr.querySelector(".mm-fight__wss-tile--pen");
-        if (earned) {
-          earned.textContent = "0";
-        }
-        if (pen) {
-          pen.textContent = "0";
-        }
+        pr.innerHTML = "";
       });
     }
   }
@@ -657,32 +756,15 @@
     if (wssRace) {
       wssRace.removeAttribute("hidden");
     }
-    var bm = msg.blueMajorPoints != null ? msg.blueMajorPoints : 0;
-    var rm = msg.redMajorPoints != null ? msg.redMajorPoints : 0;
-    var bp = msg.bluePenaltyPoints != null ? msg.bluePenaltyPoints : 0;
-    var rp = msg.redPenaltyPoints != null ? msg.redPenaltyPoints : 0;
     [ "blue", "red" ].forEach(function (side) {
-      var row = art.querySelector(
+      var pair = art.querySelector(
         ".mm-fight__athlete--" + side + " .mm-fight__wss-pair"
       );
-      if (!row) {
+      if (!pair) {
         return;
       }
-      var earned = row.querySelector(
-        ".mm-fight__wss-tile--earned"
-      );
-      var pen = row.querySelector(".mm-fight__wss-tile--pen");
-      if (earned) {
-        earned.textContent = String(
-          side === "blue" ? bm : rm
-        );
-      }
-      if (pen) {
-        pen.textContent = String(
-          side === "blue" ? bp : rp
-        );
-      }
-      row.removeAttribute("hidden");
+      var score = wssExtractScoreBySide(msg, side);
+      renderWssScoreTilesForSide(pair, score);
     });
   }
 
@@ -923,16 +1005,6 @@
     var wss = document.createElement("div");
     wss.className = "mm-fight__wss-pair";
     wss.setAttribute("hidden", "hidden");
-    var tEarned = document.createElement("div");
-    tEarned.className = "mm-fight__wss-tile mm-fight__wss-tile--earned";
-    tEarned.setAttribute("aria-label", "Earned points");
-    tEarned.textContent = "0";
-    var tPen = document.createElement("div");
-    tPen.className = "mm-fight__wss-tile mm-fight__wss-tile--pen";
-    tPen.setAttribute("aria-label", "Penalty points");
-    tPen.textContent = "0";
-    wss.appendChild(tEarned);
-    wss.appendChild(tPen);
 
     wrap.appendChild(cornerEl);
     wrap.appendChild(main);
@@ -2354,6 +2426,12 @@
     if (origMmLinkEl && typeof cfg.martialMatchEventUrl === "function") {
       if (evSlug) {
         var mmUrl = cfg.martialMatchEventUrl(evSlug.slug);
+        var tab = getCmTabFromUrl();
+        if (tab === CM_TAB_FIGHTS) {
+          mmUrl += "/current-matches";
+        } else if (tab === CM_TAB_HARMONOGRAM) {
+          mmUrl += "/schedules";
+        }
         origMmLinkEl.href = mmUrl;
         origMmLinkEl.setAttribute("title", mmUrl);
         origMmLinkEl.classList.remove("is-hidden");

@@ -15,9 +15,18 @@
   var eventNumericId = null;
 
   function refreshSlugFromLocation() {
+    var prevSlugStr = evSlug && evSlug.slug ? evSlug.slug : "";
     var p = new URLSearchParams(window.location.search);
     evSlug = eventSlugFromQuery(p);
     eventNumericId = evSlug ? evSlug.numericId : null;
+    var nextSlugStr = evSlug && evSlug.slug ? evSlug.slug : "";
+    if (prevSlugStr !== nextSlugStr) {
+      /**
+       * Active event changed: drop all live overlays/cache to prevent applying
+       * stale WSS updates from previous slug during next fights render.
+       */
+      cmWssInvalidateLiveCacheAndOverlays();
+    }
   }
 
   refreshSlugFromLocation();
@@ -460,10 +469,11 @@
       if (!pf || pf.id == null || pf.matId == null) {
         continue;
       }
-      want["scoreboard:mat:" + String(pf.matId)] = {
-        fightId: pf.id,
-        matId: pf.matId,
-      };
+      var chKey = "scoreboard:mat:" + String(pf.matId);
+      if (!want[chKey]) {
+        want[chKey] = Object.create(null);
+      }
+      want[chKey][String(pf.id)] = true;
     }
     var chs = Object.keys(cmWssLiveMsgByChannel);
     for (var c = 0; c < chs.length; c++) {
@@ -473,7 +483,7 @@
       if (
         !w ||
         !msg ||
-        String(msg.fightId) !== String(w.fightId)
+        !w[String(msg.fightId)]
       ) {
         delete cmWssLiveMsgByChannel[ch];
       }
@@ -868,6 +878,8 @@
     if (evSlug && getCmTabFromUrl() === CM_TAB_FIGHTS) {
       cmWssResyncSubscriptionFromFights();
     } else {
+      // Fights is inactive: clear cached live overlays immediately.
+      cmWssInvalidateLiveCacheAndOverlays();
       cmWssLeaveAllChannels();
     }
   }
@@ -2941,7 +2953,9 @@
     });
     tabFightsBtn.addEventListener("click", function () {
       if (!evSlug) return;
-      setCmTab(CM_TAB_FIGHTS);
+      if (getCmTabFromUrl() !== CM_TAB_FIGHTS) {
+        setCmTab(CM_TAB_FIGHTS);
+      }
       loadFights().catch(function () {
         /* zostaw poprzednią listę */
       });
@@ -3790,6 +3804,13 @@
     if (tab === CM_TAB_EVENTS) {
       refreshEventsListVisibility();
     } else {
+      if (tab === CM_TAB_FIGHTS) {
+        /**
+         * Filter apply can radically change visible rows. Drop live WSS cache to avoid
+         * briefly reapplying stale mat+fight overlays during list rebuild.
+         */
+        cmWssInvalidateLiveCacheAndOverlays();
+      }
       if (lastFightsData) {
         renderFights(lastFightsData);
       }

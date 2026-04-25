@@ -261,31 +261,50 @@
   }
 
   /**
-   * Scoreboard payload field aliases across different event types.
+   * Scoreboard payload aliases across event types.
    *
-   * We render three optional score tiles per side:
+   * We render up to three tiles per corner:
    * - earned (green)
    * - attempt/advantage (yellow)
    * - penalty (red)
    *
-   * Different combat types emit different key names (examples from websocket fixtures):
-   * - submissionFighting2: blueMajorPoints / bluePenaltyPoints
-   * - bjj: competitor1MajorPoints / competitor1Advantages / competitor1Penalties
-   * - roundBased (boxing/kickboxing/etc): no score keys in payload
+   * Source payload families:
+   * - Side-native keys (already blue/red oriented):
+   *   blueMajorPoints / redMajorPoints, bluePenaltyPoints / redPenaltyPoints, ...
+   * - Competitor-indexed keys (bjj-style):
+   *   competitor1MajorPoints / competitor2MajorPoints, ...Advantages, ...Penalties
+   *
+   * Important: `switchedCompetitors` can invert competitor-to-corner relation.
+   * For indexed keys we map blue/red to competitor1/2 dynamically:
+   * - switchedCompetitors=false: blue->competitor1, red->competitor2
+   * - switchedCompetitors=true:  blue->competitor2, red->competitor1
    *
    * Rule: tile is shown only when at least one mapped key exists in payload.
    * Value 0 is still shown (present and currently zero).
    */
-  var WSS_SCORE_FIELD_ALIASES_BY_SIDE = {
+  var WSS_SCORE_FIELD_ALIASES_BY_SIDE_NATIVE = {
     blue: {
-      earned: [ "blueMajorPoints", "competitor1MajorPoints" ],
-      attempt: [ "blueAdvantages", "competitor1Advantages" ],
-      penalty: [ "bluePenaltyPoints", "competitor1Penalties" ],
+      earned: [ "blueMajorPoints" ],
+      attempt: [ "blueAdvantages" ],
+      penalty: [ "bluePenaltyPoints" ],
     },
     red: {
-      earned: [ "redMajorPoints", "competitor2MajorPoints" ],
-      attempt: [ "redAdvantages", "competitor2Advantages" ],
-      penalty: [ "redPenaltyPoints", "competitor2Penalties" ],
+      earned: [ "redMajorPoints" ],
+      attempt: [ "redAdvantages" ],
+      penalty: [ "redPenaltyPoints" ],
+    },
+  };
+
+  var WSS_SCORE_FIELD_ALIASES_BY_COMPETITOR = {
+    competitor1: {
+      earned: [ "competitor1MajorPoints" ],
+      attempt: [ "competitor1Advantages" ],
+      penalty: [ "competitor1Penalties" ],
+    },
+    competitor2: {
+      earned: [ "competitor2MajorPoints" ],
+      attempt: [ "competitor2Advantages" ],
+      penalty: [ "competitor2Penalties" ],
     },
   };
 
@@ -307,12 +326,30 @@
     return { present: false, value: 0 };
   }
 
+  function wssCompetitorKeyForCorner(msg, side) {
+    var switched = Boolean(msg && msg.switchedCompetitors);
+    if (side === "blue") {
+      return switched ? "competitor2" : "competitor1";
+    }
+    return switched ? "competitor1" : "competitor2";
+  }
+
+  function wssReadScorePartForCorner(msg, side, kind) {
+    var cfgNative = WSS_SCORE_FIELD_ALIASES_BY_SIDE_NATIVE[side] || {};
+    var nativePart = wssReadScorePartByAliases(msg, cfgNative[kind] || []);
+    if (nativePart.present) {
+      return nativePart;
+    }
+    var competitorKey = wssCompetitorKeyForCorner(msg, side);
+    var cfgComp = WSS_SCORE_FIELD_ALIASES_BY_COMPETITOR[competitorKey] || {};
+    return wssReadScorePartByAliases(msg, cfgComp[kind] || []);
+  }
+
   function wssExtractScoreBySide(msg, side) {
-    var cfgBySide = WSS_SCORE_FIELD_ALIASES_BY_SIDE[side] || {};
     return {
-      earned: wssReadScorePartByAliases(msg, cfgBySide.earned || []),
-      attempt: wssReadScorePartByAliases(msg, cfgBySide.attempt || []),
-      penalty: wssReadScorePartByAliases(msg, cfgBySide.penalty || []),
+      earned: wssReadScorePartForCorner(msg, side, "earned"),
+      attempt: wssReadScorePartForCorner(msg, side, "attempt"),
+      penalty: wssReadScorePartForCorner(msg, side, "penalty"),
     };
   }
 

@@ -2928,6 +2928,56 @@
     updateFilterMainButtonLabel();
   }
 
+  var shareNavBtn = document.getElementById("mm-cm-nav-share");
+
+  function buildSharePayload() {
+    var url = window.location.href;
+    var title = document.title || "MartialMatch viewer";
+    var sum = getEventSummaryForHeader();
+    if (sum && sum.title) {
+      title = String(sum.title).trim() + " — MartialMatch viewer";
+    }
+    return { url: url, title: title };
+  }
+
+  function copyUrlToClipboard(url) {
+    if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
+      return Promise.reject(new Error("clipboard_unavailable"));
+    }
+    return navigator.clipboard.writeText(url);
+  }
+
+  function shareCurrentPageUrl() {
+    var payload = buildSharePayload();
+    if (navigator.share) {
+      if (navigator.canShare && !navigator.canShare(payload)) {
+        return copyUrlToClipboard(payload.url);
+      }
+      return navigator.share(payload).catch(function (err) {
+        if (err && err.name === "AbortError") return;
+        return copyUrlToClipboard(payload.url);
+      });
+    }
+    return copyUrlToClipboard(payload.url);
+  }
+
+  function initShareNav() {
+    if (!shareNavBtn) return;
+    var canShare = Boolean(navigator.share);
+    var canCopy =
+      navigator.clipboard && typeof navigator.clipboard.writeText === "function";
+    if (!canShare && !canCopy) {
+      shareNavBtn.classList.add("is-hidden");
+      return;
+    }
+    shareNavBtn.classList.remove("is-hidden");
+    shareNavBtn.addEventListener("click", function () {
+      shareCurrentPageUrl().catch(function () {
+        /* cancelled or clipboard blocked */
+      });
+    });
+  }
+
   function initCmTabsFromUrl() {
     if (
       !tabEventsBtn ||
@@ -4352,6 +4402,7 @@
   }
 
   initCmTabsFromUrl();
+  initShareNav();
   updateFilterRootVisibility();
   updateFilterMainButtonLabel();
   syncHeaderEventLine();

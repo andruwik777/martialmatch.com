@@ -2117,3 +2117,49 @@ body {
 .mm-filter-club.mm-filter-club--filter-hidden {
   display: none !important;
 }
+
+/* PWA install — fixed below header, above list content */
+.mm-pwa-install {
+  position: fixed;
+  right: max(0.5rem, env(safe-area-inset-right, 0px));
+  z-index: 30;
+  margin: 0;
+  padding: 0.4rem 0.75rem;
+  min-height: 2.75rem;
+  min-width: 5.5rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: #5b8cff;
+  border: 1px solid #4a7ae8;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.1s ease,
+    filter 0.1s ease;
+}
+
+.mm-pwa-install:hover {
+  background: #6b9aff;
+  border-color: #5b8cff;
+}
+
+.mm-pwa-install:active {
+  transform: scale(0.98);
+  filter: brightness(0.92);
+}
+
+.mm-pwa-install:focus-visible {
+  outline: 2px solid #90cdf4;
+  outline-offset: 2px;
+}
+
+.mm-pwa-install[hidden] {
+  display: none !important;
+}

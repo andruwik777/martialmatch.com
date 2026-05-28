@@ -774,6 +774,7 @@ body {
   flex: 0 0 auto;
 }
 
+.mm-cm-header-nav__home,
 .mm-cm-header-nav__share {
   margin: 0;
   padding: 0;
@@ -794,20 +795,25 @@ body {
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
 }
 
+.mm-cm-header-nav__home:hover,
 .mm-cm-header-nav__share:hover {
   color: #7aa8ff;
   text-decoration: underline;
   background: transparent;
 }
 
+.mm-cm-header-nav__home:active,
+.mm-cm-header-nav__home:focus,
 .mm-cm-header-nav__share:active,
 .mm-cm-header-nav__share:focus {
   background: transparent;
   background-color: transparent;
 }
 
+.mm-cm-header-nav__home:focus-visible,
 .mm-cm-header-nav__share:focus-visible {
   outline: 2px solid #5b8cff;
   outline-offset: 2px;

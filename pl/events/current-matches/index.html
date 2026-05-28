@@ -15,11 +15,13 @@
 <body>
   <header class="header mm-cm-page-header">
     <nav class="mm-nav mm-cm-header-nav" aria-label="Navigation">
-      <a
+      <button
+        type="button"
         class="mm-nav-link mm-cm-header-nav__home"
-        href="./?tab=events"
         id="mm-cm-nav-home"
-        >Home</a>
+      >
+        Home
+      </button>
       <a
         class="mm-nav-link mm-cm-header-orig-link is-hidden"
         id="mm-cm-orig-mm-link"
@@ -360,14 +362,6 @@
     </div>
   </main>
 
-  <script>
-    (function () {
-      var a = document.getElementById("mm-cm-nav-home");
-      if (a && window.MM_CONFIG && window.MM_CONFIG.withModeQuery) {
-        a.href = window.MM_CONFIG.withModeQuery("./?tab=events");
-      }
-    })();
-  </script>
   <script src="../../../pwa.js" defer></script>
   <script src="current-matches.js" defer></script>
 </body>

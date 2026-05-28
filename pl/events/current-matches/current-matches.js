@@ -995,6 +995,47 @@
     return name || "—";
   }
 
+  /** Easter egg: random emoji after exact family first+last names (filter rows and fight cards). */
+  var FAMILY_EMOJI_POOL = [
+    "🥋",
+    "🤼",
+    "💪",
+    "🏆",
+    "🔥",
+    "👊",
+    "⭐",
+    "🐻",
+    "🐱",
+    "🐾",
+    "✨",
+    "🙂",
+    "😊",
+    "😄",
+    "😎",
+  ];
+  var FAMILY_NAMES = {
+    "Mykhailo Petrov": true,
+    "Anna Petrova": true,
+  };
+
+  function isFamilyDisplayName(name) {
+    var s = String(name != null ? name : "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return Boolean(FAMILY_NAMES[s]);
+  }
+
+  function pickRandomFamilyEmoji() {
+    return FAMILY_EMOJI_POOL[
+      Math.floor(Math.random() * FAMILY_EMOJI_POOL.length)
+    ];
+  }
+
+  function displayNameWithFamilyEmoji(name) {
+    if (!isFamilyDisplayName(name)) return name;
+    return name + " " + pickRandomFamilyEmoji();
+  }
+
   /**
    * Canonical club line: "academyName / academyBranch" (aligned with starting-list JSON).
    */
@@ -1083,7 +1124,7 @@
     var nm = document.createElement("span");
     nm.className = "mm-fight__name";
     var dn = competitorDisplayName(c);
-    nm.textContent = dn;
+    nm.textContent = displayNameWithFamilyEmoji(dn);
     if (/^--/.test(String(dn).trim())) {
       nm.classList.add("mm-muted", "mm-fight__name--placeholder");
     }
@@ -1911,6 +1952,47 @@
     }
   }
 
+  /**
+   * Home reset: drop per-event API bundle + lane dots; keep list card metadata from index.
+   */
+  function resetEventApiCacheForHome() {
+    aggregateParticipantMapsPromise = null;
+    for (var ek in eventParticipantIdMap) {
+      delete eventParticipantIdMap[ek];
+    }
+    if (parsedEventsList.length) {
+      for (var ti = 0; ti < parsedEventsList.length; ti++) {
+        var evo = parsedEventsList[ti];
+        var enid = evo.numericId;
+        eventCache[enid] = {
+          title: evo.title || "",
+          registration: evo.registration,
+          dateText: evo.dateText || "",
+          place: evo.place || "",
+          countryCode: evo.countryCode || "",
+          thumb: evo.thumb || "",
+          tags: evo.tags || [],
+        };
+        refreshLanesForNumericId(enid);
+      }
+      return;
+    }
+    for (var nid in eventCache) {
+      if (!Object.prototype.hasOwnProperty.call(eventCache, nid)) continue;
+      var prev = eventCache[nid];
+      eventCache[nid] = {
+        title: prev.title || "",
+        registration: prev.registration,
+        dateText: prev.dateText || "",
+        place: prev.place || "",
+        countryCode: prev.countryCode || "",
+        thumb: prev.thumb || "",
+        tags: prev.tags || [],
+      };
+      refreshLanesForNumericId(nid);
+    }
+  }
+
   function buildEventThumbPlaceholder() {
     var ph = document.createElement("div");
     ph.className = "mm-event-thumb-placeholder";
@@ -2518,6 +2600,62 @@
     stopPoll();
   }
 
+  /**
+   * Home: reset slug + filters, Events tab, replaceState (no history stack entry).
+   * Matches a fresh ?tab=events load: first event is activated when the list exists.
+   */
+  function goHome() {
+    closeFilterPanel();
+    var p = new URLSearchParams(window.location.search);
+    p.delete("slug");
+    p.delete(URL_PARAM_SLUG_FILTER);
+    p.delete(URL_PARAM_EVENTS_FILTER);
+    p.set("tab", "events");
+    replaceLocationQuery(p);
+
+    resetEventApiCacheForHome();
+    lastFightsData = null;
+    lastSchedulesPayload = null;
+    startingListEntries = null;
+    matNamesById = Object.create(null);
+    startingListLoadPromise = null;
+    cmWssInvalidateLiveCacheAndOverlays();
+    renderFights(null);
+    if (listEl) listEl.innerHTML = "";
+    if (toolbarEl) {
+      toolbarEl.classList.add("is-hidden");
+      toolbarEl.textContent = "";
+    }
+    refreshHarmonogram();
+    clearError();
+
+    if (parsedEventsList.length) {
+      activateEventSlug(
+        cfg.parseEventSlug(parsedEventsList[0].slug),
+        CM_TAB_EVENTS,
+        { forceReload: true }
+      );
+      return;
+    }
+
+    notifyUrlChanged();
+    applyCmTabDom(CM_TAB_EVENTS);
+    highlightSelectedEventRow("");
+    refreshEventsListVisibility();
+    updateFilterMainButtonLabel();
+    stopPoll();
+    syncHeaderEventLine();
+  }
+
+  var homeNavBtn = document.getElementById("mm-cm-nav-home");
+
+  function initHomeNav() {
+    if (!homeNavBtn) return;
+    homeNavBtn.addEventListener("click", function () {
+      goHome();
+    });
+  }
+
   function syncHeaderEventLine() {
     if (origMmLinkEl && typeof cfg.martialMatchEventUrl === "function") {
       if (evSlug) {
@@ -2685,16 +2823,21 @@
       });
   }
 
-  function ensureEventLoaded(slugObj) {
+  function ensureEventLoaded(slugObj, loadOpts) {
     var nid = slugObj.numericId;
-    if (eventCache[nid] && eventCache[nid].loaded) {
+    var forceReload = loadOpts && loadOpts.forceReload;
+    if (
+      !forceReload &&
+      eventCache[nid] &&
+      eventCache[nid].loaded
+    ) {
       applyCachedEventToView(nid);
       return Promise.resolve();
     }
     return loadEventBundle(slugObj);
   }
 
-  function activateEventSlug(slugObj, preferredTab) {
+  function activateEventSlug(slugObj, preferredTab, loadOpts) {
     var tab =
       preferredTab == null ? CM_TAB_EVENTS : preferredTab;
     closeFilterPanel();
@@ -2711,7 +2854,7 @@
       placeholderEl.textContent = "Loading…";
     }
     clearError();
-    return ensureEventLoaded(slugObj)
+    return ensureEventLoaded(slugObj, loadOpts)
       .then(function () {
         syncHeaderEventLine();
         if (placeholderEl) placeholderEl.classList.add("is-hidden");
@@ -3512,7 +3655,7 @@
 
         var nameEl = document.createElement("div");
         nameEl.className = "mm-filter-row__name";
-        nameEl.textContent = item.name;
+        nameEl.textContent = displayNameWithFamilyEmoji(item.name);
         if (dqNoPay) {
           if (blockDqNoPayUi) {
             nameEl.setAttribute(
@@ -4402,6 +4545,7 @@
   }
 
   initCmTabsFromUrl();
+  initHomeNav();
   initShareNav();
   updateFilterRootVisibility();
   updateFilterMainButtonLabel();

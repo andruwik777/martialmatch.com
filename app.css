@@ -1645,6 +1645,34 @@ body {
   gap: 0.28rem;
 }
 
+.mm-filter-favorites-preset-btn {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.3rem 0.45rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: #c4d0e8;
+  background: #252a38;
+  border: 1px solid #3d4a66;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-filter-favorites-preset-btn.is-active {
+  color: #f0c040;
+  border-color: #8a7020;
+  background: #2e2a1e;
+}
+
+.mm-filter-favorites-preset-btn__icon {
+  display: block;
+  line-height: 1;
+}
+
 .mm-filter-only-selected {
   flex: 0 0 auto;
   display: flex;
@@ -2103,6 +2131,48 @@ body {
   margin-top: 0.15rem;
   font-size: 0.75rem;
   color: #8b92a8;
+}
+
+.mm-filter-row__controls {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  padding-top: 0.05rem;
+}
+
+.mm-filter-row__favorite-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  margin: 0;
+  padding: 0;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: #9aa3bc;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-filter-row__favorite-btn.is-active {
+  color: #f0c040;
+}
+
+.mm-filter-row__favorite-btn:focus-visible {
+  outline: 2px solid #7aa8ff;
+  outline-offset: 1px;
+}
+
+.mm-filter-row__favorite-icon {
+  display: block;
+  line-height: 1;
 }
 
 .mm-filter-row__check {

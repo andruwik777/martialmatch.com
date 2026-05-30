@@ -9,7 +9,7 @@ const USE_SERVER_CACHE = true;
 const USE_CLIENT_CACHE = true;
 
 /** Edge cache TTL for cached proxy routes (seconds). */
-const EDGE_CACHE_MAX_AGE = 3600;
+const EDGE_CACHE_MAX_AGE = 300;
 /** Same TTL for browser HTTP cache on client responses (HIT/MISS 200), when USE_CLIENT_CACHE. */
 const BROWSER_CACHE_CONTROL = "public, max-age=" + EDGE_CACHE_MAX_AGE;
 

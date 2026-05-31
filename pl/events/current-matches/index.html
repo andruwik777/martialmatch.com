@@ -177,31 +177,22 @@
                   </button>
                 </div>
               </div>
-              <button
-                type="button"
-                id="mm-filter-favorites-preset-btn"
-                class="mm-filter-favorites-preset-btn"
-                title="Select favorites on this list (Apply Filter to save to URL)."
-                aria-label="Select favorites on this list"
-                aria-pressed="false"
+              <label
+                class="mm-filter-only-favorites"
+                id="mm-filter-only-favorites-label"
               >
+                <input
+                  type="checkbox"
+                  id="mm-filter-only-favorites-cb"
+                  aria-label="Show only favorite athletes in this list"
+                />
                 <span
-                  class="mm-filter-favorites-preset-btn__icon"
-                  aria-hidden="true"
-                >☆</span>
-                <span class="mm-filter-favorites-preset-btn__text">
-                  <span
-                    class="mm-filter-favorites-preset-btn__label mm-filter-favorites-preset-btn__label--long"
-                  >Select favorites</span>
-                  <span
-                    class="mm-filter-favorites-preset-btn__label mm-filter-favorites-preset-btn__label--short"
-                  >Favorites</span>
-                  <span
-                    class="mm-filter-favorites-preset-btn__count"
-                    aria-hidden="true"
-                  ></span>
-                </span>
-              </button>
+                  class="mm-filter-only-favorites__text mm-filter-only-favorites__text--long"
+                >Show favorites only</span>
+                <span
+                  class="mm-filter-only-favorites__text mm-filter-only-favorites__text--short"
+                >Favorites only</span>
+              </label>
               <label class="mm-filter-only-selected">
                 <input
                   type="checkbox"

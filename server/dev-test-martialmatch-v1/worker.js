@@ -23,7 +23,9 @@ const NUMERIC_TO_SLUG = {
   665: "665-ground-game-cup-baltic-eastern-europe-championships",
   648: "648-solt-kids",
   759: "759-highkick-6",
-
+  649: "649-solt-17-x-dzik-gi-no-gi-team-battle",
+  660: "660-open-gi-2025-gi-no-gi-jiu-jitsu",
+  
 };
 
 const ALLOWED_SLUGS = new Set(Object.values(NUMERIC_TO_SLUG));

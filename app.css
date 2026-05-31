@@ -1630,7 +1630,7 @@ body {
 }
 
 .mm-filter-toolbar-row__club {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
 }
 
@@ -1638,22 +1638,19 @@ body {
   display: none;
 }
 
-.mm-filter-toolbar-row__actions {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: stretch;
-  gap: 0.28rem;
-}
-
 .mm-filter-favorites-preset-btn {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 2rem;
-  padding: 0.3rem 0.45rem;
-  font-size: 1rem;
-  line-height: 1;
+  gap: 0.3rem;
+  min-height: 2.125rem;
+  padding: 0.35rem 0.5rem;
+  font: inherit;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
   color: #c4d0e8;
   background: #252a38;
   border: 1px solid #3d4a66;
@@ -1669,17 +1666,36 @@ body {
 }
 
 .mm-filter-favorites-preset-btn__icon {
+  flex-shrink: 0;
   display: block;
+  font-size: 1rem;
   line-height: 1;
 }
 
+.mm-filter-favorites-preset-btn__text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mm-filter-favorites-preset-btn__label--short {
+  display: none;
+}
+
+.mm-filter-favorites-preset-btn__count {
+  font-weight: 700;
+}
+
 .mm-filter-only-selected {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  max-width: 42%;
   display: flex;
   align-items: center;
   gap: 0.28rem;
-  padding: 0.3rem 0.35rem;
-  font-size: 0.65rem;
+  min-height: 2.125rem;
+  padding: 0.35rem 0.4rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: #c4d0e8;
   line-height: 1.2;
@@ -1705,10 +1721,36 @@ body {
   white-space: nowrap;
 }
 
+.mm-filter-only-selected__text--short {
+  display: none;
+}
+
+@media (max-width: 360px) {
+  .mm-filter-favorites-preset-btn__label--long {
+    display: none;
+  }
+
+  .mm-filter-favorites-preset-btn__label--short {
+    display: inline;
+  }
+
+  .mm-filter-only-selected__text--long {
+    display: none;
+  }
+
+  .mm-filter-only-selected__text--short {
+    display: inline;
+  }
+
+  .mm-filter-only-selected {
+    max-width: 38%;
+  }
+}
+
 .mm-filter-club-jump {
   position: relative;
   min-width: 0;
-  width: 100%;
+  width: auto;
 }
 
 .mm-filter-club-jump__toggle {
@@ -1716,9 +1758,10 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 0.25rem;
-  width: 100%;
+  width: auto;
   max-width: 100%;
   padding: 0.35rem 0.4rem;
+  min-height: 2.125rem;
   font: inherit;
   font-size: 0.6875rem;
   font-weight: 600;

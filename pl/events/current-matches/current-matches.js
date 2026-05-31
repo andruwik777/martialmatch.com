@@ -3731,16 +3731,35 @@
     if (icon) {
       icon.textContent = filled ? "★" : "☆";
     }
+    var labelLong = filterFavoritesPresetBtn.querySelector(
+      ".mm-filter-favorites-preset-btn__label--long"
+    );
+    var labelShort = filterFavoritesPresetBtn.querySelector(
+      ".mm-filter-favorites-preset-btn__label--short"
+    );
+    var countEl = filterFavoritesPresetBtn.querySelector(
+      ".mm-filter-favorites-preset-btn__count"
+    );
+    var labelWord = filled ? "Favorites" : "Select favorites";
+    if (labelLong) {
+      labelLong.textContent = labelWord;
+    }
+    if (labelShort) {
+      labelShort.textContent = "Favorites";
+    }
+    if (countEl) {
+      countEl.textContent = presetN > 0 ? " · " + presetN : "";
+    }
     var aria =
       filled
-        ? "Favorites selection active — " +
+        ? "Favorites checkboxes active — " +
           presetN +
           " on this list. Tap Apply Filter to save to URL."
-        : "Select favorites on this list (" +
+        : "Select favorites on this list — sets checkboxes to favorites and clears others (" +
           presetN +
           " of " +
           favTotal +
-          " on list). Does not apply until Apply Filter.";
+          " on list). Tap Apply Filter to save to URL.";
     filterFavoritesPresetBtn.setAttribute("aria-label", aria);
     filterFavoritesPresetBtn.title = aria;
   }

@@ -177,26 +177,44 @@
                   </button>
                 </div>
               </div>
-              <div class="mm-filter-toolbar-row__actions">
-                <button
-                  type="button"
-                  id="mm-filter-favorites-preset-btn"
-                  class="mm-filter-favorites-preset-btn"
-                  title="Select favorites on this list (Apply Filter to save to URL)."
-                  aria-label="Select favorites on this list"
-                  aria-pressed="false"
-                >
-                  <span class="mm-filter-favorites-preset-btn__icon" aria-hidden="true">☆</span>
-                </button>
-                <label class="mm-filter-only-selected">
-                  <input
-                    type="checkbox"
-                    id="mm-filter-only-selected-cb"
-                    aria-label="Show only selected athletes on list"
-                  />
-                  <span class="mm-filter-only-selected__text">Selected only</span>
-                </label>
-              </div>
+              <button
+                type="button"
+                id="mm-filter-favorites-preset-btn"
+                class="mm-filter-favorites-preset-btn"
+                title="Select favorites on this list (Apply Filter to save to URL)."
+                aria-label="Select favorites on this list"
+                aria-pressed="false"
+              >
+                <span
+                  class="mm-filter-favorites-preset-btn__icon"
+                  aria-hidden="true"
+                >☆</span>
+                <span class="mm-filter-favorites-preset-btn__text">
+                  <span
+                    class="mm-filter-favorites-preset-btn__label mm-filter-favorites-preset-btn__label--long"
+                  >Select favorites</span>
+                  <span
+                    class="mm-filter-favorites-preset-btn__label mm-filter-favorites-preset-btn__label--short"
+                  >Favorites</span>
+                  <span
+                    class="mm-filter-favorites-preset-btn__count"
+                    aria-hidden="true"
+                  ></span>
+                </span>
+              </button>
+              <label class="mm-filter-only-selected">
+                <input
+                  type="checkbox"
+                  id="mm-filter-only-selected-cb"
+                  aria-label="Show only athletes with the filter checkbox checked in this list"
+                />
+                <span
+                  class="mm-filter-only-selected__text mm-filter-only-selected__text--long"
+                >Show checked only</span>
+                <span
+                  class="mm-filter-only-selected__text mm-filter-only-selected__text--short"
+                >Checked only</span>
+              </label>
             </div>
             <ul
               id="mm-filter-club-jump-list"

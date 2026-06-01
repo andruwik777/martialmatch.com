@@ -37,12 +37,15 @@
       >
         Share
       </button>
-      <a
+      <button
+        type="button"
         class="mm-nav-link mm-cm-header-nav__help"
-        href="https://github.com/andruwik777/dev.martialmatch.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        >Help</a>
+        id="mm-cm-nav-help"
+        aria-haspopup="dialog"
+        aria-controls="mm-cm-help-root"
+      >
+        Help
+      </button>
     </nav>
     <div class="mm-cm-header-context">
       <p id="mm-cm-header-prompt" class="mm-cm-header-prompt is-hidden" aria-live="polite"></p>
@@ -59,6 +62,82 @@
   <main class="main">
     <div id="mm-cm-error" class="mm-alert mm-alert--error is-hidden" role="alert"></div>
     <div id="mm-cm-content">
+      <div
+        class="mm-cm-tabs"
+        role="tablist"
+        aria-label="Event view"
+      >
+        <button
+          type="button"
+          class="mm-cm-tab"
+          id="mm-cm-tab-events"
+          role="tab"
+          aria-selected="true"
+          aria-controls="mm-cm-panel-events"
+          tabindex="0"
+        >
+          Events
+        </button>
+        <button
+          type="button"
+          class="mm-cm-tab mm-cm-tab--fights mm-cm-tab--disabled"
+          id="mm-cm-tab-fights"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mm-cm-panel-fights"
+          tabindex="-1"
+          disabled
+          aria-disabled="true"
+        >
+          <span id="mm-cm-tab-fights-label" class="mm-cm-tab__label">Fights</span>
+          <span
+            class="mm-cm-tab__refresh"
+            id="mm-cm-tab-fights-refresh"
+            hidden
+            aria-hidden="true"
+            ><svg
+              class="mm-cm-tab-refresh-ic"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </span>
+          <span
+            class="mm-cm-tab__wss"
+            id="mm-cm-tab-fights-wss"
+            hidden
+            aria-hidden="true"
+            role="presentation"
+            ><span
+              class="mm-cm-tab__wss-dot"
+              id="mm-cm-tab-fights-wss-dot"
+            ></span>
+          </span>
+        </button>
+        <button
+          type="button"
+          class="mm-cm-tab mm-cm-tab--disabled"
+          id="mm-cm-tab-harmonogram"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mm-cm-panel-harmonogram"
+          tabindex="-1"
+          disabled
+          aria-disabled="true"
+        >
+          <span class="mm-cm-tab__label">Schedule</span>
+        </button>
+      </div>
       <div id="mm-cm-filter-root" class="mm-cm-filter is-hidden">
         <div
           id="mm-cm-events-toolbar"
@@ -82,7 +161,7 @@
               aria-controls="mm-filter-panel"
               aria-expanded="false"
             >
-              <span class="mm-filter-main-btn__label">All Participants</span>
+              <span class="mm-filter-main-btn__label">Filter events by participants</span>
               <span class="mm-filter-main-btn__chevron" aria-hidden="true">
                 <svg
                   class="mm-filter-main-btn__chevron-svg"
@@ -104,7 +183,7 @@
           aria-controls="mm-filter-panel"
           aria-expanded="false"
         >
-          <span class="mm-filter-main-btn__label">This Event Participants · all</span>
+          <span class="mm-filter-main-btn__label">Filter fights by participants</span>
           <span class="mm-filter-main-btn__chevron" aria-hidden="true">
             <svg
               class="mm-filter-main-btn__chevron-svg"
@@ -177,10 +256,7 @@
                   </button>
                 </div>
               </div>
-              <label
-                class="mm-filter-only-favorites"
-                id="mm-filter-only-favorites-label"
-              >
+              <label class="mm-filter-only-favorites">
                 <input
                   type="checkbox"
                   id="mm-filter-only-favorites-cb"
@@ -188,10 +264,10 @@
                 />
                 <span
                   class="mm-filter-only-favorites__text mm-filter-only-favorites__text--long"
-                >Show favorites only</span>
+                >Show favorites only (<span class="mm-fav-star-mark" aria-hidden="true">★</span>)</span>
                 <span
                   class="mm-filter-only-favorites__text mm-filter-only-favorites__text--short"
-                >Favorites only</span>
+                >Favorites only (<span class="mm-fav-star-mark" aria-hidden="true">★</span>)</span>
               </label>
               <label class="mm-filter-only-selected">
                 <input
@@ -274,82 +350,6 @@
         </div>
       </div>
       <div
-        class="mm-cm-tabs"
-        role="tablist"
-        aria-label="Event view"
-      >
-        <button
-          type="button"
-          class="mm-cm-tab"
-          id="mm-cm-tab-events"
-          role="tab"
-          aria-selected="true"
-          aria-controls="mm-cm-panel-events"
-          tabindex="0"
-        >
-          Events
-        </button>
-        <button
-          type="button"
-          class="mm-cm-tab mm-cm-tab--fights mm-cm-tab--disabled"
-          id="mm-cm-tab-fights"
-          role="tab"
-          aria-selected="false"
-          aria-controls="mm-cm-panel-fights"
-          tabindex="-1"
-          disabled
-          aria-disabled="true"
-        >
-          <span id="mm-cm-tab-fights-label" class="mm-cm-tab__label">Fights</span>
-          <span
-            class="mm-cm-tab__refresh"
-            id="mm-cm-tab-fights-refresh"
-            hidden
-            aria-hidden="true"
-            ><svg
-              class="mm-cm-tab-refresh-ic"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="12"
-              height="12"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-          </span>
-          <span
-            class="mm-cm-tab__wss"
-            id="mm-cm-tab-fights-wss"
-            hidden
-            aria-hidden="true"
-            role="presentation"
-            ><span
-              class="mm-cm-tab__wss-dot"
-              id="mm-cm-tab-fights-wss-dot"
-            ></span>
-          </span>
-        </button>
-        <button
-          type="button"
-          class="mm-cm-tab mm-cm-tab--disabled"
-          id="mm-cm-tab-harmonogram"
-          role="tab"
-          aria-selected="false"
-          aria-controls="mm-cm-panel-harmonogram"
-          tabindex="-1"
-          disabled
-          aria-disabled="true"
-        >
-          <span class="mm-cm-tab__label">Schedule</span>
-        </button>
-      </div>
-      <div
         id="mm-cm-panel-events"
         class="mm-cm-tabpanel"
         role="tabpanel"
@@ -380,6 +380,135 @@
       </div>
     </div>
   </main>
+
+  <div
+    id="mm-cm-help-root"
+    class="mm-cm-help is-hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mm-cm-help-title"
+    aria-hidden="true"
+  >
+    <div class="mm-cm-help__scroll">
+      <h2 id="mm-cm-help-title" class="mm-cm-help__title">About this app</h2>
+      <p class="mm-cm-help__lead">
+        <strong>MartialMatch viewer</strong> is an unofficial companion for
+        <a
+          class="mm-cm-help__link"
+          href="https://martialmatch.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          >martialmatch.com</a
+        >. It helps <strong>coaches and parents</strong> focus on
+        <strong>one athlete or a group</strong> instead of scrolling entire
+        starting lists and fight queues.
+      </p>
+
+      <h3 class="mm-cm-help__heading">Who is it for?</h3>
+      <ul class="mm-cm-help__list">
+        <li>Coaches following a team on competition day</li>
+        <li>Parents watching one child across mats</li>
+        <li>Friends checking where someone is registered and when they fight</li>
+      </ul>
+
+      <h3 class="mm-cm-help__heading">Three tabs</h3>
+      <dl class="mm-cm-help__dl">
+        <dt>Events</dt>
+        <dd>
+          See <strong>which competitions</strong> your athletes entered — filter
+          the event list.
+        </dd>
+        <dt>Fights</dt>
+        <dd>
+          See <strong>only their fights</strong> on the active event, with
+          <strong>live scoreboard updates</strong>.
+        </dd>
+        <dt>Schedule</dt>
+        <dd>
+          See <strong>category blocks and times</strong> before the official
+          site surfaces them conveniently. Schedules are often prepared
+          <strong>days ahead</strong>, while the main site may only highlight
+          them on event day.
+        </dd>
+      </dl>
+
+      <h3 class="mm-cm-help__heading">Filters &amp; sharing</h3>
+      <ol class="mm-cm-help__list mm-cm-help__list--ordered">
+        <li>Open the filter dropdown, pick athletes, then <strong>Apply</strong>.</li>
+        <li>
+          Your selection is stored in the URL (<code>events_filter</code> on
+          Events, <code>slug_filter</code> on Fights and Schedule).
+        </li>
+        <li>
+          Tap <strong>Share</strong> or copy the link — others open the same
+          filtered view.
+        </li>
+      </ol>
+      <p class="mm-cm-help__note">
+        Each tab uses its own URL filter param for its job; they are not merged
+        automatically.
+      </p>
+
+      <h3 class="mm-cm-help__heading">
+        Favorites (<span class="mm-fav-star-mark" aria-hidden="true">★</span>)
+      </h3>
+      <p>
+        Tap the star next to an athlete in the filter list. Favorites are saved
+        <strong>only on this device</strong> (localStorage) — they are
+        <strong>not</strong> in the link you share. They help you find your
+        people quickly on the <strong>next event</strong> without searching the
+        full list again.
+      </p>
+
+      <h3 class="mm-cm-help__heading">Install like an app</h3>
+      <ul class="mm-cm-help__list">
+        <li>
+          <strong>Android:</strong> use <strong>Install</strong> when offered, or
+          Add to Home screen.
+        </li>
+        <li>
+          <strong>iOS:</strong> Safari → Share → <strong>Add to Home Screen</strong>
+          (there is no install banner on iOS).
+        </li>
+      </ul>
+
+      <h3 class="mm-cm-help__heading">Live updates</h3>
+      <p>
+        On the <strong>Fights</strong> tab the app keeps a live connection to
+        MartialMatch’s scoreboard (via a small proxy). Timer, status, and points
+        update the same way as on the official site — without refreshing the
+        whole page.
+      </p>
+
+      <h3 class="mm-cm-help__heading">Questions &amp; feedback</h3>
+      <p>
+        Not affiliated with MartialMatch. Bugs and ideas:
+        <a
+          class="mm-cm-help__link"
+          href="https://github.com/andruwik777/dev.martialmatch.com/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub Issues</a
+        >.
+      </p>
+
+      <p class="mm-cm-help__footer">
+        If this app saves you from missing a kid’s fight because you were still
+        reading someone else’s category name — you’re welcome. 🤼 We can’t
+        promise the first match is before coffee, but at least you’ll know
+        <em>when</em> to panic. ☕😅
+      </p>
+    </div>
+    <div class="mm-cm-help__bar">
+      <button
+        type="button"
+        id="mm-cm-help-close"
+        class="mm-cm-help__close mm-filter-apply-btn"
+      >
+        Close
+      </button>
+    </div>
+  </div>
 
   <script src="../../../pwa.js" defer></script>
   <script src="current-matches.js" defer></script>

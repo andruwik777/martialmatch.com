@@ -106,9 +106,6 @@
   );
   var filterOnlySelectedCb = document.getElementById("mm-filter-only-selected-cb");
   var filterOnlyFavoritesCb = document.getElementById("mm-filter-only-favorites-cb");
-  var filterOnlyFavoritesLabelEl = document.getElementById(
-    "mm-filter-only-favorites-label"
-  );
   var filterOnlyEmptyHintEl = document.getElementById("mm-filter-only-empty-hint");
   var filterSearchInputEl = document.getElementById("mm-filter-search-input");
 
@@ -2391,7 +2388,6 @@
     refreshSlugFromLocation();
     refreshEventsListVisibility();
     updateFilterMainButtonLabel();
-    updateFilterFavoritesOnlyToolbarUi();
   }
 
   function setEventsFilterQueryInUrl(idsUnique) {
@@ -2575,14 +2571,11 @@
     eventsToolbarEl.classList.toggle("is-hidden", !onEvents);
     filterMainBtn.classList.toggle("is-hidden", onEvents);
 
-    var hasSlug = Boolean(evSlug);
-
     if (changeActiveEventBtn) {
       changeActiveEventBtn.classList.add("is-hidden");
     }
     if (filterMainBtnEvents) {
-      var showFilEv = onEvents && hasSlug;
-      filterMainBtnEvents.classList.toggle("is-hidden", !showFilEv);
+      filterMainBtnEvents.classList.toggle("is-hidden", !onEvents);
     }
   }
 
@@ -2679,11 +2672,66 @@
   }
 
   var homeNavBtn = document.getElementById("mm-cm-nav-home");
+  var helpNavBtn = document.getElementById("mm-cm-nav-help");
+  var helpRootEl = document.getElementById("mm-cm-help-root");
+  var helpCloseBtn = document.getElementById("mm-cm-help-close");
 
   function initHomeNav() {
     if (!homeNavBtn) return;
     homeNavBtn.addEventListener("click", function () {
       goHome();
+    });
+  }
+
+  function openHelpOverlay() {
+    if (!helpRootEl) return;
+    if (filterPanelOpen) {
+      closeFilterPanel();
+    }
+    helpRootEl.classList.remove("is-hidden");
+    helpRootEl.setAttribute("aria-hidden", "false");
+    document.body.classList.add("mm-cm-help-open");
+    if (helpNavBtn) {
+      helpNavBtn.setAttribute("aria-expanded", "true");
+    }
+    if (helpCloseBtn) {
+      helpCloseBtn.focus();
+    }
+  }
+
+  function closeHelpOverlay() {
+    if (!helpRootEl) return;
+    helpRootEl.classList.add("is-hidden");
+    helpRootEl.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("mm-cm-help-open");
+    if (helpNavBtn) {
+      helpNavBtn.setAttribute("aria-expanded", "false");
+      helpNavBtn.focus();
+    }
+  }
+
+  function initHelpNav() {
+    if (!helpNavBtn || !helpRootEl) return;
+    helpNavBtn.setAttribute("aria-expanded", "false");
+    helpNavBtn.addEventListener("click", function () {
+      if (helpRootEl.classList.contains("is-hidden")) {
+        openHelpOverlay();
+      } else {
+        closeHelpOverlay();
+      }
+    });
+    if (helpCloseBtn) {
+      helpCloseBtn.addEventListener("click", closeHelpOverlay);
+    }
+    document.addEventListener("keydown", function (ev) {
+      if (
+        ev.key === "Escape" &&
+        helpRootEl &&
+        !helpRootEl.classList.contains("is-hidden")
+      ) {
+        ev.preventDefault();
+        closeHelpOverlay();
+      }
     });
   }
 
@@ -2748,7 +2796,6 @@
     updateFilterRootVisibility();
     syncHeaderEventLine();
     updateEventsToolbarUi();
-    updateFilterFavoritesOnlyToolbarUi();
   }
 
   function applyCachedEventToView(nid) {
@@ -3621,111 +3668,6 @@
     return Object.keys(idSet).length;
   }
 
-  function filterIdSetsEqual(a, b) {
-    var na = filterIdSetKeyCount(a);
-    var nb = filterIdSetKeyCount(b);
-    if (na !== nb) return false;
-    if (!na) return true;
-    for (var k in a) {
-      if (!b[k]) return false;
-    }
-    return true;
-  }
-
-  /** Public IDs currently listed in the open filter panel. */
-  function getFilterListMemberPublicIds() {
-    var out = Object.create(null);
-    if (!filterListRootEl) return out;
-    var boxes = filterListRootEl.querySelectorAll(
-      'input[type="checkbox"][data-mm-filter-member]'
-    );
-    for (var i = 0; i < boxes.length; i++) {
-      var v = boxes[i].value;
-      if (v) out[v] = true;
-    }
-    return out;
-  }
-
-  /** Entries for the current filter list context (Events tab or active event). */
-  function getFilterListContextEntries() {
-    if (getCmTabFromUrl() === CM_TAB_EVENTS) {
-      return buildAggregateFilterEntries();
-    }
-    if (Array.isArray(startingListEntries) && startingListEntries.length) {
-      return startingListEntries;
-    }
-    if (eventNumericId && eventCache[eventNumericId]) {
-      var c = eventCache[eventNumericId];
-      if (c && c.startingListsPublic != null) {
-        return flattenStartingListFromPublicBody(c.startingListsPublic);
-      }
-    }
-    return [];
-  }
-
-  /** Favorite athletes on the current filter list — all their publicIds. */
-  function getApplicableFavoritesPresetIdSet() {
-    var favKeys = loadFavoriteAthleteKeySet();
-    var entries = getFilterListContextEntries();
-    var out = Object.create(null);
-    for (var i = 0; i < entries.length; i++) {
-      var ent = entries[i];
-      var key = athleteKeyFromEntry(ent);
-      if (key && favKeys[key]) {
-        out[ent.publicId] = true;
-      }
-    }
-    return out;
-  }
-
-  /** @returns {Record<string, true>} */
-  function panelCheckboxIdSetFromDom() {
-    var ids = collectCheckedPublicIds();
-    var out = Object.create(null);
-    for (var i = 0; i < ids.length; i++) {
-      out[ids[i]] = true;
-    }
-    return out;
-  }
-
-  function getCommittedUrlFilterIdSet() {
-    if (getCmTabFromUrl() === CM_TAB_EVENTS) {
-      return getEventsFilterIdSetFromUrl() || Object.create(null);
-    }
-    return getSlugFilterIdSetFromUrl() || Object.create(null);
-  }
-
-  /** URL filter IDs effective on the current tab context. */
-  function getEffectiveCommittedFilterIdSet() {
-    var raw = getCommittedUrlFilterIdSet();
-    if (getCmTabFromUrl() === CM_TAB_EVENTS) {
-      return raw;
-    }
-    var inList = getFilterListMemberPublicIds();
-    if (!filterIdSetKeyCount(inList)) {
-      inList = buildActiveEventPublicIdLookup() || Object.create(null);
-    }
-    var out = Object.create(null);
-    for (var k in raw) {
-      if (inList[k]) out[k] = true;
-    }
-    return out;
-  }
-
-  function panelCheckboxesMatchFavoritesPreset() {
-    return filterIdSetsEqual(
-      panelCheckboxIdSetFromDom(),
-      getApplicableFavoritesPresetIdSet()
-    );
-  }
-
-  function committedFilterMatchesFavoritesPreset() {
-    return filterIdSetsEqual(
-      getEffectiveCommittedFilterIdSet(),
-      getApplicableFavoritesPresetIdSet()
-    );
-  }
-
   function syncFilterFavoriteStarButtonUi(btn, isFavorite) {
     if (!btn) return;
     btn.classList.toggle("is-active", isFavorite);
@@ -3768,18 +3710,6 @@
     }
   }
 
-  function updateFilterFavoritesOnlyToolbarUi() {
-    if (!filterOnlyFavoritesLabelEl) return;
-    var preset = getApplicableFavoritesPresetIdSet();
-    var presetN = filterIdSetKeyCount(preset);
-    var filled =
-      presetN > 0 &&
-      (filterPanelOpen
-        ? panelCheckboxesMatchFavoritesPreset()
-        : committedFilterMatchesFavoritesPreset());
-    filterOnlyFavoritesLabelEl.classList.toggle("is-active", filled);
-  }
-
   function onFilterListCheckboxChange(ev) {
     var t = ev.target;
     if (!t || t.type !== "checkbox" || !filterListRootEl) return;
@@ -3795,14 +3725,12 @@
       }
       setClubHeaderCheckboxAria(t);
       applyFilterPanelListVisibility();
-      updateFilterFavoritesOnlyToolbarUi();
       return;
     }
 
     if (t.hasAttribute("data-mm-filter-member")) {
       updateClubHeaderCheckboxFromMembers(section);
       applyFilterPanelListVisibility();
-      updateFilterFavoritesOnlyToolbarUi();
     }
   }
 
@@ -3817,7 +3745,6 @@
     var nowFav = toggleFavoriteAthleteKey(athleteKey);
     syncAllFavoriteStarsForAthleteKey(athleteKey, nowFav);
     applyFilterPanelListVisibility();
-    updateFilterFavoritesOnlyToolbarUi();
   }
 
   function onFilterOnlyFavoritesChange() {
@@ -3991,7 +3918,6 @@
       filterSearchInputEl.value = "";
     }
     applyFilterPanelListVisibility();
-    updateFilterFavoritesOnlyToolbarUi();
   }
 
   function syncFilterCheckboxesFromUrl() {
@@ -4009,7 +3935,6 @@
     }
     refreshAllClubHeaderCheckboxes();
     applyFilterPanelListVisibility();
-    updateFilterFavoritesOnlyToolbarUi();
   }
 
   function countEventsFilterIdsInUrl() {
@@ -4075,22 +4000,26 @@
     return n;
   }
 
-  /** Unique athletes in merged filter list (all events), 0 if none loaded yet. */
-  function countAggregateFilterPoolSize() {
-    return buildAggregateFilterEntries().length;
+  function filterMainBtnLabelByParticipantCount(n) {
+    return n === 1 ? "1 participant" : n + " participants";
   }
 
-  function filterLabelEventsFightersCount(totalSelected) {
-    if (!totalSelected) return "All Participants";
-    var base =
-      totalSelected === 1
-        ? "1 Participant"
-        : totalSelected + " Participants";
-    var pool = countAggregateFilterPoolSize();
-    if (pool > 0) {
-      return base + " from " + pool;
-    }
-    return base;
+  function filterMainBtnLabelEvents(totalSelected) {
+    if (!totalSelected) return "Filter events by participants";
+    return (
+      "Filtered events by " + filterMainBtnLabelByParticipantCount(totalSelected)
+    );
+  }
+
+  function filterMainBtnLabelSlugTab(tab, selectedOnEvent, totalUrlSlug) {
+    var kind = tab === CM_TAB_HARMONOGRAM ? "schedule" : "fights";
+    if (!totalUrlSlug) return "Filter " + kind + " by participants";
+    return (
+      "Filtered " +
+      kind +
+      " by " +
+      filterMainBtnLabelByParticipantCount(selectedOnEvent)
+    );
   }
 
   /** Athletes on the active event starting list (denominator for filter button). */
@@ -4108,13 +4037,6 @@
       return startingListEntries.length;
     }
     return 0;
-  }
-
-  function filterLabelThisEventFighters(totalUrl, n) {
-    if (!totalUrl) return "This Event Participants · all";
-    var pool = countStartingListSizeActiveEvent();
-    var denom = pool > 0 ? pool : totalUrl;
-    return "This Event Participants · " + n + " / " + denom;
   }
 
   function updateFilterMainButtonLabel() {
@@ -4143,9 +4065,9 @@
       }
       if (lab) {
         if (btn === filterMainBtnEvents && tab === CM_TAB_EVENTS) {
-          lab.textContent = filterLabelEventsFightersCount(totalUrlEvents);
+          lab.textContent = filterMainBtnLabelEvents(totalUrlEvents);
         } else if (btn === filterMainBtn && tab !== CM_TAB_EVENTS) {
-          lab.textContent = filterLabelThisEventFighters(totalUrlSlug, n);
+          lab.textContent = filterMainBtnLabelSlugTab(tab, n, totalUrlSlug);
         }
       }
       if (tab === CM_TAB_EVENTS) {
@@ -4226,7 +4148,6 @@
     }
     setFilterMobileBarVisible(true);
     updateFilterMainButtonLabel();
-    updateFilterFavoritesOnlyToolbarUi();
   }
 
   function closeFilterPanel() {
@@ -4243,7 +4164,6 @@
     }
     if (filterPanelStatusEl) filterPanelStatusEl.textContent = "";
     updateFilterMainButtonLabel();
-    updateFilterFavoritesOnlyToolbarUi();
   }
 
   function collectCheckedPublicIds() {
@@ -4815,10 +4735,10 @@
 
   initCmTabsFromUrl();
   initHomeNav();
+  initHelpNav();
   initShareNav();
   updateFilterRootVisibility();
   updateFilterMainButtonLabel();
-  updateFilterFavoritesOnlyToolbarUi();
   syncHeaderEventLine();
 
   loadEventsIndex().then(function () {

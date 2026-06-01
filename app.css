@@ -46,7 +46,7 @@ body {
 .events {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: var(--mm-cm-card-gap, 0.65rem);
 }
 
 .event-card {
@@ -534,11 +534,38 @@ body {
   color: #edf2f7;
 }
 
+/* Current matches — shared vertical rhythm (tabs ↔ filter row reference gap) */
+#mm-cm-content {
+  --mm-cm-stack-gap: 0.5rem;
+  --mm-cm-card-gap: 0.65rem;
+}
+
+/* Main card lists — events, fights, schedule categories */
+.mm-cm-events-list,
+.mm-fights,
+.mm-hg-list {
+  gap: var(--mm-cm-card-gap);
+}
+
+.header.mm-cm-page-header + .main {
+  --mm-cm-stack-gap: 0.5rem;
+  padding-top: var(--mm-cm-stack-gap);
+}
+
+/* Gap below header event card (same rhythm as tabs → filter); avoid doubling with .main padding */
+.header.mm-cm-page-header:has(.mm-cm-header-card-wrap:not(.is-hidden)) + .main {
+  padding-top: 0;
+}
+
+.mm-cm-header-card-wrap:not(.is-hidden) {
+  margin-bottom: var(--mm-cm-stack-gap);
+}
+
 /* Current matches — trzy zakładki (Events / Fights / Harmonogram) */
 .mm-cm-tabs {
   display: flex;
   gap: 0.35rem;
-  margin: 0 0 0.75rem;
+  margin: 0 0 var(--mm-cm-stack-gap);
 }
 
 /* ~25% / 50% / 25% — środkowa zakładka Fights szersza */
@@ -741,14 +768,14 @@ body {
 
 /* Current-matches: same column as .main (36rem), not full viewport */
 .header.mm-cm-page-header {
+  --mm-cm-stack-gap: 0.5rem;
   max-width: 36rem;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
   box-sizing: border-box;
   border-bottom: none;
-  /* Match gap below nav (~0.25rem nav + ~0.1rem context) */
-  padding: 0.35rem 1rem 0.2rem;
+  padding: 0.35rem 1rem 0;
 }
 
 .header.mm-cm-page-header .mm-cm-header-nav {
@@ -775,6 +802,7 @@ body {
 }
 
 .mm-cm-header-nav__home,
+.mm-cm-header-nav__help,
 .mm-cm-header-nav__share {
   margin: 0;
   padding: 0;
@@ -799,6 +827,7 @@ body {
 }
 
 .mm-cm-header-nav__home:hover,
+.mm-cm-header-nav__help:hover,
 .mm-cm-header-nav__share:hover {
   color: #7aa8ff;
   text-decoration: underline;
@@ -807,6 +836,8 @@ body {
 
 .mm-cm-header-nav__home:active,
 .mm-cm-header-nav__home:focus,
+.mm-cm-header-nav__help:active,
+.mm-cm-header-nav__help:focus,
 .mm-cm-header-nav__share:active,
 .mm-cm-header-nav__share:focus {
   background: transparent;
@@ -814,6 +845,7 @@ body {
 }
 
 .mm-cm-header-nav__home:focus-visible,
+.mm-cm-header-nav__help:focus-visible,
 .mm-cm-header-nav__share:focus-visible {
   outline: 2px solid #5b8cff;
   outline-offset: 2px;
@@ -846,7 +878,7 @@ body {
 }
 
 .mm-cm-header-card-wrap {
-  margin: 0 0 0.35rem;
+  margin: 0;
 }
 
 .mm-cm-header-card-root {
@@ -917,10 +949,6 @@ body {
   outline-offset: 2px;
 }
 
-.mm-cm-events-list {
-  margin-top: 0.5rem;
-}
-
 .mm-event-row--selected {
   outline: 2px solid #5b8cff;
   outline-offset: 1px;
@@ -946,11 +974,10 @@ body {
 .mm-hg-list {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
 }
 
 .mm-hg-day-heading {
-  margin: 0.35rem 0 0.1rem;
+  margin: 0;
   padding: 0.4rem 0.55rem;
   font-size: 0.8125rem;
   font-weight: 700;
@@ -960,10 +987,6 @@ body {
   background: linear-gradient(90deg, #1a365d 0%, #2c5282 55%, transparent 100%);
   border-left: 3px solid #63b3ed;
   border-radius: 6px;
-}
-
-.mm-hg-list > .mm-hg-day-heading:first-child {
-  margin-top: 0;
 }
 
 .mm-hg-card {
@@ -1018,14 +1041,13 @@ body {
 
 /* Current matches — lista walk */
 .mm-cm-toolbar {
-  margin: 0 0 0.75rem;
+  margin: 0 0 var(--mm-cm-stack-gap, 0.5rem);
   font-size: 0.8125rem;
 }
 
 .mm-fights {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
 }
 
 .mm-fight {
@@ -1428,11 +1450,26 @@ body {
 
 /* Current matches — filtr uczestników (starting-lists) */
 .mm-cm-filter {
-  margin-bottom: 0.85rem;
+  margin-top: 0;
+  margin-bottom: var(--mm-cm-stack-gap);
 }
 
 .mm-cm-events-toolbar {
-  margin-bottom: 0.55rem;
+  margin-bottom: var(--mm-cm-stack-gap);
+}
+
+.mm-cm-filter.is-open:not(.is-hidden) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-cm-stack-gap);
+}
+
+.mm-cm-filter.is-open:not(.is-hidden) .mm-cm-events-toolbar {
+  margin-bottom: 0;
+}
+
+.mm-cm-filter.is-open:not(.is-hidden) .mm-filter-panel:not(.is-hidden) {
+  margin-top: 0;
 }
 
 .mm-cm-events-toolbar__actions {
@@ -1544,26 +1581,35 @@ body {
   padding-right: 0.75rem;
 }
 
-.mm-filter-panel {
-  margin-top: 0.5rem;
+.mm-filter-panel:not(.is-hidden) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-cm-stack-gap);
+  margin-top: var(--mm-cm-stack-gap);
+}
+
+.mm-filter-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-cm-stack-gap);
+  min-width: 0;
 }
 
 .mm-filter-panel .mm-filter-scroll {
-  margin-top: 0.45rem;
+  margin-top: 0;
 }
 
 .mm-filter-panel-status {
-  margin: 0 0 0.5rem;
+  margin: 0;
   font-size: 0.8125rem;
 }
 
 .mm-filter-panel-status:empty {
   display: none;
-  margin: 0;
 }
 
 .mm-filter-panel-hint {
-  margin: 0 0 0.5rem;
+  margin: 0;
   font-size: 0.8125rem;
   line-height: 1.45;
   color: #a0aec0;
@@ -1583,7 +1629,7 @@ body {
 }
 
 .mm-filter-search-wrap {
-  margin: 0 0 0.5rem;
+  margin: 0;
 }
 
 .mm-filter-search-input {
@@ -1619,7 +1665,7 @@ body {
 .mm-filter-club-jump-wrap {
   position: relative;
   z-index: 5;
-  margin: 0 0 0.5rem;
+  margin: 0;
 }
 
 .mm-filter-toolbar-row {
@@ -1627,6 +1673,7 @@ body {
   flex-wrap: nowrap;
   align-items: stretch;
   gap: 0.28rem;
+  width: 100%;
 }
 
 .mm-filter-toolbar-row__club {
@@ -1639,9 +1686,8 @@ body {
 }
 
 .mm-filter-only-favorites {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-width: 0;
-  max-width: 42%;
   display: flex;
   align-items: center;
   gap: 0.28rem;
@@ -1656,12 +1702,6 @@ body {
   border-radius: 8px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-}
-
-.mm-filter-only-favorites.is-active {
-  color: #f0c040;
-  border-color: #8a7020;
-  background: #2e2a1e;
 }
 
 .mm-filter-only-favorites input {
@@ -1684,8 +1724,8 @@ body {
 }
 
 .mm-filter-only-selected {
-  flex: 0 1 auto;
-  max-width: 42%;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 0.28rem;
@@ -1736,14 +1776,6 @@ body {
 
   .mm-filter-only-selected__text--short {
     display: inline;
-  }
-
-  .mm-filter-only-selected {
-    max-width: 38%;
-  }
-
-  .mm-filter-only-favorites {
-    max-width: 38%;
   }
 }
 
@@ -1968,12 +2000,13 @@ body {
     padding-bottom: 0;
     display: flex;
     flex-direction: column;
+    gap: var(--mm-cm-stack-gap);
     overflow: hidden;
     background: #12141a;
   }
 
   #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) .mm-cm-events-toolbar {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0;
     flex-shrink: 0;
   }
 
@@ -1984,9 +2017,10 @@ body {
   #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) #mm-filter-panel:not(.is-hidden) {
     flex: 1 1 0;
     min-height: 0;
-    margin-top: 0.35rem;
+    margin-top: 0;
     display: flex;
     flex-direction: column;
+    gap: var(--mm-cm-stack-gap);
     overflow: hidden;
   }
 
@@ -2010,7 +2044,7 @@ body {
   #mm-cm-filter-root.mm-cm-filter.is-open:not(.is-hidden) .mm-filter-scroll {
     flex: 1 1 0;
     min-height: 0;
-    margin-top: 0.35rem;
+    margin-top: 0;
     max-height: none !important;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -2050,6 +2084,155 @@ body {
 .mm-filter-apply-btn:focus-visible {
   outline: 2px solid #c4d8ff;
   outline-offset: 2px;
+}
+
+/* Current matches — fullscreen Help dialog */
+body.mm-cm-help-open {
+  overflow: hidden;
+}
+
+.mm-cm-help.is-hidden {
+  display: none !important;
+}
+
+.mm-cm-help:not(.is-hidden) {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #12141a;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.mm-cm-help__scroll {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 0.85rem max(1rem, env(safe-area-inset-right, 0px)) 0.5rem
+    max(1rem, env(safe-area-inset-left, 0px));
+  box-sizing: border-box;
+}
+
+.mm-cm-help__title {
+  margin: 0 0 0.65rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e8e8ec;
+}
+
+.mm-cm-help__lead {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #c8cdd8;
+}
+
+.mm-cm-help__heading {
+  margin: 1.1rem 0 0.45rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.mm-cm-help__list {
+  margin: 0 0 0.65rem;
+  padding-left: 1.15rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #c8cdd8;
+}
+
+.mm-cm-help__list--ordered {
+  padding-left: 1.35rem;
+}
+
+.mm-cm-help__list li + li {
+  margin-top: 0.35rem;
+}
+
+.mm-cm-help__dl {
+  margin: 0 0 0.65rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #c8cdd8;
+}
+
+.mm-cm-help__dl dt {
+  margin: 0.65rem 0 0.15rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.mm-cm-help__dl dt:first-child {
+  margin-top: 0;
+}
+
+.mm-cm-help__dl dd {
+  margin: 0;
+}
+
+.mm-cm-help__note {
+  margin: 0 0 0.65rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #9aa0b0;
+}
+
+.mm-cm-help p {
+  margin: 0 0 0.65rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #c8cdd8;
+}
+
+.mm-cm-help__link {
+  color: #7aa8ff;
+  text-decoration: none;
+}
+
+.mm-cm-help__link:hover {
+  text-decoration: underline;
+}
+
+.mm-cm-help__footer {
+  margin-top: 1rem !important;
+  padding-top: 0.75rem;
+  border-top: 1px solid #2a2e3a;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #b8c0d0;
+}
+
+.mm-cm-help__bar {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5rem max(1rem, env(safe-area-inset-right, 0px))
+    calc(0.55rem + env(safe-area-inset-bottom, 0px))
+    max(1rem, env(safe-area-inset-left, 0px));
+  background: #1a1d26;
+  border-top: 1px solid #2a2e3a;
+  box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.45);
+}
+
+.mm-cm-help__bar .mm-cm-help__close {
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mm-cm-help code {
+  font-size: 0.8125em;
+  padding: 0.08em 0.3em;
+  background: #2a2e3a;
+  border-radius: 4px;
+  color: #dbeafe;
 }
 
 .mm-filter-list-root {
@@ -2206,6 +2389,12 @@ body {
 
 .mm-filter-row__favorite-btn.is-active {
   color: #f0c040;
+}
+
+/* Filled favorite star in labels (filter toolbar, Help) — matches active row star */
+.mm-fav-star-mark {
+  color: #f0c040;
+  font-weight: 700;
 }
 
 .mm-filter-row__favorite-btn:focus-visible {

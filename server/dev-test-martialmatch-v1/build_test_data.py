@@ -1,4 +1,4 @@
-"""Generate test fixture HTML/JSON under data/. Run: python server/test-martialmatch/build_test_data.py"""
+"""Generate test fixture HTML/JSON under data/. Run: python server/dev-test-martialmatch-v1/build_test_data.py"""
 import shutil
 from pathlib import Path
 

@@ -1,7 +1,7 @@
 /**
  * Theme: if prod.css exists at site root → app.css + prod.css.
  * Otherwise → app.css + dev.css, and if URL has mode=test also dev-test.css.
- * Favicon: HTML defaults to prod (favicon.svg); this script swaps on dev / dev-test.
+ * Favicon / apple-touch-icon: optimistic dev swap (reverted when prod.css exists).
  * Commit prod.css only on the production repo (not in dev).
  */
 (function () {
@@ -33,29 +33,44 @@
     link.href = href;
   }
 
+  function setAppleTouchIcon(fileName) {
+    var href = base + fileName;
+    var link = document.querySelector('link[rel="apple-touch-icon"]');
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "apple-touch-icon";
+      document.head.appendChild(link);
+    }
+    link.href = href;
+  }
+
   var testMode = /[?&]mode=test(?:&|$|#)/i.test(window.location.href);
+  var devFavicon = testMode ? "favicon-dev-test.svg" : "favicon-dev.svg";
+  var devTouchIcon = testMode ? "icons/icon-192-dev-test.png" : "icons/icon-192-dev.png";
+
+  setFavicon(devFavicon);
+  setAppleTouchIcon(devTouchIcon);
+
+  function applyDevTheme() {
+    addCss("dev.css");
+    if (testMode) addCss("dev-test.css");
+  }
+
+  function applyProdTheme() {
+    addCss("prod.css");
+    setFavicon("favicon.svg");
+    setAppleTouchIcon("icons/icon-192.png");
+  }
 
   fetch(base + "prod.css", { method: "HEAD", cache: "no-cache" })
     .then(function (res) {
       if (res.ok) {
-        addCss("prod.css");
+        applyProdTheme();
       } else {
-        addCss("dev.css");
-        if (testMode) {
-          addCss("dev-test.css");
-          setFavicon("favicon-dev-test.svg");
-        } else {
-          setFavicon("favicon-dev.svg");
-        }
+        applyDevTheme();
       }
     })
     .catch(function () {
-      addCss("dev.css");
-      if (testMode) {
-        addCss("dev-test.css");
-        setFavicon("favicon-dev-test.svg");
-      } else {
-        setFavicon("favicon-dev.svg");
-      }
+      applyDevTheme();
     });
 })();

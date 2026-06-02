@@ -165,9 +165,8 @@
       });
   }
 
-  function linkManifest() {
+  function attachManifest(href) {
     if (!document.head) return;
-    var href = absoluteFromRepo("manifest.webmanifest");
     var existing = document.querySelector('link[rel="manifest"]');
     if (existing) {
       existing.setAttribute("href", href);
@@ -177,6 +176,28 @@
     link.rel = "manifest";
     link.href = href;
     document.head.appendChild(link);
+  }
+
+  /** Prod vs dev/test — same prod.css probe as theme-loader.js. */
+  function linkManifestForEnv() {
+    var testMode = /[?&]mode=test(?:&|$|#)/i.test(global.location.href);
+    fetch(absoluteFromRepo("prod.css"), { method: "HEAD", cache: "no-cache" })
+      .then(function (res) {
+        if (res.ok) {
+          attachManifest(absoluteFromRepo("manifest.webmanifest"));
+        } else if (testMode) {
+          attachManifest(absoluteFromRepo("manifest-dev-test.webmanifest"));
+        } else {
+          attachManifest(absoluteFromRepo("manifest-dev.webmanifest"));
+        }
+      })
+      .catch(function () {
+        if (testMode) {
+          attachManifest(absoluteFromRepo("manifest-dev-test.webmanifest"));
+        } else {
+          attachManifest(absoluteFromRepo("manifest-dev.webmanifest"));
+        }
+      });
   }
 
   function onTabChanged(tab) {
@@ -213,7 +234,7 @@
     repoBasePath: repoBasePath,
   };
 
-  linkManifest();
+  linkManifestForEnv();
   registerServiceWorker();
 
   if (document.readyState === "loading") {

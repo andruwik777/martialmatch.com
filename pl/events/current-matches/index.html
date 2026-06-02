@@ -432,21 +432,55 @@
         </dd>
       </dl>
 
+      <h3 class="mm-cm-help__heading">Event card dots</h3>
+      <p>
+        Each event row (and the active-event header) shows <strong>three small dots</strong>
+        — a quick traffic-light style check for that competition:
+      </p>
+      <dl class="mm-cm-help__dl">
+        <dt>Red</dt>
+        <dd>
+          <strong>Starting list</strong> — filled = athletes found; ring only = empty
+          response; cross = request failed.
+        </dd>
+        <dt>Yellow</dt>
+        <dd>
+          <strong>Schedule</strong> — same filled / ring / cross meaning.
+        </dd>
+        <dt>Green</dt>
+        <dd>
+          <strong>Fights</strong> — same filled / ring / cross meaning.
+        </dd>
+      </dl>
+
       <h3 class="mm-cm-help__heading">Filters &amp; sharing</h3>
+      <p>
+        The app keeps <strong>two separate URL filters</strong>. They are
+        <strong>not merged</strong> — each tab uses its own param for its job:
+      </p>
+      <dl class="mm-cm-help__dl">
+        <dt><code>events_filter</code></dt>
+        <dd>
+          <strong>Events tab only</strong> — which competitions appear in the
+          event list.
+        </dd>
+        <dt><code>slug_filter</code></dt>
+        <dd>
+          <strong>Fights and Schedule tabs</strong> — which athletes to show on
+          the <strong>currently active event</strong>.
+        </dd>
+      </dl>
       <ol class="mm-cm-help__list mm-cm-help__list--ordered">
         <li>Open the filter dropdown, pick athletes, then <strong>Apply</strong>.</li>
         <li>
-          Your selection is stored in the URL (<code>events_filter</code> on
-          Events, <code>slug_filter</code> on Fights and Schedule).
-        </li>
-        <li>
           Tap <strong>Share</strong> or copy the link — others open the same
-          filtered view.
+          filtered view for that tab’s param.
         </li>
       </ol>
       <p class="mm-cm-help__note">
-        Each tab uses its own URL filter param for its job; they are not merged
-        automatically.
+        Picking a <strong>different active event</strong> on the Events tab
+        <strong>clears <code>slug_filter</code></strong> (athlete IDs are tied to
+        one event). <code>events_filter</code> is kept.
       </p>
 
       <h3 class="mm-cm-help__heading">
@@ -478,6 +512,12 @@
         MartialMatch’s scoreboard (via a small proxy). Timer, status, and points
         update the same way as on the official site — without refreshing the
         whole page.
+      </p>
+      <p>
+        A <strong>small green dot</strong> in the bottom-right corner of the
+        <strong>Fights</strong> tab label means the connection is
+        <strong>open</strong>. When the server sends an update, the dot
+        <strong>briefly flashes</strong> — live traffic is coming in.
       </p>
 
       <h3 class="mm-cm-help__heading">Questions &amp; feedback</h3>

@@ -3608,6 +3608,24 @@
         filterOnlyEmptyHintEl.classList.add("is-hidden");
       }
     }
+
+    syncClubHeaderCheckboxDisabledState(onlyFav, onlySel);
+  }
+
+  /** Club select-all is read-only while list shows a subset (favorites / checked). */
+  function syncClubHeaderCheckboxDisabledState(onlyFav, onlySel) {
+    if (!filterListRootEl) return;
+    var lock = Boolean(onlyFav || onlySel);
+    var sections = filterListRootEl.querySelectorAll(".mm-filter-club");
+    for (var i = 0; i < sections.length; i++) {
+      var headerCb = clubHeaderCheckboxInSection(sections[i]);
+      if (!headerCb) continue;
+      headerCb.disabled = lock;
+      var lab = headerCb.closest(".mm-filter-club-name__label");
+      if (lab) {
+        lab.classList.toggle("mm-filter-club-name__label--club-locked", lock);
+      }
+    }
   }
 
   /** @returns {Record<string, true>} */
@@ -3718,6 +3736,7 @@
     if (!section) return;
 
     if (t.hasAttribute("data-mm-filter-club")) {
+      if (t.disabled) return;
       t.indeterminate = false;
       var kids = memberFilterCheckboxesInSection(section);
       for (var i = 0; i < kids.length; i++) {

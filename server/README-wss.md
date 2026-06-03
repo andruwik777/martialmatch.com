@@ -2,7 +2,11 @@
 
 Shared implementation: [\_shared/wss-proxy-core.js](_shared/wss-proxy-core.js).
 
-## Deploy (recommended layout)
+## Deploy (Render)
+
+**Autodeploy:** the Render service watches this GitHub repo. With **root directory** = **`server`**, a redeploy runs only when a commit changes files under **`server/`**. UI or docs changes at the repo root do not trigger Render.
+
+### Recommended layout
 
 - **Root directory:** `server` (so `../_shared` from `dev-martialmatch-v1` / `dev-test-martialmatch-v1` / `prod-martialmatch-v1` resolves on disk).
 - **Build command:** `npm install`

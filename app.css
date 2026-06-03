@@ -797,13 +797,15 @@ body {
 
 .mm-cm-header-nav__home,
 .mm-cm-header-nav__help,
-.mm-cm-header-nav__share {
+.mm-cm-header-nav__share,
+.mm-cm-header-nav__qr {
   flex: 0 0 auto;
 }
 
 .mm-cm-header-nav__home,
 .mm-cm-header-nav__help,
-.mm-cm-header-nav__share {
+.mm-cm-header-nav__share,
+.mm-cm-header-nav__qr {
   margin: 0;
   padding: 0;
   font: inherit;
@@ -828,7 +830,8 @@ body {
 
 .mm-cm-header-nav__home:hover,
 .mm-cm-header-nav__help:hover,
-.mm-cm-header-nav__share:hover {
+.mm-cm-header-nav__share:hover,
+.mm-cm-header-nav__qr:hover {
   color: #7aa8ff;
   text-decoration: underline;
   background: transparent;
@@ -839,14 +842,17 @@ body {
 .mm-cm-header-nav__help:active,
 .mm-cm-header-nav__help:focus,
 .mm-cm-header-nav__share:active,
-.mm-cm-header-nav__share:focus {
+.mm-cm-header-nav__share:focus,
+.mm-cm-header-nav__qr:active,
+.mm-cm-header-nav__qr:focus {
   background: transparent;
   background-color: transparent;
 }
 
 .mm-cm-header-nav__home:focus-visible,
 .mm-cm-header-nav__help:focus-visible,
-.mm-cm-header-nav__share:focus-visible {
+.mm-cm-header-nav__share:focus-visible,
+.mm-cm-header-nav__qr:focus-visible {
   outline: 2px solid #5b8cff;
   outline-offset: 2px;
   border-radius: 2px;
@@ -2156,6 +2162,22 @@ body.mm-cm-help-open {
   margin-top: 0.35rem;
 }
 
+.mm-cm-help__lane-list {
+  list-style: none;
+  padding-left: 0.15rem;
+}
+
+.mm-cm-help__lane-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.mm-cm-help__lane-list .mm-event-lane-slot {
+  flex-shrink: 0;
+  margin-top: 0.15em;
+}
+
 .mm-cm-help__dl {
   margin: 0 0 0.65rem;
   font-size: 0.875rem;
@@ -2233,6 +2255,76 @@ body.mm-cm-help-open {
   background: #2a2e3a;
   border-radius: 4px;
   color: #dbeafe;
+}
+
+/* Current matches — QR code fullscreen dialog (extends .mm-cm-help shell) */
+.mm-cm-qr__body {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 0.85rem max(1rem, env(safe-area-inset-right, 0px)) 0.5rem
+    max(1rem, env(safe-area-inset-left, 0px));
+  text-align: center;
+}
+
+.mm-cm-qr__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e8e8ec;
+}
+
+.mm-cm-qr__lead {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #c8cdd8;
+  max-width: 22rem;
+}
+
+.mm-cm-qr__lead.is-hidden {
+  display: none !important;
+}
+
+.mm-cm-qr__notice {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #fcd34d;
+  max-width: 22rem;
+}
+
+.mm-cm-qr__notice.is-hidden {
+  display: none !important;
+}
+
+.mm-cm-qr__canvas {
+  display: block;
+  width: min(85vw, 18rem);
+  height: auto;
+  max-height: min(55vh, 18rem);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.mm-cm-qr__error {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #fca5a5;
+  max-width: 22rem;
+}
+
+.mm-cm-qr__error.is-hidden {
+  display: none !important;
 }
 
 .mm-filter-list-root {

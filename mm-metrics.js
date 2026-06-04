@@ -1,5 +1,5 @@
 /**
- * Prod-only custom metrics (prod.css probe). Sends to prod Worker /mm/metrics/collect.
+ * Prod-only custom metrics (window.MM_PROD_PROBE). Sends to prod Worker /mm/metrics/collect.
  */
 (function (global) {
   "use strict";
@@ -12,19 +12,6 @@
   var enabled = false;
   var clientId = null;
   var sessionId = null;
-
-  function repoBasePath() {
-    var scripts = document.getElementsByTagName("script");
-    for (var i = 0; i < scripts.length; i++) {
-      var src = scripts[i].getAttribute("src") || "";
-      if (src.indexOf("mm-metrics.js") === -1) continue;
-      var url = new URL(src, global.location.href);
-      var path = url.pathname;
-      var idx = path.lastIndexOf("/");
-      return idx >= 0 ? path.slice(0, idx + 1) : "/";
-    }
-    return "/";
-  }
 
   function isTestMode() {
     return /[?&]mode=test(?:&|$|#)/i.test(global.location.href);
@@ -187,15 +174,22 @@
     }
   }
 
+  function whenProdSite(cb) {
+    var probe = global.MM_PROD_PROBE;
+    if (!probe || typeof probe.then !== "function") {
+      cb(false);
+      return;
+    }
+    probe.then(cb).catch(function () {
+      cb(false);
+    });
+  }
+
   global.MM_METRICS = { track: track };
 
   if (isTestMode()) return;
 
-  fetch(repoBasePath() + "prod.css", { method: "HEAD", cache: "no-cache" })
-    .then(function (res) {
-      if (res.ok) initMetrics();
-    })
-    .catch(function () {
-      /* dev — no metrics */
-    });
+  whenProdSite(function (isProd) {
+    if (isProd) initMetrics();
+  });
 })(typeof window !== "undefined" ? window : self);

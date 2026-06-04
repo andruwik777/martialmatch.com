@@ -2,6 +2,7 @@
  * Theme: if prod.css exists at site root → app.css + prod.css.
  * Otherwise → app.css + dev.css, and if URL has mode=test also dev-test.css.
  * Favicon / apple-touch-icon: optimistic dev swap (reverted when prod.css exists).
+ * Exposes window.MM_PROD_PROBE (Promise<boolean>) — single HEAD for prod detection.
  * Commit prod.css only on the production repo (not in dev).
  */
 (function () {
@@ -62,15 +63,21 @@
     setAppleTouchIcon("icons/icon-192.png");
   }
 
-  fetch(base + "prod.css", { method: "HEAD", cache: "no-cache" })
+  var prodProbe = fetch(base + "prod.css", { method: "HEAD", cache: "no-cache" })
     .then(function (res) {
-      if (res.ok) {
-        applyProdTheme();
-      } else {
-        applyDevTheme();
-      }
+      return res.ok;
     })
     .catch(function () {
-      applyDevTheme();
+      return false;
     });
+
+  window.MM_PROD_PROBE = prodProbe;
+
+  prodProbe.then(function (isProd) {
+    if (isProd) {
+      applyProdTheme();
+    } else {
+      applyDevTheme();
+    }
+  });
 })();

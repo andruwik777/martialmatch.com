@@ -184,26 +184,29 @@
     document.head.appendChild(link);
   }
 
-  /** Prod vs dev/test — same prod.css probe as theme-loader.js. */
+  /** Prod vs dev/test — window.MM_PROD_PROBE from theme-loader.js. */
+  function whenProdProbe(cb) {
+    var probe = global.MM_PROD_PROBE;
+    if (!probe || typeof probe.then !== "function") {
+      cb(false);
+      return;
+    }
+    probe.then(cb).catch(function () {
+      cb(false);
+    });
+  }
+
   function linkManifestForEnv() {
     var testMode = /[?&]mode=test(?:&|$|#)/i.test(global.location.href);
-    fetch(absoluteFromRepo("prod.css"), { method: "HEAD", cache: "no-cache" })
-      .then(function (res) {
-        if (res.ok) {
-          attachManifest(absoluteFromRepo("manifest.webmanifest"));
-        } else if (testMode) {
-          attachManifest(absoluteFromRepo("manifest-dev-test.webmanifest"));
-        } else {
-          attachManifest(absoluteFromRepo("manifest-dev.webmanifest"));
-        }
-      })
-      .catch(function () {
-        if (testMode) {
-          attachManifest(absoluteFromRepo("manifest-dev-test.webmanifest"));
-        } else {
-          attachManifest(absoluteFromRepo("manifest-dev.webmanifest"));
-        }
-      });
+    whenProdProbe(function (isProd) {
+      if (isProd) {
+        attachManifest(absoluteFromRepo("manifest.webmanifest"));
+      } else if (testMode) {
+        attachManifest(absoluteFromRepo("manifest-dev-test.webmanifest"));
+      } else {
+        attachManifest(absoluteFromRepo("manifest-dev.webmanifest"));
+      }
+    });
   }
 
   function onTabChanged(tab) {

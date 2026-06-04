@@ -168,6 +168,9 @@
   function wireUiMetrics() {
     wireShareButton();
     wireQrButton();
+    wireNavButton("mm-cm-nav-help", "data-mm-metrics-help", "help_open");
+    wireNavButton("mm-cm-nav-home", "data-mm-metrics-home", "home_nav");
+    wireNavButton("mm-cm-orig-mm-link", "data-mm-metrics-orig", "orig_mm_link");
     wireTabButtons();
   }
 

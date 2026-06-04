@@ -1,17 +1,55 @@
 /**
  * Prod-only custom metrics: POST /mm/metrics/collect
- * K1 share_click, qr_open → KV daily counters
- * D1 session_start, tab_view → clients + events tables
+ * KV: share_click, qr_open, help_open, fights_refresh, home_nav, orig_mm_link,
+ *     pwa_install_click, filter_open → daily counters
+ * D1: session_start, tab_view, filter_apply, filter_clear, favorite_toggle,
+ *     event_select, change_active_event, share_outcome → events table
  */
 
 const METRICS_PATH = "/mm/metrics/collect";
-const ALLOWED_EVENTS = new Set([
+
+const KV_EVENT_PREFIX = {
+  share_click: "metrics:share:",
+  qr_open: "metrics:qr:",
+  help_open: "metrics:help:",
+  fights_refresh: "metrics:fights_refresh:",
+  home_nav: "metrics:home:",
+  orig_mm_link: "metrics:orig_link:",
+  pwa_install_click: "metrics:pwa_install:",
+  filter_open: "metrics:filter_open:",
+};
+
+const D1_EVENTS = new Set([
   "session_start",
-  "share_click",
-  "qr_open",
   "tab_view",
+  "filter_apply",
+  "filter_clear",
+  "favorite_toggle",
+  "event_select",
+  "change_active_event",
+  "share_outcome",
 ]);
-const ALLOWED_TAB_VIEW = new Set(["events", "fights", "harmonogram"]);
+
+const ALLOWED_EVENTS = new Set([
+  ...Object.keys(KV_EVENT_PREFIX),
+  ...D1_EVENTS,
+]);
+
+const ALLOWED_TABS = new Set(["events", "fights", "harmonogram"]);
+const ALLOWED_FILTER_KIND = new Set(["events", "slug"]);
+const ALLOWED_FAVORITE_ACTION = new Set(["add", "remove"]);
+const ALLOWED_SHARE_METHOD = new Set(["native", "clipboard", "abort"]);
+
+const CLIENT_ERROR_CODES = new Set([
+  "invalid_tab",
+  "invalid_kind",
+  "invalid_count",
+  "invalid_action",
+  "invalid_method",
+  "invalid_has_slug",
+  "invalid_has_filter",
+]);
+
 const METRICS_PAGES_ORIGIN = "https://andruwik777.github.io";
 const DEV_PAGES_PATH = "/dev.martialmatch.com/";
 
@@ -101,52 +139,120 @@ async function insertEvent(db, ts, day, event, payload, props) {
     .run();
 }
 
-async function handleSessionStart(env, payload, ts, day) {
-  var db = env.METRICS_DB;
-  if (!db) throw new Error("metrics_db_missing");
-  await ensureSchema(db);
+function readTab(props) {
+  return props && typeof props.tab === "string" ? props.tab : "";
+}
 
-  await db
-    .prepare(
-      `INSERT INTO clients (client_id, first_seen, last_seen)
-       VALUES (?, ?, ?)
-       ON CONFLICT(client_id) DO UPDATE SET last_seen = excluded.last_seen`
-    )
-    .bind(payload.client_id, ts, ts)
-    .run();
+function requireTab(props) {
+  var tab = readTab(props);
+  if (!ALLOWED_TABS.has(tab)) throw new Error("invalid_tab");
+  return tab;
+}
 
+function requireBool(props, key) {
+  var v = props && props[key];
+  if (typeof v !== "boolean") throw new Error("invalid_" + key);
+  return v;
+}
+
+function normalizeD1Props(event, rawProps) {
   var props =
-    payload.props && typeof payload.props === "object" ? payload.props : null;
-  await insertEvent(db, ts, day, "session_start", payload, props);
-}
+    rawProps && typeof rawProps === "object" ? rawProps : {};
 
-async function handleTabView(env, payload, ts, day) {
-  var db = env.METRICS_DB;
-  if (!db) throw new Error("metrics_db_missing");
-  await ensureSchema(db);
-
-  var tab =
-    payload.props && typeof payload.props.tab === "string"
-      ? payload.props.tab
-      : "";
-  if (!ALLOWED_TAB_VIEW.has(tab)) {
-    throw new Error("invalid_tab");
+  if (event === "session_start") {
+    return props;
   }
-  await insertEvent(db, ts, day, "tab_view", payload, { tab: tab });
+
+  if (event === "tab_view" || event === "change_active_event") {
+    return { tab: requireTab(props) };
+  }
+
+  if (event === "event_select") {
+    var fromTab =
+      props && typeof props.from_tab === "string" ? props.from_tab : "";
+    if (!ALLOWED_TABS.has(fromTab)) throw new Error("invalid_tab");
+    return { from_tab: fromTab };
+  }
+
+  if (event === "filter_apply") {
+    var kind =
+      props && typeof props.kind === "string" ? props.kind : "";
+    if (!ALLOWED_FILTER_KIND.has(kind)) throw new Error("invalid_kind");
+    var count = props.count;
+    if (
+      typeof count !== "number" ||
+      !Number.isFinite(count) ||
+      count < 0 ||
+      count > 10000
+    ) {
+      throw new Error("invalid_count");
+    }
+    return {
+      kind: kind,
+      tab: requireTab(props),
+      count: Math.floor(count),
+    };
+  }
+
+  if (event === "filter_clear") {
+    var clearKind =
+      props && typeof props.kind === "string" ? props.kind : "";
+    if (!ALLOWED_FILTER_KIND.has(clearKind)) throw new Error("invalid_kind");
+    return {
+      kind: clearKind,
+      tab: requireTab(props),
+    };
+  }
+
+  if (event === "favorite_toggle") {
+    var action =
+      props && typeof props.action === "string" ? props.action : "";
+    if (!ALLOWED_FAVORITE_ACTION.has(action)) throw new Error("invalid_action");
+    return { action: action };
+  }
+
+  if (event === "share_outcome") {
+    var method =
+      props && typeof props.method === "string" ? props.method : "";
+    if (!ALLOWED_SHARE_METHOD.has(method)) throw new Error("invalid_method");
+    return {
+      method: method,
+      tab: requireTab(props),
+      has_slug: requireBool(props, "has_slug"),
+      has_filter: requireBool(props, "has_filter"),
+    };
+  }
+
+  return props;
 }
 
-async function handleKvDailyCounter(env, day, keyPrefix) {
+async function handleKvEvent(env, event, day) {
+  var prefix = KV_EVENT_PREFIX[event];
+  if (!prefix) throw new Error("unknown_kv_event");
   var kv = env.METRICS_KV;
   if (!kv) throw new Error("metrics_kv_missing");
-  await incrementKvCounter(kv, keyPrefix + day);
+  await incrementKvCounter(kv, prefix + day);
 }
 
-async function handleShareClick(env, day) {
-  await handleKvDailyCounter(env, day, "metrics:share:");
-}
+async function handleD1Event(env, event, payload, ts, day) {
+  var db = env.METRICS_DB;
+  if (!db) throw new Error("metrics_db_missing");
+  await ensureSchema(db);
 
-async function handleQrOpen(env, day) {
-  await handleKvDailyCounter(env, day, "metrics:qr:");
+  var props = normalizeD1Props(event, payload.props);
+
+  if (event === "session_start") {
+    await db
+      .prepare(
+        `INSERT INTO clients (client_id, first_seen, last_seen)
+         VALUES (?, ?, ?)
+         ON CONFLICT(client_id) DO UPDATE SET last_seen = excluded.last_seen`
+      )
+      .bind(payload.client_id, ts, ts)
+      .run();
+  }
+
+  await insertEvent(db, ts, day, event, payload, props);
 }
 
 export function isMetricsCollectPath(pathname) {
@@ -207,18 +313,14 @@ export async function handleMetricsCollect(request, env, allowOrigin) {
   var day = utcDay(ts);
 
   try {
-    if (event === "session_start") {
-      await handleSessionStart(env, payload, ts, day);
-    } else if (event === "share_click") {
-      await handleShareClick(env, day);
-    } else if (event === "qr_open") {
-      await handleQrOpen(env, day);
-    } else if (event === "tab_view") {
-      await handleTabView(env, payload, ts, day);
+    if (KV_EVENT_PREFIX[event]) {
+      await handleKvEvent(env, event, day);
+    } else if (D1_EVENTS.has(event)) {
+      await handleD1Event(env, event, payload, ts, day);
     }
   } catch (err) {
     var code = err && err.message ? err.message : "store_failed";
-    if (code === "invalid_tab") {
+    if (CLIENT_ERROR_CODES.has(code)) {
       return jsonResponse(allowOrigin, 400, { ok: false, error: code });
     }
     return jsonResponse(allowOrigin, 503, { ok: false, error: code });

@@ -135,6 +135,12 @@
 
     installBtn.addEventListener("click", function () {
       if (!deferredPrompt) return;
+      if (
+        global.MM_METRICS &&
+        typeof global.MM_METRICS.track === "function"
+      ) {
+        global.MM_METRICS.track("pwa_install_click", {});
+      }
       deferredPrompt.prompt();
       deferredPrompt.userChoice
         .then(function (choice) {

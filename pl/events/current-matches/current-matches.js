@@ -69,6 +69,25 @@
   var URL_PARAM_SLUG_FILTER = "slug_filter";
   var FAVORITES_LS_KEY = "mm_cm_favorites_v1";
 
+  function mmTrack(event, props) {
+    if (typeof window !== "undefined" && window.MM_METRICS && window.MM_METRICS.track) {
+      window.MM_METRICS.track(event, props || {});
+    }
+  }
+
+  function mmFilterKindForTab(tab) {
+    return tab === CM_TAB_EVENTS ? "events" : "slug";
+  }
+
+  function mmShareContextProps() {
+    var tab = getCmTabFromUrl();
+    return {
+      tab: tab,
+      has_slug: Boolean(evSlug),
+      has_filter: Boolean(getEventsFilterIdSetFromUrl()) || Boolean(getSlugFilterIdSetFromUrl()),
+    };
+  }
+
   var eventCache = Object.create(null);
   var parsedEventsList = [];
   /** True after the /pl/events index fetch settles (success or error). */
@@ -3171,16 +3190,52 @@
 
   function shareCurrentPageUrl() {
     var payload = buildSharePayload();
-    if (navigator.share) {
-      if (navigator.canShare && !navigator.canShare(payload)) {
-        return copyUrlToClipboard(payload.url);
-      }
-      return navigator.share(payload).catch(function (err) {
-        if (err && err.name === "AbortError") return;
-        return copyUrlToClipboard(payload.url);
+    var ctx = mmShareContextProps();
+
+    function trackShareOutcome(method) {
+      mmTrack("share_outcome", {
+        method: method,
+        tab: ctx.tab,
+        has_slug: ctx.has_slug,
+        has_filter: ctx.has_filter,
       });
     }
-    return copyUrlToClipboard(payload.url);
+
+    if (navigator.share) {
+      if (navigator.canShare && !navigator.canShare(payload)) {
+        return copyUrlToClipboard(payload.url)
+          .then(function () {
+            trackShareOutcome("clipboard");
+          })
+          .catch(function () {
+            trackShareOutcome("abort");
+          });
+      }
+      return navigator.share(payload)
+        .then(function () {
+          trackShareOutcome("native");
+        })
+        .catch(function (err) {
+          if (err && err.name === "AbortError") {
+            trackShareOutcome("abort");
+            return;
+          }
+          return copyUrlToClipboard(payload.url)
+            .then(function () {
+              trackShareOutcome("clipboard");
+            })
+            .catch(function () {
+              trackShareOutcome("abort");
+            });
+        });
+    }
+    return copyUrlToClipboard(payload.url)
+      .then(function () {
+        trackShareOutcome("clipboard");
+      })
+      .catch(function () {
+        trackShareOutcome("abort");
+      });
   }
 
   function initShareNav() {
@@ -3231,6 +3286,8 @@
       if (!evSlug) return;
       if (getCmTabFromUrl() !== CM_TAB_FIGHTS) {
         setCmTab(CM_TAB_FIGHTS);
+      } else {
+        mmTrack("fights_refresh", {});
       }
       loadFights().catch(function () {
         /* zostaw poprzednią listę */
@@ -3251,6 +3308,7 @@
         var parsed = cfg.parseEventSlug(slugStr);
         if (!parsed) return;
         evClick.preventDefault();
+        mmTrack("event_select", { from_tab: "events" });
         activateEventSlug(parsed);
       });
       eventsListEl.addEventListener("keydown", function (evKd) {
@@ -3261,9 +3319,12 @@
             : null;
         if (!row || !eventsListEl.contains(row)) return;
         evKd.preventDefault();
-        var slugStr = row.getAttribute("data-mm-event-slug");
-        var parsed = cfg.parseEventSlug(slugStr || "");
-        if (parsed) activateEventSlug(parsed);
+        var slugStr2 = row.getAttribute("data-mm-event-slug");
+        var parsed2 = cfg.parseEventSlug(slugStr2 || "");
+        if (parsed2) {
+          mmTrack("event_select", { from_tab: "events" });
+          activateEventSlug(parsed2);
+        }
       });
     }
     var tabsWrap = tabFightsBtn.closest(".mm-cm-tabs");
@@ -3609,13 +3670,14 @@
       }
     }
 
-    syncClubHeaderCheckboxDisabledState(onlyFav, onlySel);
+    var hasSearchInput = String(queryRaw || "").length > 0;
+    syncClubHeaderCheckboxDisabledState(onlyFav, onlySel, hasSearchInput);
   }
 
-  /** Club select-all is read-only while list shows a subset (favorites / checked). */
-  function syncClubHeaderCheckboxDisabledState(onlyFav, onlySel) {
+  /** Club select-all is read-only while list shows a subset (favorites / checked / search). */
+  function syncClubHeaderCheckboxDisabledState(onlyFav, onlySel, hasSearchInput) {
     if (!filterListRootEl) return;
-    var lock = Boolean(onlyFav || onlySel);
+    var lock = Boolean(onlyFav || onlySel || hasSearchInput);
     var sections = filterListRootEl.querySelectorAll(".mm-filter-club");
     for (var i = 0; i < sections.length; i++) {
       var headerCb = clubHeaderCheckboxInSection(sections[i]);
@@ -3762,6 +3824,7 @@
     var athleteKey = btn.getAttribute("data-athlete-key");
     if (!athleteKey) return;
     var nowFav = toggleFavoriteAthleteKey(athleteKey);
+    mmTrack("favorite_toggle", { action: nowFav ? "add" : "remove" });
     syncAllFavoriteStarsForAthleteKey(athleteKey, nowFav);
     applyFilterPanelListVisibility();
   }
@@ -4158,6 +4221,7 @@
 
   function openFilterPanel() {
     filterPanelOpen = true;
+    mmTrack("filter_open", {});
     if (filterRootEl) {
       filterRootEl.classList.add("is-open");
     }
@@ -4224,6 +4288,11 @@
   function applyFilterFromPanel() {
     var tab = getCmTabFromUrl();
     var ids = collectCheckedPublicIds();
+    mmTrack("filter_apply", {
+      kind: mmFilterKindForTab(tab),
+      tab: tab,
+      count: ids.length,
+    });
     if (tab === CM_TAB_EVENTS) {
       setEventsFilterQueryInUrl(ids);
     } else {
@@ -4238,6 +4307,10 @@
    */
   function applyFilterClearFromPanel() {
     var tab = getCmTabFromUrl();
+    mmTrack("filter_clear", {
+      kind: mmFilterKindForTab(tab),
+      tab: tab,
+    });
     if (
       (tab === CM_TAB_FIGHTS || tab === CM_TAB_HARMONOGRAM) &&
       evSlug &&
@@ -4682,6 +4755,7 @@
   }
   if (changeActiveEventBtn) {
     changeActiveEventBtn.addEventListener("click", function () {
+      mmTrack("change_active_event", { tab: getCmTabFromUrl() });
       clearActiveEventSlug();
     });
   }

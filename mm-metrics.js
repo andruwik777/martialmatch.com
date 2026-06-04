@@ -71,14 +71,6 @@
     if (!url || !enabled) return;
     var json = JSON.stringify(body);
     try {
-      if (global.navigator && global.navigator.sendBeacon) {
-        var blob = new Blob([json], { type: "application/json" });
-        if (global.navigator.sendBeacon(url, blob)) return;
-      }
-    } catch (e) {
-      /* fall through */
-    }
-    try {
       global.fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -87,7 +79,7 @@
         mode: "cors",
         credentials: "omit",
       }).catch(function () {});
-    } catch (e2) {
+    } catch (e) {
       /* ignore */
     }
   }

@@ -1,11 +1,17 @@
 /**
  * Prod-only custom metrics: POST /mm/metrics/collect
- * K1 share_click → KV daily counter
- * D1 session_start → clients + events tables
+ * K1 share_click, qr_open → KV daily counters
+ * D1 session_start, tab_view → clients + events tables
  */
 
 const METRICS_PATH = "/mm/metrics/collect";
-const ALLOWED_EVENTS = new Set(["session_start", "share_click"]);
+const ALLOWED_EVENTS = new Set([
+  "session_start",
+  "share_click",
+  "qr_open",
+  "tab_view",
+]);
+const ALLOWED_TAB_VIEW = new Set(["events", "fights", "harmonogram"]);
 const METRICS_PAGES_ORIGIN = "https://andruwik777.github.io";
 const DEV_PAGES_PATH = "/dev.martialmatch.com/";
 
@@ -83,6 +89,18 @@ async function incrementKvCounter(kv, key) {
   await kv.put(key, String(n + 1));
 }
 
+async function insertEvent(db, ts, day, event, payload, props) {
+  var propsJson =
+    props && typeof props === "object" ? JSON.stringify(props) : null;
+  await db
+    .prepare(
+      `INSERT INTO events (ts, day, event, client_id, session_id, props)
+       VALUES (?, ?, ?, ?, ?, ?)`
+    )
+    .bind(ts, day, event, payload.client_id, payload.session_id, propsJson)
+    .run();
+}
+
 async function handleSessionStart(env, payload, ts, day) {
   var db = env.METRICS_DB;
   if (!db) throw new Error("metrics_db_missing");
@@ -98,23 +116,37 @@ async function handleSessionStart(env, payload, ts, day) {
     .run();
 
   var props =
-    payload.props && typeof payload.props === "object"
-      ? JSON.stringify(payload.props)
-      : null;
+    payload.props && typeof payload.props === "object" ? payload.props : null;
+  await insertEvent(db, ts, day, "session_start", payload, props);
+}
 
-  await db
-    .prepare(
-      `INSERT INTO events (ts, day, event, client_id, session_id, props)
-       VALUES (?, ?, ?, ?, ?, ?)`
-    )
-    .bind(ts, day, "session_start", payload.client_id, payload.session_id, props)
-    .run();
+async function handleTabView(env, payload, ts, day) {
+  var db = env.METRICS_DB;
+  if (!db) throw new Error("metrics_db_missing");
+  await ensureSchema(db);
+
+  var tab =
+    payload.props && typeof payload.props.tab === "string"
+      ? payload.props.tab
+      : "";
+  if (!ALLOWED_TAB_VIEW.has(tab)) {
+    throw new Error("invalid_tab");
+  }
+  await insertEvent(db, ts, day, "tab_view", payload, { tab: tab });
+}
+
+async function handleKvDailyCounter(env, day, keyPrefix) {
+  var kv = env.METRICS_KV;
+  if (!kv) throw new Error("metrics_kv_missing");
+  await incrementKvCounter(kv, keyPrefix + day);
 }
 
 async function handleShareClick(env, day) {
-  var kv = env.METRICS_KV;
-  if (!kv) throw new Error("metrics_kv_missing");
-  await incrementKvCounter(kv, "metrics:share:" + day);
+  await handleKvDailyCounter(env, day, "metrics:share:");
+}
+
+async function handleQrOpen(env, day) {
+  await handleKvDailyCounter(env, day, "metrics:qr:");
 }
 
 export function isMetricsCollectPath(pathname) {
@@ -179,9 +211,16 @@ export async function handleMetricsCollect(request, env, allowOrigin) {
       await handleSessionStart(env, payload, ts, day);
     } else if (event === "share_click") {
       await handleShareClick(env, day);
+    } else if (event === "qr_open") {
+      await handleQrOpen(env, day);
+    } else if (event === "tab_view") {
+      await handleTabView(env, payload, ts, day);
     }
   } catch (err) {
     var code = err && err.message ? err.message : "store_failed";
+    if (code === "invalid_tab") {
+      return jsonResponse(allowOrigin, 400, { ok: false, error: code });
+    }
     return jsonResponse(allowOrigin, 503, { ok: false, error: code });
   }
 

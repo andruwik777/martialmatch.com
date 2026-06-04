@@ -129,13 +129,46 @@
     track("session_start", sessionProps());
   }
 
-  function wireShareButton() {
-    var btn = document.getElementById("mm-cm-nav-share");
-    if (!btn || btn.getAttribute("data-mm-metrics-share") === "1") return;
-    btn.setAttribute("data-mm-metrics-share", "1");
+  function wireNavButton(btnId, dataAttr, eventName, props) {
+    var btn = document.getElementById(btnId);
+    if (!btn || btn.getAttribute(dataAttr) === "1") return;
+    btn.setAttribute(dataAttr, "1");
     btn.addEventListener("click", function () {
-      track("share_click", {});
+      track(eventName, props || {});
     });
+  }
+
+  function wireShareButton() {
+    wireNavButton("mm-cm-nav-share", "data-mm-metrics-share", "share_click");
+  }
+
+  function wireQrButton() {
+    wireNavButton("mm-cm-nav-qr", "data-mm-metrics-qr", "qr_open");
+  }
+
+  function wireTabButtons() {
+    var tabs = [
+      { id: "mm-cm-tab-events", tab: "events" },
+      { id: "mm-cm-tab-fights", tab: "fights" },
+      { id: "mm-cm-tab-harmonogram", tab: "harmonogram" },
+    ];
+    for (var i = 0; i < tabs.length; i++) {
+      (function (spec) {
+        var btn = document.getElementById(spec.id);
+        if (!btn || btn.getAttribute("data-mm-metrics-tab") === "1") return;
+        btn.setAttribute("data-mm-metrics-tab", "1");
+        btn.addEventListener("click", function () {
+          if (btn.classList.contains("mm-cm-tab--disabled")) return;
+          track("tab_view", { tab: spec.tab });
+        });
+      })(tabs[i]);
+    }
+  }
+
+  function wireUiMetrics() {
+    wireShareButton();
+    wireQrButton();
+    wireTabButtons();
   }
 
   function initMetrics() {
@@ -145,9 +178,9 @@
     sessionId = ensureSessionId();
     sendSessionStartOnce();
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", wireShareButton);
+      document.addEventListener("DOMContentLoaded", wireUiMetrics);
     } else {
-      wireShareButton();
+      wireUiMetrics();
     }
   }
 

@@ -33,13 +33,15 @@ Paste IDs into `server/prod-martialmatch-v1/wrangler.toml` under `[[kv_namespace
 
 After prod release + a few app visits:
 
-**KV** — Workers → KV → MM_METRICS → key `metrics:share:YYYY-MM-DD` (increments on Share click).
+**KV** — Workers → KV → MM_METRICS → key `metrics:share:YYYY-MM-DD` or `metrics:qr:YYYY-MM-DD`.
 
 **D1** — Storage → D1 → mm-prod-metrics → Console:
 
 ```sql
 SELECT COUNT(*) AS clients FROM clients;
 SELECT * FROM events ORDER BY id DESC LIMIT 20;
+SELECT json_extract(props, '$.tab') AS tab, COUNT(*) AS n
+FROM events WHERE event = 'tab_view' GROUP BY tab;
 ```
 
 Optional manual schema (tables are also created on first collect):

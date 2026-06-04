@@ -6,9 +6,7 @@
  *     event_select, change_active_event, share_outcome → events table
  */
 
-const METRICS_PATH = "/mm/metrics/collect";
-
-const KV_EVENT_PREFIX = {
+export const KV_EVENT_PREFIX = {
   share_click: "metrics:share:",
   qr_open: "metrics:qr:",
   help_open: "metrics:help:",
@@ -18,6 +16,8 @@ const KV_EVENT_PREFIX = {
   pwa_install_click: "metrics:pwa_install:",
   filter_open: "metrics:filter_open:",
 };
+
+const METRICS_PATH = "/mm/metrics/collect";
 
 const D1_EVENTS = new Set([
   "session_start",

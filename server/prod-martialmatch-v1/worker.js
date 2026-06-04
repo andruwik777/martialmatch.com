@@ -5,6 +5,7 @@ import {
   handleMetricsCollect,
   isMetricsCollectPath,
 } from "./metrics-collect.js";
+import { handleMetricsStats, isMetricsStatsPath } from "./metrics-stats.js";
 
 const USE_SERVER_CACHE = true;
 
@@ -185,6 +186,10 @@ export default {
 
     if (isMetricsCollectPath(path)) {
       return handleMetricsCollect(request, env, allowOrigin);
+    }
+
+    if (isMetricsStatsPath(path)) {
+      return handleMetricsStats(request, env, url);
     }
 
     const html = "text/html; charset=utf-8";

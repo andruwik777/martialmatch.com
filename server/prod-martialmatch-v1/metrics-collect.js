@@ -6,7 +6,8 @@
 
 const METRICS_PATH = "/mm/metrics/collect";
 const ALLOWED_EVENTS = new Set(["session_start", "share_click"]);
-const PROD_PAGES_PATH = "/martialmatch.com/";
+const METRICS_PAGES_ORIGIN = "https://andruwik777.github.io";
+const DEV_PAGES_PATH = "/dev.martialmatch.com/";
 
 let schemaReady = false;
 
@@ -31,11 +32,17 @@ function isValidId(value) {
   return s.length >= 8 && s.length <= 64;
 }
 
-function isProdAppReferer(request) {
+function isProdMetricsRequest(request) {
   var ref = request.headers.get("Referer") || "";
   if (!ref) return true;
   try {
-    return new URL(ref).pathname.indexOf(PROD_PAGES_PATH) !== -1;
+    var u = new URL(ref);
+    if (u.origin !== METRICS_PAGES_ORIGIN) return false;
+    if (u.pathname.indexOf(DEV_PAGES_PATH) !== -1) return false;
+    if (u.pathname.indexOf("/martialmatch.com/") !== -1) return true;
+    if (u.pathname === "/" || u.pathname === "") return true;
+    if (u.pathname.indexOf("/martialmatch/") === 0) return true;
+    return false;
   } catch (e) {
     return false;
   }
@@ -140,7 +147,7 @@ export async function handleMetricsCollect(request, env, allowOrigin) {
     return jsonResponse(allowOrigin, 403, { ok: false, error: "origin_not_allowed" });
   }
 
-  if (!isProdAppReferer(request)) {
+  if (!isProdMetricsRequest(request)) {
     return jsonResponse(allowOrigin, 403, { ok: false, error: "not_prod_app" });
   }
 

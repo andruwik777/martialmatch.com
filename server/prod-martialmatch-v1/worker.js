@@ -1,6 +1,11 @@
 /**
  * Use Worker Cache API (match/put) for cached routes. Set false to always hit origin (debug).
  */
+import {
+  handleMetricsCollect,
+  isMetricsCollectPath,
+} from "./metrics-collect.js";
+
 const USE_SERVER_CACHE = true;
 
 /**
@@ -170,13 +175,17 @@ async function fetchOriginPassthrough(targetUrl, allowOrigin, contentType) {
 }
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const origin = request.headers.get("Origin");
 
     const allowOrigin = ALLOWED_CORS_ORIGINS.includes(origin) ? origin : null;
 
     const url = new URL(request.url);
     const path = url.pathname;
+
+    if (isMetricsCollectPath(path)) {
+      return handleMetricsCollect(request, env, allowOrigin);
+    }
 
     const html = "text/html; charset=utf-8";
     const json = "application/json";

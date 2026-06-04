@@ -5,3 +5,12 @@ compatibility_date = "2026-04-23"
 [observability]
 enabled = true
 head_sampling_rate = 1
+
+[[kv_namespaces]]
+binding = "METRICS_KV"
+id = "0aee3608e6944e23a4ff320a83cbea5d"
+
+[[d1_databases]]
+binding = "METRICS_DB"
+database_name = "mm-prod-metrics"
+database_id = "6d1a3e3c-fb52-4f43-aa79-7206ea5cb960"

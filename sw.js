@@ -13,5 +13,16 @@ self.addEventListener("activate", function (event) {
 });
 
 self.addEventListener("fetch", function (event) {
-  event.respondWith(fetch(event.request));
+  var request = event.request;
+  var url;
+  try {
+    url = new URL(request.url);
+  } catch (err) {
+    return;
+  }
+  // Cross-origin (Worker API, /mm/metrics/collect): bypass SW — avoids CORS/beacon failures.
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+  event.respondWith(fetch(request));
 });

@@ -170,4 +170,4 @@
     .catch(function () {
       /* dev — no metrics */
     });
-})();
+})(typeof window !== "undefined" ? window : self);

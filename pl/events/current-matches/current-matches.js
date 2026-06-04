@@ -2985,6 +2985,11 @@
     );
   }
 
+  /** Events aggregate load must not repaint the shared filter panel on Fights/Schedule. */
+  function shouldApplyEventsAggregateFilterPanelResult() {
+    return getCmTabFromUrl() === CM_TAB_EVENTS;
+  }
+
   var AGGREGATE_FILTER_LOAD_HINT =
     "The athlete list and Apply / Clear actions will appear when every event's starting list has finished loading.";
 
@@ -4424,6 +4429,9 @@
       }
       ensureAggregateParticipantMaps()
         .then(function () {
+          if (!shouldApplyEventsAggregateFilterPanelResult()) {
+            return;
+          }
           setEventsAggregateFilterLoadingUi(false);
           if (filterPanelStatusEl) filterPanelStatusEl.textContent = "";
           var merged = buildAggregateFilterEntries();
@@ -4434,6 +4442,9 @@
           syncFilterCheckboxesFromUrl();
         })
         .catch(function (err) {
+          if (!shouldApplyEventsAggregateFilterPanelResult()) {
+            return;
+          }
           setEventsAggregateFilterLoadingUi(false);
           if (filterPanelStatusEl) {
             filterPanelStatusEl.textContent =

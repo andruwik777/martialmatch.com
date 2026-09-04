@@ -52,21 +52,34 @@
     );
   }
 
-  /** Miesiące w dopełniaczu jak w „Data zawodów” na martialmatch.com */
+  /** Month names on martialmatch.com event cards (full genitive + abbreviations). */
   var POLISH_MONTH_TO_INDEX = {
+    sty: 0,
     stycznia: 0,
+    lut: 1,
     lutego: 1,
+    mar: 2,
     marca: 2,
+    kwi: 3,
     kwietnia: 3,
+    maj: 4,
     maja: 4,
+    cze: 5,
     czerwca: 5,
+    lip: 6,
     lipca: 6,
+    sie: 7,
     sierpnia: 7,
+    wrz: 8,
     września: 8,
     wrzesnia: 8,
+    paź: 9,
+    paz: 9,
     października: 9,
     pazdziernika: 9,
+    lis: 10,
     listopada: 10,
+    gru: 11,
     grudnia: 11,
   };
 
@@ -152,66 +165,58 @@
     return null;
   }
 
+  function registrationFromListingBadgeText(txt, badgeClass) {
+    if (!txt) return null;
+    if (/Trwające\s+zawody/i.test(txt)) {
+      return { kind: "ongoing", text: txt };
+    }
+    if (/Rejestracja\s+zako[nń]czona/i.test(txt)) {
+      return { kind: "closed", text: txt };
+    }
+    if (/Start\s+rejestracji/i.test(txt)) {
+      return { kind: "start", text: txt };
+    }
+    if (/Koniec\s+rejestracji/i.test(txt)) {
+      return { kind: "end", text: txt };
+    }
+    if (badgeClass.indexOf("is-warning") !== -1) {
+      return { kind: "closed", text: txt };
+    }
+    if (badgeClass.indexOf("is-info") !== -1) {
+      return { kind: "start", text: txt };
+    }
+    if (badgeClass.indexOf("is-success") !== -1) {
+      if (/Trwające/i.test(txt)) return { kind: "ongoing", text: txt };
+      return { kind: "end", text: txt };
+    }
+    return null;
+  }
+
   /**
-   * @param {HTMLElement} row
+   * @param {HTMLElement} card
    * @returns {{ kind: string, text: string } | null}
    * kind: ongoing | start | end | closed
    */
-  function parseRegistration(row) {
-    var candidates = row.querySelectorAll(
-      "span.has-text-success, span.has-text-info, span.has-text-warning"
-    );
-    var i;
-    var maxLen = 200;
+  function parseRegistration(card) {
+    var badge = card.querySelector(".event-listing-card__registration-badge");
+    if (!badge) return null;
+    var txt = badge.textContent.replace(/\s+/g, " ").trim();
+    if (!txt || txt.length > 200) return null;
+    return registrationFromListingBadgeText(txt, badge.className || "");
+  }
 
-    function skipContext(el) {
-      if (!el) return true;
-      if (el.closest(".tags")) return true;
-      if (el.closest(".event-date")) return true;
-      return false;
+  function parseEventListingCardDate(card) {
+    var cal = card.querySelector(".event-listing-card__detail .fa-calendar-alt");
+    var detail = cal && cal.closest(".event-listing-card__detail");
+    if (!detail) return "";
+    var spans = detail.querySelectorAll("span");
+    for (var i = 0; i < spans.length; i++) {
+      var sp = spans[i];
+      if (sp.classList.contains("event-listing-card__detail-icon")) continue;
+      var t = sp.textContent.replace(/\s+/g, " ").trim();
+      if (t) return t;
     }
-
-    for (i = 0; i < candidates.length; i++) {
-      var el = candidates[i];
-      if (skipContext(el)) continue;
-      var txt = el.textContent.replace(/\s+/g, " ").trim();
-      if (!txt || txt.length > maxLen) continue;
-
-      if (/Trwające\s+zawody/i.test(txt)) {
-        return { kind: "ongoing", text: txt };
-      }
-      if (/Rejestracja\s+zakończona/i.test(txt)) {
-        return { kind: "closed", text: txt };
-      }
-      if (/Rejestracja\s+zakonczona/i.test(txt)) {
-        return { kind: "closed", text: txt };
-      }
-      if (/Start\s+rejestracji/i.test(txt)) {
-        return { kind: "start", text: txt };
-      }
-      if (/Koniec\s+rejestracji/i.test(txt)) {
-        return { kind: "end", text: txt };
-      }
-    }
-
-    for (i = 0; i < candidates.length; i++) {
-      var el2 = candidates[i];
-      if (skipContext(el2)) continue;
-      var t2 = el2.textContent.replace(/\s+/g, " ").trim();
-      if (!t2 || t2.length > maxLen) continue;
-      var cls = el2.className || "";
-      if (cls.indexOf("has-text-warning") !== -1) {
-        return { kind: "closed", text: t2 };
-      }
-      if (cls.indexOf("has-text-info") !== -1) {
-        return { kind: "start", text: t2 };
-      }
-      if (cls.indexOf("has-text-success") !== -1) {
-        if (/Trwające/i.test(t2)) return { kind: "ongoing", text: t2 };
-        return { kind: "end", text: t2 };
-      }
-    }
-    return null;
+    return "";
   }
 
   function registrationHtml(reg) {
@@ -246,14 +251,14 @@
    * @param {HTMLElement} row
    * @returns {{ countryCode: string, place: string }}
    */
-  function parsePlaceAndFlag(row) {
-    var marker = row.querySelector(".fa-map-marker-alt");
-    var locRow = marker && marker.closest(".is-size-6");
+  function parsePlaceAndFlag(card) {
+    var marker = card.querySelector(".event-listing-card__detail .fa-map-marker-alt");
+    var locRow = marker && marker.closest(".event-listing-card__detail");
     var countryCode = "";
     var place = "";
     if (!locRow) return { countryCode: countryCode, place: place };
 
-    var flagEl = locRow.querySelector("i.flag-icon");
+    var flagEl = locRow.querySelector(".flag-icon, .event-listing-card__flag");
     if (flagEl && flagEl.classList) {
       flagEl.classList.forEach(function (c) {
         var m = /^flag-icon-([a-z]{2})$/i.exec(c);
@@ -264,8 +269,11 @@
     var spans = locRow.querySelectorAll("span");
     for (var i = 0; i < spans.length; i++) {
       var sp = spans[i];
+      if (sp.classList.contains("event-listing-card__detail-icon")) continue;
+      if (sp.classList.contains("flag-icon")) continue;
+      if (sp.classList.contains("event-listing-card__flag")) continue;
       if (sp.querySelector(".fa-map-marker-alt")) continue;
-      if (sp.querySelector("i.flag-icon")) continue;
+      if (sp.querySelector(".flag-icon")) continue;
       var t = sp.textContent.replace(/\s+/g, " ").trim();
       if (t && t.length < 120) place = t;
     }
@@ -276,9 +284,10 @@
    * @param {HTMLElement} row
    * @returns {{ key: string, label: string }[]}
    */
-  function parseEventTypeTags(row) {
+  function parseEventTypeTags(card) {
     var out = [];
-    row.querySelectorAll(".tag.is-event-type").forEach(function (el) {
+    card.querySelectorAll(".tag.is-event-type").forEach(function (el) {
+      if (el.classList.contains("event-listing-card__types-more")) return;
       var typeKey = "";
       el.classList.forEach(function (c) {
         if (c === "tag" || c === "is-event-type") return;
@@ -298,12 +307,12 @@
    * @returns {object[]}
    */
   function parseEventsFromDocument(doc) {
-    var links = doc.querySelectorAll("a.event-image-link[href*='/events/']");
+    var cards = doc.querySelectorAll("a.event-listing-card[href*='/events/']");
     var out = [];
     var seen = Object.create(null);
 
-    links.forEach(function (a) {
-      var href = a.getAttribute("href") || "";
+    cards.forEach(function (card) {
+      var href = card.getAttribute("href") || "";
       var pathMatch = href.match(/\/events\/([^/?#]+)/);
       if (!pathMatch) return;
       var slug = pathMatch[1];
@@ -312,28 +321,18 @@
       if (seen[parsed.slug]) return;
       seen[parsed.slug] = true;
 
-      var row = a.closest("div.columns.is-centered.is-gapless");
-      if (!row) return;
-
-      var titleEl = row.querySelector("a.has-text-white");
+      var titleEl = card.querySelector(".event-listing-card__title");
       var title = titleEl
         ? titleEl.textContent.replace(/\s+/g, " ").trim()
         : "";
 
-      var img = a.querySelector("img.event-thumbnail");
+      var img = card.querySelector("img.event-listing-card__thumbnail");
       var thumb = img ? (img.getAttribute("src") || "").trim() : "";
 
-      var dateEl = row.querySelector(".event-date");
-      var dateText = dateEl
-        ? dateEl.textContent
-            .replace(/\s+/g, " ")
-            .replace(/Data zawodów:\s*/i, "")
-            .trim()
-        : "";
-
-      var pf = parsePlaceAndFlag(row);
-      var registration = parseRegistration(row);
-      var tags = parseEventTypeTags(row);
+      var dateText = parseEventListingCardDate(card);
+      var pf = parsePlaceAndFlag(card);
+      var registration = parseRegistration(card);
+      var tags = parseEventTypeTags(card);
 
       if (!registration) {
         registration = registrationFallbackFromEventDates(dateText);

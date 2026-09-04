@@ -5,15 +5,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
 SRC = REPO / "research" / "html.starting.list"
-EVENTS_SRC = REPO / "research" / "html.pl.events"
 SCHED_SRC = REPO / "research" / "json.harmonogram"
 FIGHTS_SRC = REPO / "research" / "json.przebieg.walk"
 DATA = ROOT / "data"
-
-# 1-based line numbers in research/html.pl.events: inclusive block pasted into data/events.html.
-# After MM changes the list page, adjust these (see README — For developers).
-EVENTS_HTML_FIRST_LINE = 326
-EVENTS_HTML_LAST_LINE = 625  # inclusive last line; slice uses [FIRST-1 : LAST] (end exclusive)
 
 EMPTY_SCHEDULES = '{"activeScheduleId":0,"schedules":[]}'
 EMPTY_FIGHTS = '{"fightQueueStatuses":{},"result":[]}'
@@ -88,17 +82,11 @@ def main() -> None:
         (DATA / slug / "schedules.json").write_text(EMPTY_SCHEDULES, encoding="utf8")
         (DATA / slug / "fights.json").write_text(EMPTY_FIGHTS, encoding="utf8")
 
-    elines = EVENTS_SRC.read_text(encoding="utf8").splitlines(keepends=True)
-    body = "".join(elines[EVENTS_HTML_FIRST_LINE - 1 : EVENTS_HTML_LAST_LINE])
-    events_html = (
-        "<!DOCTYPE html>\n<html lang=\"pl\">\n<head>"
-        '<meta charset="utf-8">\n<title>Test — events</title>\n</head>\n<body>\n'
-        + body
-        + "\n</body>\n</html>\n"
+    print("Wrote schedules.json / fights.json")
+    print(
+        "Note: data/pl/events.html uses event-listing-card markup — update manually "
+        "(build_test_data.py no longer slices research/html.pl.events)."
     )
-    (DATA / "events.html").write_text(events_html, encoding="utf8")
-
-    print("Wrote schedules.json / fights.json / events.html")
     print("Done.")
 
 
